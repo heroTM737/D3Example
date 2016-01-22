@@ -4,18 +4,18 @@ var sourceList = [
     {
         x: 10,
         y: 10
-    },{
+    }, {
         x: 10,
         y: 110
-    },{
-        x: 200,
-        y: 210
-    },{
-        x: 200,
-        y: 310
-    },{
+    }, {
         x: 100,
+        y: 210
+    }, {
+        x: 200,
         y: 310
+    }, {
+        x: 300,
+        y: 410
     },
 ];
 
@@ -23,25 +23,24 @@ var targetList = [
     {
         x: 100,
         y: 10
-    },{
+    }, {
         x: 100,
         y: 110
-    },{
+    }, {
         x: 100,
         y: 210
-    },{
+    }, {
         x: 100,
         y: 310
     },
 ];
 
 var numberOfLink = sourceList.length;
-numberOfLink = 1;
 for (var i = 0; i < numberOfLink; i++) {
     var is = Math.floor(Math.random() * sourceList.length);
-    is = 3;
+    is = i;
     var it = Math.floor(Math.random() * targetList.length);
-    it =0;
+    it = 0;
     links.push({
         source: {
             x: sourceList[is].x,
@@ -57,9 +56,9 @@ for (var i = 0; i < numberOfLink; i++) {
 var radius = 5;
 
 var svgContainer = d3.select("body")
- .append("svg")
- .attr("width", 1000)
- .attr("height", 1000);
+    .append("svg")
+    .attr("width", 1000)
+    .attr("height", 1000);
 
 svgContainer.append("defs").append("marker")
     .attr("id", "arrowhead")
@@ -93,11 +92,6 @@ var diagonal = d3.svg.diagonal()
         return [d.y, d.x];
     });
 
-//var diagonal = d3.svg.diagonal()
-//    .projection(function (d) {
-//        return [d.x, d.y];
-//    });
-
 var link = group.append("path")
     .attr("class", "link")
     .attr("d", diagonal)
@@ -105,24 +99,24 @@ var link = group.append("path")
 
 var circleSources = group.append("circle")
     .attr("class", "circle")
-    .attr("cx", function(d) {
-      return d.source.x;
+    .attr("cx", function (d) {
+        return d.source.x;
     })
-    .attr("cy", function(d) {
-      return d.source.y;
+    .attr("cy", function (d) {
+        return d.source.y;
     })
-    .attr("r", function(d) {
-      return radius;
+    .attr("r", function (d) {
+        return radius;
     });
 
 var circleTargets = group.append("circle")
     .attr("class", "circle")
-    .attr("cx", function(d) {
-      return d.target.x;
+    .attr("cx", function (d) {
+        return d.target.x;
     })
-    .attr("cy", function(d) {
-      return d.target.y;
+    .attr("cy", function (d) {
+        return d.target.y;
     })
-    .attr("r", function(d) {
-      return radius;
+    .attr("r", function (d) {
+        return radius;
     });
