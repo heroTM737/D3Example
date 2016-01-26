@@ -82,8 +82,8 @@ for (var i = 0; i < circleList.length; i++) {
 }
 
 var radius = 5;
-var rw = 200;
-var rh = 100;
+var rw = 20;
+var rh = 10;
 
 var svg = d3.select("body")
     .append("svg")

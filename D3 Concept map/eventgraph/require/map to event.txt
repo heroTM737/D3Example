@@ -1,0 +1,5 @@
+separate source and target
+
+one color when hight light
+
+short lalbel to 10 chars, full label on tooltips
