@@ -1,13 +1,40 @@
+.hidden {
+    display: none;
+}
+
 .link {
-    stroke : red;
+    /*    stroke: rgb(224, 243, 248);*/
+    stroke: rgb(253, 174, 97);
+    /*    stroke: rgb(215, 48, 39);*/
     fill: none;
 }
-.link-head{
-    fill: red;
+
+.link-highlight {
+    stroke: rgb(215, 48, 39);
+    stroke-width: 5px;
 }
-.circle{
+
+.circle {
     fill: steelblue;
 }
-.rect{
+
+.circle-highlight {
     fill: red;
+}
+
+.rect {
+    fill: steelblue;
+}
+
+.rect-highlight {
+    fill: red !important;
+}
+
+.tooltip {
+    position: fixed;
+    top: 10;
+    left: 10;
+    background: pink;
+    padding: 3px;
+    border-radius: 5px;
 }
