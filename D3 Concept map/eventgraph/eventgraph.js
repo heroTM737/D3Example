@@ -129,15 +129,34 @@ function rect_mouseover(d) {
     //hightlight
     var id = "x" + d.x + "xy" + d.y + "y";
     d3.selectAll('#' + id).classed('rect-highlight', true);
-    d3.selectAll(".link[id*='" + id + "']").classed('link-highlight', true);
-    d3.selectAll('.link').each(function(d, i) {
-        var s_id = "x" + d.source.x + "xy" + d.source.y + "y";
-        var t_id = "x" + d.target.x + "xy" + d.target.y + "y";
-        
-        if (d_id == s_id) {
-            d3.selectAll(".link[id*='" + t_id + "']").classed('link-highlight', true);
-        }
-    });
+    
+    d3.selectAll(".link[id*='s" + id + "']")
+        .classed('link-highlight', true)
+        .each(function(d, i) {
+            var s_id = "x" + d.source.x + "xy" + d.source.y + "y";
+            var t_id = "x" + d.target.x + "xy" + d.target.y + "y";
+
+            d3.selectAll(".link[id*='s" + t_id + "']")
+                .classed('link-highlight', true)
+                .each(function(d, i) {
+                    var target_id = "x" + d.target.x + "xy" + d.target.y + "y";
+                    d3.select(".rect[id='" + target_id + "']").classed('rect-highlight', true);
+                });
+        });
+    
+    d3.selectAll(".link[id*='t" + id + "']")
+        .classed('link-highlight', true)
+        .each(function(d, i) {
+            var s_id = "x" + d.source.x + "xy" + d.source.y + "y";
+            var t_id = "x" + d.target.x + "xy" + d.target.y + "y";
+
+            d3.selectAll(".link[id*='t" + s_id + "']")
+                .classed('link-highlight', true)
+                .each(function(d, i) {
+                    var source_id = "x" + d.source.x + "xy" + d.source.y + "y";
+                    d3.select(".rect[id='" + source_id + "']").classed('rect-highlight', true);
+                });
+        });
     
     //show tooltips
     showTooltips(getTooltips(d), d);
@@ -147,15 +166,34 @@ function rect_mouseout(d) {
     var id = "x" + d.x + "xy" + d.y + "y";
     var d_id = id;
     d3.selectAll('#' + id).classed('rect-highlight', false);
-    d3.selectAll(".link[id*='" + id + "']").classed('link-highlight', false);
-    d3.selectAll('.link').each(function(d, i) {
-        var s_id = "x" + d.source.x + "xy" + d.source.y + "y";
-        var t_id = "x" + d.target.x + "xy" + d.target.y + "y";
-        
-        if (d_id == s_id) {
-            d3.selectAll(".link[id*='" + t_id + "']").classed('link-highlight', false);
-        }
-    });
+    
+    d3.selectAll(".link[id*='s" + id + "']")
+        .classed('link-highlight', false)
+        .each(function(d, i) {
+            var s_id = "x" + d.source.x + "xy" + d.source.y + "y";
+            var t_id = "x" + d.target.x + "xy" + d.target.y + "y";
+
+            d3.selectAll(".link[id*='s" + t_id + "']")
+                .classed('link-highlight', false)
+                .each(function(d, i) {
+                    var target_id = "x" + d.target.x + "xy" + d.target.y + "y";
+                    d3.select(".rect[id='" + target_id + "']").classed('rect-highlight', false);
+                });
+        });
+    
+    d3.selectAll(".link[id*='t" + id + "']")
+        .classed('link-highlight', false)
+        .each(function(d, i) {
+            var s_id = "x" + d.source.x + "xy" + d.source.y + "y";
+            var t_id = "x" + d.target.x + "xy" + d.target.y + "y";
+
+            d3.selectAll(".link[id*='t" + s_id + "']")
+                .classed('link-highlight', false)
+                .each(function(d, i) {
+                    var source_id = "x" + d.source.x + "xy" + d.source.y + "y";
+                    d3.select(".rect[id='" + source_id + "']").classed('rect-highlight', false);
+                });
+        });
     
     hideTooltips();
 }
