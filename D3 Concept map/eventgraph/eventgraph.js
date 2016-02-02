@@ -1,3 +1,7 @@
+var radius = 5;
+var rw = 20;
+var rh = 20;
+
 $.ajax({
     type: "GET",
     url: "data/EventGraphData.json",
@@ -14,7 +18,7 @@ $.ajax({
             if (result.nodes[i].type == "event") {
                 circleList.push({
                     x: 300,
-                    y: 50 + circleList.length * 15,
+                    y: 50 + circleList.length * radius * 3,
                     data: result.nodes[i]
                 });
                 result.nodes[i].cindex = circleList.length - 1;
@@ -94,10 +98,6 @@ $.ajax({
 //    }
 //});
 
-var radius = 5;
-var rw = 20;
-var rh = 20;
-
 var diagonal = d3.svg.diagonal()
     .source(function (d) {
         return {
@@ -135,6 +135,8 @@ function rect_mouseover(d) {
         .each(function(d, i) {
             var s_id = "x" + d.source.x + "xy" + d.source.y + "y";
             var t_id = "x" + d.target.x + "xy" + d.target.y + "y";
+            
+            d3.selectAll(".circle[id*='" + t_id + "']").classed('circle-highlight', true);
 
             d3.selectAll(".link[id*='s" + t_id + "']")
                 .classed('link-highlight', true)
@@ -149,6 +151,8 @@ function rect_mouseover(d) {
         .each(function(d, i) {
             var s_id = "x" + d.source.x + "xy" + d.source.y + "y";
             var t_id = "x" + d.target.x + "xy" + d.target.y + "y";
+        
+            d3.selectAll(".circle[id*='" + s_id + "']").classed('circle-highlight', true);
 
             d3.selectAll(".link[id*='t" + s_id + "']")
                 .classed('link-highlight', true)
@@ -172,6 +176,8 @@ function rect_mouseout(d) {
         .each(function(d, i) {
             var s_id = "x" + d.source.x + "xy" + d.source.y + "y";
             var t_id = "x" + d.target.x + "xy" + d.target.y + "y";
+        
+            d3.selectAll(".circle[id*='" + t_id + "']").classed('circle-highlight', false);
 
             d3.selectAll(".link[id*='s" + t_id + "']")
                 .classed('link-highlight', false)
@@ -186,6 +192,8 @@ function rect_mouseout(d) {
         .each(function(d, i) {
             var s_id = "x" + d.source.x + "xy" + d.source.y + "y";
             var t_id = "x" + d.target.x + "xy" + d.target.y + "y";
+        
+            d3.selectAll(".circle[id*='" + s_id + "']").classed('circle-highlight', false);
 
             d3.selectAll(".link[id*='t" + s_id + "']")
                 .classed('link-highlight', false)
@@ -211,15 +219,45 @@ function circle_mouseover(d) {
     
     //hightlight
     var id = "x" + d.x + "xy" + d.y + "y";
-    d3.selectAll('#' + "x" + d.x + "y" + d.y).classed('circle-highlight', true);
-    d3.selectAll(".link[id*='" + id + "']").classed('link-highlight', true);
+    d3.selectAll('#' + "x" + d.x + "xy" + d.y + "y").classed('circle-highlight', true);
+    
+    d3.selectAll(".link[id*='t" + id + "']")
+        .classed('link-highlight', true)
+        .each(function(d, i) {
+            var source_id = "x" + d.source.x + "xy" + d.source.y + "y";
+            d3.select(".rect[id='" + source_id + "']").classed('rect-highlight', true);
+        });
+    
+    d3.selectAll(".link[id*='s" + id + "']")
+        .classed('link-highlight', true)
+        .each(function(d, i) {
+            var target_id = "x" + d.target.x + "xy" + d.target.y + "y";
+            d3.select(".rect[id='" + target_id + "']").classed('rect-highlight', true);
+        });
+    
+    
+    
     showTooltips(getTooltips(d), d);
 }
 
 function circle_mouseout(d) {
     var id = "x" + d.x + "xy" + d.y + "y";
     d3.selectAll('#' + id).classed('circle-highlight', false);
-    d3.selectAll(".link[id*='" + id + "']").classed('link-highlight', false);
+    
+    d3.selectAll(".link[id*='t" + id + "']")
+        .classed('link-highlight', false)
+        .each(function(d, i) {
+            var source_id = "x" + d.source.x + "xy" + d.source.y + "y";
+            d3.select(".rect[id='" + source_id + "']").classed('rect-highlight', false);
+        });
+    
+    d3.selectAll(".link[id*='s" + id + "']")
+        .classed('link-highlight', false)
+        .each(function(d, i) {
+            var target_id = "x" + d.target.x + "xy" + d.target.y + "y";
+            d3.select(".rect[id='" + target_id + "']").classed('rect-highlight', false);
+        });
+    
     hideTooltips();
 }
 

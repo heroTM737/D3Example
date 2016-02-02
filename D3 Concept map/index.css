@@ -12,15 +12,17 @@
 
 .link-highlight {
     stroke: #FD6E6E;
-    stroke-width: 2px;
+    stroke-width: 3px;
 }
 
 .circle {
     fill: steelblue;
+    stroke-width: 2px;
 }
 
 .circle-highlight {
-    fill: red;
+    fill: yellow !important;
+    stroke: red;
 }
 
 .rect {
@@ -28,14 +30,16 @@
 }
 
 .rect-highlight {
-    fill: red !important;
+    fill: yellow !important;
+    stroke: red;
 }
 
 .tooltip {
     position: fixed;
     top: 10;
     left: 10;
-    background: pink;
+    background: rgba(0, 0, 0, 0.5);
     padding: 3px;
     border-radius: 5px;
+    color: black;
 }
