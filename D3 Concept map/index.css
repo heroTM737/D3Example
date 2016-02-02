@@ -15,21 +15,21 @@
     stroke-width: 3px;
 }
 
-.circle {
+.event {
     fill: steelblue;
     stroke-width: 2px;
 }
 
-.circle-highlight {
+.event-highlight {
     fill: yellow !important;
     stroke: red;
 }
 
-.rect {
+.machine {
     fill: steelblue;
 }
 
-.rect-highlight {
+.machine-highlight {
     fill: yellow !important;
     stroke: red;
 }

@@ -9,26 +9,26 @@ $.ajax({
     success: function (data, textStatus, jqXHR) {
         var result = JSON.parse(data);
         
-        var circleList = [];
-        var rectList = [];
+        var machines = [];
+        var events = [];
         var links = [];
         
         for (var i in result.nodes){
 //            console.log(result.nodes[i].type);
             if (result.nodes[i].type == "event") {
-                circleList.push({
+                events.push({
                     x: 300,
-                    y: 50 + circleList.length * radius * 3,
+                    y: 50 + events.length * radius * 3,
                     data: result.nodes[i]
                 });
-                result.nodes[i].cindex = circleList.length - 1;
+                result.nodes[i].cindex = events.length - 1;
             } else if (result.nodes[i].type == "source_target") {
-                rectList.push({
-                    x: 50 + (rectList.length % 2) * 500,
-                    y: 100 + rectList.length * 200,
+                machines.push({
+                    x: 50 + (machines.length % 2) * 500,
+                    y: 100 + machines.length * 200,
                     data: result.nodes[i]
                 });
-                result.nodes[i].cindex = rectList.length - 1;
+                result.nodes[i].cindex = machines.length - 1;
             } 
         }
         
@@ -47,25 +47,25 @@ $.ajax({
             };
             
             if (result.nodes[source].type == "event") {
-                link.source.x = circleList[result.nodes[source].cindex].x;
-                link.source.y = circleList[result.nodes[source].cindex].y;
+                link.source.x = events[result.nodes[source].cindex].x;
+                link.source.y = events[result.nodes[source].cindex].y;
             } else if (result.nodes[source].type == "source_target") {
-                link.source.x = rectList[result.nodes[source].cindex].x;
-                link.source.y = rectList[result.nodes[source].cindex].y;
+                link.source.x = machines[result.nodes[source].cindex].x;
+                link.source.y = machines[result.nodes[source].cindex].y;
             }
             
             if (result.nodes[target].type == "event") {
-                link.target.x = circleList[result.nodes[target].cindex].x;
-                link.target.y = circleList[result.nodes[target].cindex].y;
+                link.target.x = events[result.nodes[target].cindex].x;
+                link.target.y = events[result.nodes[target].cindex].y;
             } else if (result.nodes[target].type == "source_target") {
-                link.target.x = rectList[result.nodes[target].cindex].x;
-                link.target.y = rectList[result.nodes[target].cindex].y;
+                link.target.x = machines[result.nodes[target].cindex].x;
+                link.target.y = machines[result.nodes[target].cindex].y;
             }
             
             links.push(link);
         }
         
-        visualizeData(circleList,  rectList, links);
+        visualizeData(events, machines, links);
     }
 });
 
@@ -115,7 +115,7 @@ var diagonal = d3.svg.diagonal()
         return [d.y, d.x];
     });
 
-function rect_mouseover(d) {
+function machine_mouseover(d) {
     // bring to front
     var d_id = "x" + d.x + "xy" + d.y + "y";
     
@@ -128,7 +128,7 @@ function rect_mouseover(d) {
     
     //hightlight
     var id = "x" + d.x + "xy" + d.y + "y";
-    d3.selectAll('#' + id).classed('rect-highlight', true);
+    d3.selectAll('#' + id).classed('machine-highlight', true);
     
     d3.selectAll(".link[id*='s" + id + "']")
         .classed('link-highlight', true)
@@ -136,13 +136,13 @@ function rect_mouseover(d) {
             var s_id = "x" + d.source.x + "xy" + d.source.y + "y";
             var t_id = "x" + d.target.x + "xy" + d.target.y + "y";
             
-            d3.selectAll(".circle[id*='" + t_id + "']").classed('circle-highlight', true);
+            d3.selectAll(".event[id*='" + t_id + "']").classed('event-highlight', true);
 
             d3.selectAll(".link[id*='s" + t_id + "']")
                 .classed('link-highlight', true)
                 .each(function(d, i) {
                     var target_id = "x" + d.target.x + "xy" + d.target.y + "y";
-                    d3.select(".rect[id='" + target_id + "']").classed('rect-highlight', true);
+                    d3.select(".machine[id='" + target_id + "']").classed('machine-highlight', true);
                 });
         });
     
@@ -152,13 +152,13 @@ function rect_mouseover(d) {
             var s_id = "x" + d.source.x + "xy" + d.source.y + "y";
             var t_id = "x" + d.target.x + "xy" + d.target.y + "y";
         
-            d3.selectAll(".circle[id*='" + s_id + "']").classed('circle-highlight', true);
+            d3.selectAll(".event[id*='" + s_id + "']").classed('event-highlight', true);
 
             d3.selectAll(".link[id*='t" + s_id + "']")
                 .classed('link-highlight', true)
                 .each(function(d, i) {
                     var source_id = "x" + d.source.x + "xy" + d.source.y + "y";
-                    d3.select(".rect[id='" + source_id + "']").classed('rect-highlight', true);
+                    d3.select(".machine[id='" + source_id + "']").classed('machine-highlight', true);
                 });
         });
     
@@ -166,10 +166,10 @@ function rect_mouseover(d) {
     showTooltips(getTooltips(d), d);
 }
 
-function rect_mouseout(d) {
+function machine_mouseout(d) {
     var id = "x" + d.x + "xy" + d.y + "y";
     var d_id = id;
-    d3.selectAll('#' + id).classed('rect-highlight', false);
+    d3.selectAll('#' + id).classed('machine-highlight', false);
     
     d3.selectAll(".link[id*='s" + id + "']")
         .classed('link-highlight', false)
@@ -177,13 +177,13 @@ function rect_mouseout(d) {
             var s_id = "x" + d.source.x + "xy" + d.source.y + "y";
             var t_id = "x" + d.target.x + "xy" + d.target.y + "y";
         
-            d3.selectAll(".circle[id*='" + t_id + "']").classed('circle-highlight', false);
+            d3.selectAll(".event[id*='" + t_id + "']").classed('event-highlight', false);
 
             d3.selectAll(".link[id*='s" + t_id + "']")
                 .classed('link-highlight', false)
                 .each(function(d, i) {
                     var target_id = "x" + d.target.x + "xy" + d.target.y + "y";
-                    d3.select(".rect[id='" + target_id + "']").classed('rect-highlight', false);
+                    d3.select(".machine[id='" + target_id + "']").classed('machine-highlight', false);
                 });
         });
     
@@ -193,20 +193,20 @@ function rect_mouseout(d) {
             var s_id = "x" + d.source.x + "xy" + d.source.y + "y";
             var t_id = "x" + d.target.x + "xy" + d.target.y + "y";
         
-            d3.selectAll(".circle[id*='" + s_id + "']").classed('circle-highlight', false);
+            d3.selectAll(".event[id*='" + s_id + "']").classed('event-highlight', false);
 
             d3.selectAll(".link[id*='t" + s_id + "']")
                 .classed('link-highlight', false)
                 .each(function(d, i) {
                     var source_id = "x" + d.source.x + "xy" + d.source.y + "y";
-                    d3.select(".rect[id='" + source_id + "']").classed('rect-highlight', false);
+                    d3.select(".machine[id='" + source_id + "']").classed('machine-highlight', false);
                 });
         });
     
     hideTooltips();
 }
 
-function circle_mouseover(d) {
+function event_mouseover(d) {
     // bring to front
     var d_id = "x" + d.x + "xy" + d.y + "y";
     
@@ -219,43 +219,41 @@ function circle_mouseover(d) {
     
     //hightlight
     var id = "x" + d.x + "xy" + d.y + "y";
-    d3.selectAll('#' + "x" + d.x + "xy" + d.y + "y").classed('circle-highlight', true);
+    d3.selectAll('#' + "x" + d.x + "xy" + d.y + "y").classed('event-highlight', true);
     
     d3.selectAll(".link[id*='t" + id + "']")
         .classed('link-highlight', true)
         .each(function(d, i) {
             var source_id = "x" + d.source.x + "xy" + d.source.y + "y";
-            d3.select(".rect[id='" + source_id + "']").classed('rect-highlight', true);
+            d3.select(".machine[id='" + source_id + "']").classed('machine-highlight', true);
         });
     
     d3.selectAll(".link[id*='s" + id + "']")
         .classed('link-highlight', true)
         .each(function(d, i) {
             var target_id = "x" + d.target.x + "xy" + d.target.y + "y";
-            d3.select(".rect[id='" + target_id + "']").classed('rect-highlight', true);
+            d3.select(".machine[id='" + target_id + "']").classed('machine-highlight', true);
         });
-    
-    
     
     showTooltips(getTooltips(d), d);
 }
 
-function circle_mouseout(d) {
+function event_mouseout(d) {
     var id = "x" + d.x + "xy" + d.y + "y";
-    d3.selectAll('#' + id).classed('circle-highlight', false);
+    d3.selectAll('#' + id).classed('event-highlight', false);
     
     d3.selectAll(".link[id*='t" + id + "']")
         .classed('link-highlight', false)
         .each(function(d, i) {
             var source_id = "x" + d.source.x + "xy" + d.source.y + "y";
-            d3.select(".rect[id='" + source_id + "']").classed('rect-highlight', false);
+            d3.select(".machine[id='" + source_id + "']").classed('machine-highlight', false);
         });
     
     d3.selectAll(".link[id*='s" + id + "']")
         .classed('link-highlight', false)
         .each(function(d, i) {
             var target_id = "x" + d.target.x + "xy" + d.target.y + "y";
-            d3.select(".rect[id='" + target_id + "']").classed('rect-highlight', false);
+            d3.select(".machine[id='" + target_id + "']").classed('machine-highlight', false);
         });
     
     hideTooltips();
@@ -321,7 +319,7 @@ function visualizeData(circleList, rectList, links) {
     var rectangle = svg.selectAll("rect")
         .data(rectList)
         .enter().append("rect")
-        .attr("class", "rect")
+        .attr("class", "machine")
         .attr('id', function (d) {
             return "x" + d.x + "xy" + d.y + "y";
         })
@@ -333,13 +331,13 @@ function visualizeData(circleList, rectList, links) {
         })
         .attr("width", rw)
         .attr("height", rh)
-        .on("mouseover", rect_mouseover)
-        .on("mouseout", rect_mouseout);
+        .on("mouseover", machine_mouseover)
+        .on("mouseout", machine_mouseout);
 
     var circle = svg.selectAll("circle")
         .data(circleList)
         .enter().append("circle")
-        .attr("class", "circle")
+        .attr("class", "event")
         .attr('id', function (d) {
             return "x" + d.x + "xy" + d.y + "y";
         })
@@ -352,6 +350,6 @@ function visualizeData(circleList, rectList, links) {
         .attr("r", function (d) {
             return radius;
         })
-        .on("mouseover", circle_mouseover)
-        .on("mouseout", circle_mouseout);
+        .on("mouseover", event_mouseover)
+        .on("mouseout", event_mouseout);
 }
