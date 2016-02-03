@@ -397,6 +397,26 @@ function visualizeData(events, machines, links) {
         })
         .on("mouseover", machine_mouseover)
         .on("mouseout", machine_mouseout);
+    
+    var machine2 = svg.selectAll("g")
+        .data(machines)
+        .enter()
+        .append("circle")
+        .attr("class", "machine")
+        .attr('id', function (d) {
+            return "x" + d.x + "xy" + d.y + "y";
+        })
+        .attr("cx", function (d) {
+            return d.x + radius * 4;
+        })
+        .attr("cy", function (d) {
+            return d.y;
+        })
+        .attr("r", function (d) {
+            return radius;
+        })
+        .on("mouseover", machine_mouseover)
+        .on("mouseout", machine_mouseout);
 
     var event = svg.selectAll("rect")
         .data(events)
