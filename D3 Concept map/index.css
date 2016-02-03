@@ -3,20 +3,20 @@
 }
 
 .link {
-    /*    stroke: rgb(224, 243, 248);*/
-    /*    stroke: rgb(253, 174, 97);*/
-    /*    stroke: rgb(215, 48, 39);*/
     stroke: pink;
+    /*stroke: rgb(170, 170, 170);*/
     fill: none;
 }
 
 .link-highlight {
     stroke: #FD6E6E;
+    /*stroke: #0da4d3;*/
     stroke-width: 3px;
 }
 
 .event {
-    fill: steelblue;
+/*    fill: steelblue;*/
+    fill: black;
     stroke-width: 2px;
 }
 
@@ -26,7 +26,9 @@
 }
 
 .machine {
-    fill: steelblue;
+    stroke: steelblue;
+    stroke-width: 2px;
+    fill: pink;
 }
 
 .machine-highlight {
