@@ -1,0 +1,4 @@
+left: source machine
+right: target machine
+machine align in semi cricle
+source and target use difference color
