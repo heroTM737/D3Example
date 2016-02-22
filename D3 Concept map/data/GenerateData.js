@@ -4,9 +4,8 @@ function getFakedEventData() {
     
     var numberOfEvent = 50;
     var numberOfMachine = 20;
-    var numberOfLink = 50;
     
-    for (var i = 0; i < 50; i++) {
+    for (var i = 0; i < numberOfEvent; i++) {
         var weight = Math.floor(Math.random() * 10);
         nodes.push({
             "id": "id" + i,
