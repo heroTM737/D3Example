@@ -1,0 +1,34 @@
+.machine {
+    stroke: steelblue;
+    stroke-width: 2px;
+    fill: pink;
+}
+
+.link {
+    stroke: pink;
+    fill: none;
+}
+
+.link-highlight {
+    stroke: #FD6E6E;
+    stroke-width: 3px;
+}
+
+.event {
+    fill: steelblue;
+    stroke-width: 2px;
+}
+
+.event-highlight {
+    fill: yellow !important;
+    stroke: red;
+}
+
+.machine-highlight {
+    fill: yellow !important;
+    stroke: red;
+}
+
+.event-text {
+    fill: white;
+}

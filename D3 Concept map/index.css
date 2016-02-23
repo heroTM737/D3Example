@@ -1,46 +1,17 @@
+/*@import url("css/conceptmap.css");*/
+
+@import url("css/conceptmap_tm.css");
 .hidden {
     display: none;
-}
-
-.link {
-    stroke: pink;
-    /*stroke: rgb(170, 170, 170);*/
-    fill: none;
-}
-
-.link-highlight {
-    stroke: #FD6E6E;
-    /*stroke: #0da4d3;*/
-    stroke-width: 3px;
-}
-
-.event {
-/*    fill: steelblue;*/
-    fill: black;
-    stroke-width: 2px;
-}
-
-.event-highlight {
-    fill: yellow !important;
-    stroke: red;
-}
-
-.machine {
-    stroke: steelblue;
-    stroke-width: 2px;
-    fill: pink;
-}
-
-.machine-highlight {
-    fill: yellow !important;
-    stroke: red;
 }
 
 .tooltip {
     position: fixed;
     top: 10;
     left: 10;
-    background: rgba(0, 0, 0, 0.5);
+    /*    background: rgba(0, 0, 0, 0.5);*/
+    background: white;
+    border: 1px solid red;
     padding: 3px;
     border-radius: 5px;
     color: black;

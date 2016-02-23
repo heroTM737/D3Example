@@ -1,10 +1,10 @@
 function getFakedEventData() {
     var nodes = [];
     var links = [];
-    
-    var numberOfEvent = 50;
+
+    var numberOfEvent = 40;
     var numberOfMachine = 20;
-    
+
     for (var i = 0; i < numberOfEvent; i++) {
         var weight = Math.floor(Math.random() * 10);
         nodes.push({
@@ -26,26 +26,26 @@ function getFakedEventData() {
             "type": "source_target"
         });
     }
-    
+
     for (var i = 0; i < numberOfEvent; i++) {
         var link_machine_source = Math.floor(Math.random() * numberOfMachine) + numberOfEvent;
         var link_event = i;
         var link_machine_target = Math.floor(Math.random() * numberOfMachine) + numberOfEvent;
-        
+
         links.push({
             "source": link_machine_source,
             "target": link_event
         });
-        
+
         links.push({
             "source": link_event,
             "target": link_machine_target
         });
     }
-    
+
     var container = {};
     container.nodes = nodes;
     container.links = links;
-    
+
     return container;
 }

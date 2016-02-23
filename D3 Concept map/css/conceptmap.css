@@ -1,0 +1,32 @@
+.machine {
+    stroke-width: 2px;
+    stroke: rgb(0, 0, 0);
+    fill: rgb(102, 102, 102);
+}
+
+.machine-highlight {
+    fill: rgb(13, 164, 211);
+}
+
+.event {
+    fill: black;
+}
+
+.event-highlight {
+    fill: rgb(13, 164, 211) !important;
+}
+
+.link {
+    stroke: rgb(170, 170, 170);
+    fill: none;
+}
+
+.link-highlight {
+    stroke: rgb(13, 164, 211);
+    stroke-width: 3px;
+}
+
+.event-text {
+    fill: white;
+    font-size: 10px;
+}
