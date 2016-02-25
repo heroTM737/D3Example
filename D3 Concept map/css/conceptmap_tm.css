@@ -19,16 +19,28 @@
     stroke-width: 2px;
 }
 
+.event-group .text {
+    font-size: 14px;
+    fill: white;
+}
+
+.group {
+    overflow: hidden;
+}
+
+.group-highlight .event,
 .event-highlight {
     fill: yellow !important;
     stroke: red;
 }
 
+.group-highlight .machine,
 .machine-highlight {
     fill: yellow !important;
     stroke: red;
 }
 
-.event-text {
-    fill: white;
+.group-highlight .text,
+.event-text-highlight {
+    fill: black !important;
 }

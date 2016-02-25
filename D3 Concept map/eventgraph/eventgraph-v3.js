@@ -8,24 +8,24 @@ var shift_y = 40;
 var text_length = 80;
 
 function runTest() {
-    var data = getFakedEventData();
-    processData(data);
+//    var data = getFakedEventData();
+ //    processData(data);
 
-    //            $.ajax({
-    //                type: "GET",
-    //                url: "data/EventGraphData.json",
-    //                dataType: "text",
-    //                cache: false,
-    //                success: function (data) {
-    //                    console.log("success");
-    //                    var result = JSON.parse(data);
-    //                    processData(result);
-    //                },
-    //                error: function (response) {
-    //                    console.log("error ");
-    //                    console.log(response.responseText);
-    //                }
-    //            });
+        $.ajax({
+            type: "GET",
+            url: "data/EventGraphData.json",
+            dataType: "text",
+            cache: false,
+            success: function (data) {
+                console.log("success");
+                var result = JSON.parse(data);
+                processData(result);
+            },
+            error: function (response) {
+                console.log("error ");
+                console.log(response.responseText);
+            }
+        });
 }
 
 function processData(data) {
@@ -154,15 +154,11 @@ function machine_mouseover(d) {
     });
 
     //hightlight current machine
-    d3.selectAll('#' + d.id).classed('machine-highlight', true);
+    d3.selectAll('#group' + d.id).classed('group-highlight', true);
 
     //hight light related machine
     d.related_nodes.forEach(function (node, index) {
-        if (node.data.type == "source_target") {
-            d3.selectAll('#' + node.id).classed('machine-highlight', true);
-        } else {
-            d3.selectAll('#' + node.id).classed('event-highlight', true);
-        }
+        d3.selectAll('#group' + node.id).classed('group-highlight', true);
     });
 
     //show tooltips
@@ -176,19 +172,21 @@ function machine_mouseout(d) {
     });
 
     //hightlight current machine
-    d3.selectAll('#' + d.id).classed('machine-highlight', false);
+    d3.selectAll('#group' + d.id).classed('group-highlight', false);
 
     //hight light related machine
     d.related_nodes.forEach(function (node, index) {
-        if (node.data.type == "source_target") {
-            d3.selectAll('#' + node.id).classed('machine-highlight', false);
-        } else {
-            d3.selectAll('#' + node.id).classed('event-highlight', false);
-        }
+        d3.selectAll('#group' + node.id).classed('group-highlight', false);
     });
 
     //hide tooltips
     hideTooltips();
+}
+
+function machine_click(d) {
+    d3.select("svg").selectAll("*").remove();
+    hideTooltips();
+    visualizeDataMachine(d);
 }
 
 function event_mouseover(d) {
@@ -202,19 +200,12 @@ function event_mouseover(d) {
         d3.selectAll('#' + link.id).classed('link-highlight', true);
     });
 
-    //hightlight text
-    d3.selectAll('#text' + d.id).classed('event-text-highlight', true);
-
     //hightlight current event
-    d3.selectAll('#' + d.id).classed('event-highlight', true);
+    d3.selectAll('#group' + d.id).classed('group-highlight', true);
 
     //hight light related machine
     d.related_nodes.forEach(function (key, node) {
-        if (node.data.type == "source_target") {
-            d3.selectAll('#' + node.id).classed('machine-highlight', true);
-        } else {
-            d3.selectAll('#' + node.id).classed('event-highlight', true);
-        }
+        d3.selectAll('#group' + node.id).classed('group-highlight', true);
     });
 
     showTooltips(getTooltips(d), d);
@@ -227,18 +218,20 @@ function event_mouseout(d) {
     });
 
     //hightlight current event
-    d3.selectAll('#' + d.id).classed('event-highlight', false);
+    d3.selectAll('#group' + d.id).classed('group-highlight', false);
 
     //hight light related machine
     d.related_nodes.forEach(function (key, node) {
-        if (node.data.type == "source_target") {
-            d3.selectAll('#' + node.id).classed('machine-highlight', false);
-        } else {
-            d3.selectAll('#' + node.id).classed('event-highlight', false);
-        }
+        d3.selectAll('#group' + node.id).classed('group-highlight', false);
     });
 
     hideTooltips();
+}
+
+function event_click(d) {
+    d3.select("svg").selectAll("*").remove();
+    hideTooltips();
+    visualizeDataMachine(d);
 }
 
 var tooltip = d3.select(".tooltip");
@@ -305,8 +298,116 @@ var diagonal = d3.svg.diagonal()
         return [d.y, d.x];
     });
 
-function visualizeDataMachine(source_machines, target_machines, events, links) {
+var diagonal_machine = d3.svg.diagonal()
+    .source(function (d) {
+        return {
+            "x": d.source.y,
+            "y": d.source.x
+        };
+    })
+    .target(function (d) {
+        return {
+            "x": d.target.y,
+            "y": d.target.x
+        };
+    })
+    .projection(function (d) {
+        return [d.y, d.x];
+    });
 
+function visualizeDataMachine(d) {
+    //define coordinate
+    var center = {};
+    center.x = 300;
+    center.y = 300;
+    center.radius = 150;
+
+    d.x = center.x;
+    d.y = center.y;
+
+    var links = [];
+    var events = [];
+    d.related_nodes.forEach(function (node, index) {
+        if (node.data.type == "event") {
+            events.push(node);
+
+            links.push({
+                id: "from" + d.id + "to" + node.id,
+                source: d,
+                target: node
+            });
+        }
+    });
+
+    var angle = 2 * Math.PI / events.length;
+    for (var i = 0; i < events.length; i++) {
+        events[i].x = center.x + Math.cos(i * angle) * center.radius;
+        events[i].y = center.y + Math.sin(i * angle) * center.radius;
+    }
+
+    //render
+    var svg = d3.select("svg");
+
+    var link = svg.selectAll("path")
+        .data(links)
+        .enter().append("path")
+        .attr("class", "link")
+        .attr("id", function (d) {
+            return d.id;
+        })
+        .attr("d", diagonal_machine);
+
+    var machine_group = svg.selectAll(".machine-group")
+        .data([d])
+        .enter().append("g")
+        .attr("class", "machine-group")
+        .attr('id', function (d) {
+            return "group" + d.id;
+        })
+        .on("mouseover", machine_mouseover)
+        .on("mouseout", machine_mouseout)
+        .on("click", machine_click);
+
+    var machine = machine_group.append("circle")
+        .attr("class", "machine")
+        .attr('id', function (d) {
+            return d.id;
+        })
+        .attr("cx", function (d) {
+            return d.x;
+        })
+        .attr("cy", function (d) {
+            return d.y;
+        })
+        .attr("r", function (d) {
+            return radius;
+        });
+
+    var event_group = svg.selectAll(".event-group")
+        .data(events)
+        .enter().append("g")
+        .attr("class", "event-group")
+        .attr('id', function (d) {
+            return "group" + d.id;
+        })
+        .on("mouseover", event_mouseover)
+        .on("mouseout", event_mouseout)
+        .on("click", event_click);
+
+    var event = event_group.append("circle")
+        .attr("class", "machine")
+        .attr('id', function (d) {
+            return d.id;
+        })
+        .attr("cx", function (d) {
+            return d.x;
+        })
+        .attr("cy", function (d) {
+            return d.y;
+        })
+        .attr("r", function (d) {
+            return radius;
+        });
 }
 
 function visualizeData(source_machines, target_machines, events, links) {
@@ -342,13 +443,11 @@ function visualizeData(source_machines, target_machines, events, links) {
         event.y = event_start + index * (rh + y_margin);
     });
 
-
-
     //render
     var svg = d3.select("body")
         .append("svg")
         .attr("width", 1000)
-        .attr("height", 1000);
+        .attr("height", events.length * (rh + y_margin) + shift_y);
 
     var link = svg.selectAll("path")
         .data(links)
@@ -359,9 +458,18 @@ function visualizeData(source_machines, target_machines, events, links) {
         })
         .attr("d", diagonal);
 
-    var source = svg.selectAll("circle.source")
+    var source_group = svg.selectAll(".source-group")
         .data(source_machines)
-        .enter().append("circle")
+        .enter().append("g")
+        .attr("class", "source-group")
+        .attr('id', function (d) {
+            return "group" + d.id;
+        })
+        .on("mouseover", machine_mouseover)
+        .on("mouseout", machine_mouseout)
+        .on("click", machine_click);
+
+    var source_machine = source_group.append("circle")
         .attr("class", "machine source")
         .attr('id', function (d) {
             return d.id;
@@ -375,13 +483,8 @@ function visualizeData(source_machines, target_machines, events, links) {
         .attr("r", function (d) {
             return radius;
         })
-        .on("mouseover", machine_mouseover)
-        .on("mouseout", machine_mouseout);
 
-    var source_text = svg.selectAll("text.source")
-        .data(source_machines)
-        .enter()
-        .append("text")
+    var source_text = source_group.append("text")
         .attr("class", "text machine-text")
         .attr('id', function (d) {
             return "text" + d.id;
@@ -396,9 +499,18 @@ function visualizeData(source_machines, target_machines, events, links) {
             return d.data.name;
         });
 
-    var target = svg.selectAll("circle.target")
+    var target_group = svg.selectAll(".target-group")
         .data(target_machines)
-        .enter().append("circle")
+        .enter().append("g")
+        .attr("class", "target-group")
+        .attr('id', function (d) {
+            return "group" + d.id;
+        })
+        .on("mouseover", machine_mouseover)
+        .on("mouseout", machine_mouseout)
+        .on("click", machine_click);
+
+    var target_machine = target_group.append("circle")
         .attr("class", "machine target")
         .attr('id', function (d) {
             return d.id;
@@ -411,14 +523,9 @@ function visualizeData(source_machines, target_machines, events, links) {
         })
         .attr("r", function (d) {
             return radius;
-        })
-        .on("mouseover", machine_mouseover)
-        .on("mouseout", machine_mouseout);
+        });
 
-    var target_text = svg.selectAll("text.target")
-        .data(target_machines)
-        .enter()
-        .append("text")
+    var target_text = target_group.append("text")
         .attr("class", "text machine-text")
         .attr('id', function (d) {
             return "text" + d.id;
@@ -433,9 +540,18 @@ function visualizeData(source_machines, target_machines, events, links) {
             return d.data.name;
         });
 
-    var event = svg.selectAll("rect")
+    var event_group = svg.selectAll(".event-group")
         .data(events)
-        .enter().append("rect")
+        .enter().append("g")
+        .attr("class", "event-group")
+        .attr('id', function (d) {
+            return "group" + d.id;
+        })
+        .on("mouseover", event_mouseover)
+        .on("mouseout", event_mouseout)
+        .on("click", null);
+
+    var event = event_group.append("rect")
         .attr("class", "event")
         .attr('id', function (d) {
             return d.id;
@@ -447,14 +563,9 @@ function visualizeData(source_machines, target_machines, events, links) {
             return d.y - rh / 2;
         })
         .attr("width", rw)
-        .attr("height", rh)
-        .on("mouseover", event_mouseover)
-        .on("mouseout", event_mouseout);
+        .attr("height", rh);
 
-    var event_text = svg.selectAll("text.event")
-        .data(events)
-        .enter()
-        .append("text")
+    var event_text = event_group.append("text")
         .attr("class", "text event-text")
         .attr('id', function (d) {
             return "text" + d.id;
