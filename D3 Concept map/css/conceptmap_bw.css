@@ -1,7 +1,5 @@
 .machine {
-    stroke: steelblue;
-    stroke-width: 2px;
-    fill: pink;
+    fill: black;
 }
 
 .link {
@@ -10,14 +8,11 @@
 }
 
 .link-highlight {
-    stroke: #FD6E6E;
-    stroke-width: 3px;
+    stroke: yellow;stroke-width: 3px;
 }
 
 .event {
-    fill: steelblue;
-    stroke: pink;
-    stroke-width: 2px;
+    fill: black;
 }
 
 .event-group .text {
@@ -31,14 +26,12 @@
 
 .group-highlight .event,
 .event-highlight {
-    fill: yellow !important;
-    stroke: red;
+    fill: red !important;
 }
 
 .group-highlight .machine,
 .machine-highlight {
-    fill: yellow !important;
-    stroke: red;
+    fill: red !important;
 }
 
 .group-highlight .text,

@@ -10,7 +10,7 @@ function getFakedEventData() {
         nodes.push({
             "id": "id" + i,
             "_weight": weight,
-            "name": "name" + i,
+            "name": "event " + i,
             "typeLabel": "Name ",
             "type": "event"
         });
@@ -21,7 +21,7 @@ function getFakedEventData() {
         nodes.push({
             "id": "id" + i,
             "_weight": weight,
-            "name": "machine" + i,
+            "name": "machine " + i,
             "typeLabel": "Attacker Address, Target Address ",
             "type": "source_target"
         });

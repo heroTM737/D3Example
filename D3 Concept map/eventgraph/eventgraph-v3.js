@@ -5,27 +5,26 @@ var y_margin = 5;
 var x_margin = 300;
 var shift_x = 100;
 var shift_y = 40;
-var text_length = 80;
 
 function runTest() {
-//    var data = getFakedEventData();
- //    processData(data);
+    var data = getFakedEventData();
+    processData(data);
 
-        $.ajax({
-            type: "GET",
-            url: "data/EventGraphData.json",
-            dataType: "text",
-            cache: false,
-            success: function (data) {
-                console.log("success");
-                var result = JSON.parse(data);
-                processData(result);
-            },
-            error: function (response) {
-                console.log("error ");
-                console.log(response.responseText);
-            }
-        });
+    //        $.ajax({
+    //            type: "GET",
+    //            url: "data/EventGraphData.json",
+    //            dataType: "text",
+    //            cache: false,
+    //            success: function (data) {
+    //                console.log("success");
+    //                var result = JSON.parse(data);
+    //                processData(result);
+    //            },
+    //            error: function (response) {
+    //                console.log("error ");
+    //                console.log(response.responseText);
+    //            }
+    //        });
 }
 
 function processData(data) {
@@ -140,6 +139,7 @@ function processData(data) {
     events = events.values();
 
     visualizeData(source_machines, target_machines, events, links);
+    d3.select("svg").on("click", visualizeData.bind(null, source_machines, target_machines, events, links));
 }
 
 function machine_mouseover(d) {
@@ -184,7 +184,7 @@ function machine_mouseout(d) {
 }
 
 function machine_click(d) {
-    d3.select("svg").selectAll("*").remove();
+    d3.event.stopPropagation();
     hideTooltips();
     visualizeDataMachine(d);
 }
@@ -315,7 +315,15 @@ var diagonal_machine = d3.svg.diagonal()
         return [d.y, d.x];
     });
 
+var svg = d3.select("body")
+    .append("svg")
+    .attr("width", 1000)
+    .attr("height", 1000);
+
 function visualizeDataMachine(d) {
+    //clear
+    d3.select("svg").selectAll("*").remove();
+
     //define coordinate
     var center = {};
     center.x = 300;
@@ -380,7 +388,7 @@ function visualizeDataMachine(d) {
             return d.y;
         })
         .attr("r", function (d) {
-            return radius;
+            return radius * 3;
         });
 
     var event_group = svg.selectAll(".event-group")
@@ -411,12 +419,15 @@ function visualizeDataMachine(d) {
 }
 
 function visualizeData(source_machines, target_machines, events, links) {
+    //clear
+    d3.select("svg").selectAll("*").remove();
+
+    //define coordinate
     var max = d3.max([source_machines.length, target_machines.length, events.length]);
     var source_start = shift_y + (max - source_machines.length) / 2 * (radius * 2 + y_margin);
     var target_start = shift_y + (max - target_machines.length) / 2 * (radius * 2 + y_margin);
     var event_start = shift_y + (max - events.length) / 2 * (rh + y_margin);
 
-    //define coordinate
     var center = {};
     center.radius = 400;
     center.x = shift_x + x_margin;
@@ -444,10 +455,8 @@ function visualizeData(source_machines, target_machines, events, links) {
     });
 
     //render
-    var svg = d3.select("body")
-        .append("svg")
-        .attr("width", 1000)
-        .attr("height", events.length * (rh + y_margin) + shift_y);
+    var svg = d3.select("svg");
+    svg.attr("height", events.length * (rh + y_margin) + shift_y);
 
     var link = svg.selectAll("path")
         .data(links)
@@ -489,8 +498,9 @@ function visualizeData(source_machines, target_machines, events, links) {
         .attr('id', function (d) {
             return "text" + d.id;
         })
+        .attr("text-anchor", "end")
         .attr("x", function (d) {
-            return d.x - text_length;
+            return d.x - radius * 2;
         })
         .attr("y", function (d) {
             return d.y + radius;
@@ -570,12 +580,13 @@ function visualizeData(source_machines, target_machines, events, links) {
         .attr('id', function (d) {
             return "text" + d.id;
         })
+        .attr("text-anchor", "middle")
+        .attr("alignment-baseline", "central")
         .attr("x", function (d) {
-            var length = d.data.name.length * 7
-            return d.x - length / 2;
+            return d.x;
         })
         .attr("y", function (d) {
-            return d.y + radius;
+            return d.y;
         })
         .text(function (d) {
             return d.data.name;

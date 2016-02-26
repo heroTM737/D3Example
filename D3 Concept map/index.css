@@ -1,6 +1,9 @@
 /*@import url("css/conceptmap.css");*/
 
 @import url("css/conceptmap_tm.css");
+
+/*@import url("css/conceptmap_bw.css");*/
+
 .hidden {
     display: none;
 }
