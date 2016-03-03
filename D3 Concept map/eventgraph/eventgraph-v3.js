@@ -10,21 +10,21 @@ function runTest() {
     var data = getFakedEventData();
     processData(data);
 
-    //        $.ajax({
-    //            type: "GET",
-    //            url: "data/EventGraphData.json",
-    //            dataType: "text",
-    //            cache: false,
-    //            success: function (data) {
-    //                console.log("success");
-    //                var result = JSON.parse(data);
-    //                processData(result);
-    //            },
-    //            error: function (response) {
-    //                console.log("error ");
-    //                console.log(response.responseText);
-    //            }
-    //        });
+    //            $.ajax({
+    //                type: "GET",
+    //                url: "data/EventGraphData.json",
+    //                dataType: "text",
+    //                cache: false,
+    //                success: function (data) {
+    //                    console.log("success");
+    //                    var result = JSON.parse(data);
+    //                    processData(result);
+    //                },
+    //                error: function (response) {
+    //                    console.log("error ");
+    //                    console.log(response.responseText);
+    //                }
+    //            });
 }
 
 function processData(data) {
@@ -326,15 +326,17 @@ function visualizeDataMachine(d) {
 
     //define coordinate
     var center = {};
-    center.x = 300;
-    center.y = 300;
+    center.x = shift_x + x_margin;
+    center.y = shift_y + 400;
     center.radius = 150;
+
 
     d.x = center.x;
     d.y = center.y;
 
     var links = [];
     var events = [];
+    var targets = d3.map();
     d.related_nodes.forEach(function (node, index) {
         if (node.data.type == "event") {
             events.push(node);
@@ -344,28 +346,72 @@ function visualizeDataMachine(d) {
                 source: d,
                 target: node
             });
+        } else {
+            targets.set(node.id, node);
         }
     });
 
-    var angle = 2 * Math.PI / events.length;
+    var base_angle = 2 * Math.PI / events.length;
     for (var i = 0; i < events.length; i++) {
-        events[i].x = center.x + Math.cos(i * angle) * center.radius;
-        events[i].y = center.y + Math.sin(i * angle) * center.radius;
+        events[i].x = center.x + Math.cos(i * base_angle) * center.radius;
+        events[i].y = center.y + Math.sin(i * base_angle) * center.radius;
+        events[i].a = i * base_angle / Math.PI * 180;
+
+        events[i].related_nodes.values().forEach(function (node, index) {
+            if (targets.has(node.id)) {
+                node.x = center.x + Math.cos(i * base_angle) * center.radius * 2;
+                node.y = center.y + Math.sin(i * base_angle) * center.radius * 2;
+                node.a = i * base_angle / Math.PI * 180;
+                links.push({
+                    id: "from" + events[i].id + "to" + node.id,
+                    source: events[i],
+                    target: targets.get(node.id)
+                });
+            }
+        });
     }
+
+    targets = targets.values();
+    //    base_angle = 2 * Math.PI / targets.length;
+    //    for (var i = 0; i < targets.length; i++) {
+    //        targets[i].x = center.x + Math.cos(i * base_angle) * center.radius * 2;
+    //        targets[i].y = center.y + Math.sin(i * base_angle) * center.radius * 2;
+    //        targets[i].a = i * base_angle / Math.PI * 180;
+    //    }
 
     //render
     var svg = d3.select("svg");
 
-    var link = svg.selectAll("path")
+    //    var link = svg.selectAll("path")
+    //        .data(links)
+    //        .enter().append("path")
+    //        .attr("class", "link")
+    //        .attr("id", function (d) {
+    //            return d.id;
+    //        })
+    //        .attr("d", diagonal_machine);
+
+    var link = svg.selectAll("line")
         .data(links)
-        .enter().append("path")
+        .enter().append("line")
         .attr("class", "link")
         .attr("id", function (d) {
             return d.id;
         })
-        .attr("d", diagonal_machine);
+        .attr("x1", function (d) {
+            return d.source.x;
+        })
+        .attr("y1", function (d) {
+            return d.source.y;
+        })
+        .attr("x2", function (d) {
+            return d.target.x;
+        })
+        .attr("y2", function (d) {
+            return d.target.y;
+        });
 
-    var machine_group = svg.selectAll(".machine-group")
+    var source_group = svg.selectAll(".source-group")
         .data([d])
         .enter().append("g")
         .attr("class", "machine-group")
@@ -376,7 +422,7 @@ function visualizeDataMachine(d) {
         .on("mouseout", machine_mouseout)
         .on("click", machine_click);
 
-    var machine = machine_group.append("circle")
+    var source_machine = source_group.append("circle")
         .attr("class", "machine")
         .attr('id', function (d) {
             return d.id;
@@ -388,7 +434,54 @@ function visualizeDataMachine(d) {
             return d.y;
         })
         .attr("r", function (d) {
-            return radius * 3;
+            return center.radius - 50;
+        });
+
+    var target_group = svg.selectAll(".target-group")
+        .data(targets)
+        .enter().append("g")
+        .attr("class", "machine-group")
+        .attr('id', function (d) {
+            return "group" + d.id;
+        })
+        .on("mouseover", machine_mouseover)
+        .on("mouseout", machine_mouseout)
+        .on("click", machine_click);
+
+    var target_machine = target_group.append("circle")
+        .attr("class", "machine")
+        .attr('id', function (d) {
+            return d.id;
+        })
+        .attr("cx", function (d) {
+            return d.x;
+        })
+        .attr("cy", function (d) {
+            return d.y;
+        })
+        .attr("r", function (d) {
+            return radius;
+        });
+
+    var target_text = target_group.append("text")
+        .attr("class", "text machine-text")
+        .attr('id', function (d) {
+            return "text" + d.id;
+        })
+        .attr("text-anchor", function (d) {
+            return d.x < center.x ? "end" : "start";
+        })
+        .attr("transform", function (d) {
+            return d.x < center.x ? "rotate(" + (d.a + 180) + " " + d.x + " " + d.y + ")translate(-" + radius * 4 + ")" : "rotate(" + d.a + " " + d.x + " " + d.y + ")translate(0)";
+        })
+        .attr("x", function (d) {
+            return d.x + radius * 2;
+        })
+        .attr("y", function (d) {
+            return d.y + radius;
+        })
+        .text(function (d) {
+            return d.data.name;
         });
 
     var event_group = svg.selectAll(".event-group")
@@ -415,6 +508,28 @@ function visualizeDataMachine(d) {
         })
         .attr("r", function (d) {
             return radius;
+        });
+
+    var event_text = event_group.append("text")
+        .attr("class", "text event-text")
+        .attr('id', function (d) {
+            return "text" + d.id;
+        })
+        .attr("text-anchor", function (d) {
+            return d.x < center.x ? "end" : "start";
+        })
+        .attr("alignment-baseline", "central")
+        .attr("transform", function (d) {
+            return d.x < center.x ? "rotate(" + (d.a + 180) + " " + d.x + " " + d.y + ")translate(-8)" : "rotate(" + d.a + " " + d.x + " " + d.y + ")translate(8)";
+        })
+        .attr("x", function (d) {
+            return d.x;
+        })
+        .attr("y", function (d) {
+            return d.y;
+        })
+        .text(function (d) {
+            return d.data.name;
         });
 }
 

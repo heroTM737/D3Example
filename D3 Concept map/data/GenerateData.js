@@ -3,7 +3,7 @@ function getFakedEventData() {
     var links = [];
 
     var numberOfEvent = 40;
-    var numberOfMachine = 20;
+    var numberOfMachine = 10;
 
     for (var i = 0; i < numberOfEvent; i++) {
         var weight = Math.floor(Math.random() * 10);
