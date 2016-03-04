@@ -1,3 +1,7 @@
+function randomIntFromInterval(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
 function getFakedEventData() {
     var nodes = [];
     var links = [];
@@ -30,17 +34,33 @@ function getFakedEventData() {
     for (var i = 0; i < numberOfEvent; i++) {
         var link_machine_source = Math.floor(Math.random() * numberOfMachine) + numberOfEvent;
         var link_event = i;
-        var link_machine_target = Math.floor(Math.random() * numberOfMachine) + numberOfEvent;
+
 
         links.push({
             "source": link_machine_source,
             "target": link_event
         });
 
-        links.push({
-            "source": link_event,
-            "target": link_machine_target
-        });
+        var previous = numberOfEvent;
+        var number_of_target = Math.floor(Math.random() * (numberOfMachine / 2));
+        if (number_of_target < 1) {
+            number_of_target = 1;
+        }
+        var link_machine_target = Math.floor(Math.random() * numberOfMachine) + numberOfEvent;
+        var target = d3.map();
+        for (var j = 0; j < number_of_target; j++) {
+            while (target.has(link_machine_target)) {
+                link_machine_target = Math.floor(Math.random() * numberOfMachine) + numberOfEvent;
+            }
+            target.set(link_machine_target, true);
+
+            if (link_machine_target) {
+                links.push({
+                    "source": link_event,
+                    "target": link_machine_target
+                });
+            }
+        }
     }
 
     var container = {};

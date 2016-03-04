@@ -29,6 +29,15 @@
     overflow: hidden;
 }
 
+.text {
+    background: white;
+}
+
+.textbg {
+    stroke: white !important;
+    stroke-width: 5px !important
+}
+
 .group-highlight .event,
 .event-highlight {
     fill: yellow !important;

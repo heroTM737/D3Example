@@ -359,18 +359,19 @@ function visualizeDataMachine(d) {
         events[i].sy = center.y + Math.sin(i * base_angle) * center.radius * 2;
         events[i].a = i * base_angle / Math.PI * 180;
 
-        //        events[i].related_nodes.values().forEach(function (node, index) {
-        //            if (targets.has(node.id)) {
-        //                node.x = center.x + Math.cos(i * base_angle) * center.radius * 2;
-        //                node.y = center.y + Math.sin(i * base_angle) * center.radius * 2;
-        //                node.a = i * base_angle / Math.PI * 180;
-        //                links.push({
-        //                    id: "from" + events[i].id + "to" + node.id,
-        //                    source: events[i],
-        //                    target: targets.get(node.id)
-        //                });
-        //            }
-        //        });
+        events[i].related_nodes.values().forEach(function (node, index) {
+            if (targets.has(node.id)) {
+                var related_count = {
+                    x: events[i].sx,
+                    y: events[i].sy
+                }
+                links.push({
+                    id: "from" + events[i].id + "to" + node.id,
+                    source: events[i],
+                    target: related_count
+                });
+            }
+        });
     }
 
     targets = targets.values();
@@ -424,52 +425,51 @@ function visualizeDataMachine(d) {
             return center.radius - 50;
         });
 
-    //    var target_group = svg.selectAll(".target-group")
-    //        .data(targets)
-    //        .enter().append("g")
-    //        .attr("class", "machine-group")
-    //        .attr('id', function (d) {
-    //            return "group" + d.id;
-    //        })
-    //        .on("mouseover", machine_mouseover)
-    //        .on("mouseout", machine_mouseout)
-    //        .on("click", machine_click);
-    //
-    //    var target_machine = target_group.append("circle")
-    //        .attr("class", "machine")
-    //        .attr('id', function (d) {
-    //            return d.id;
-    //        })
-    //        .attr("cx", function (d) {
-    //            return d.x;
-    //        })
-    //        .attr("cy", function (d) {
-    //            return d.y;
-    //        })
-    //        .attr("r", function (d) {
-    //            return radius;
-    //        });
-    //
-    //    var target_text = target_group.append("text")
-    //        .attr("class", "text machine-text")
-    //        .attr('id', function (d) {
-    //            return "text" + d.id;
-    //        })
-    //        .attr("text-anchor", function (d) {
-    //            return d.x < center.x ? "end" : "start";
-    //        })
-    //        .attr("transform", function (d) {
-    //            return d.x < center.x ? "rotate(" + (d.a + 180) + " " + d.x + " " + d.y + ")translate(-" + radius * 4 + ")" : "rotate(" + d.a + " " + d.x + " " + d.y + ")translate(0)";
-    //        })
-    //        .attr("x", function (d) {
-    //            return d.x + radius * 2;
-    //        })
-    //        .attr("y", function (d) {
-    //            return d.y + radius;
-    //        })
-    //        .text(function (d) {
-    //            return d.data.name;
-    //        });
+    var target_group = svg.selectAll(".target-group")
+        .data(events)
+        .enter().append("g")
+        .attr("class", "machine-group")
+        .attr('id', function (d) {
+            return "group" + d.id;
+        })
+        .on("mouseover", machine_mouseover)
+        .on("mouseout", machine_mouseout)
+        .on("click", machine_click);
+
+    var target_machine = target_group.append("circle")
+        .attr("class", "machine")
+        .attr('id', function (d) {
+            return d.id;
+        })
+        .attr("cx", function (d) {
+            return d.sx;
+        })
+        .attr("cy", function (d) {
+            return d.sy;
+        })
+        .attr("r", function (d) {
+            return 15;
+        });
+
+    var target_text = target_group.append("text")
+        .attr("class", "text machine-text")
+        .attr('id', function (d) {
+            return "text" + d.id;
+        })
+        .attr("text-anchor", "middle")
+        .attr("alignment-baseline", "central")
+        .attr("transform", function (d) {
+            return d.x < center.x ? "rotate(" + (d.a + 180) + " " + d.sx + " " + d.sy + ")" : "rotate(" + d.a + " " + d.sx + " " + d.sy + ")";
+        })
+        .attr("x", function (d) {
+            return d.sx;
+        })
+        .attr("y", function (d) {
+            return d.sy;
+        })
+        .text(function (d) {
+            return d.related_nodes.size();
+        });
 
     var event_group = svg.selectAll(".event-group")
         .data(events)
@@ -497,19 +497,28 @@ function visualizeDataMachine(d) {
             return radius;
         });
 
-    var event_related = event_group.append("circle")
-        .attr("class", "event-related")
+
+
+    var event_textbg = event_group.append("text")
+        .attr("class", "text textbg")
         .attr('id', function (d) {
-            return d.id + "related";
+            return "text" + d.id;
         })
-        .attr("cx", function (d) {
-            return (d.x - center.x) * 2 + center.x;
+        .attr("text-anchor", function (d) {
+            return d.x < center.x ? "end" : "start";
         })
-        .attr("cy", function (d) {
-            return (d.y - center.y) * 2 + center.y;
+        .attr("alignment-baseline", "central")
+        .attr("transform", function (d) {
+            return d.x < center.x ? "rotate(" + (d.a + 180) + " " + d.x + " " + d.y + ")translate(-8)" : "rotate(" + d.a + " " + d.x + " " + d.y + ")translate(8)";
         })
-        .attr("r", function (d) {
-            return 15;
+        .attr("x", function (d) {
+            return d.x;
+        })
+        .attr("y", function (d) {
+            return d.y;
+        })
+        .text(function (d) {
+            return d.data.name;
         });
 
     var event_text = event_group.append("text")
