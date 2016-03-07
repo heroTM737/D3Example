@@ -329,6 +329,7 @@ var svg = d3.select("body")
     .attr("width", 1000)
     .attr("height", 1000);
 
+
 function visualizeDataMachine(d) {
     //clear
     d3.select("svg").selectAll("*").remove();
@@ -619,10 +620,13 @@ function visualizeDataEvent(d) {
 
     //nodes function
     var L3_click = function (group) {
-        var node_L3 = [];
-        d.related_nodes.forEach(function (node_key, node) {
+        d3.event.stopPropagation();
+        hideTooltips();
+
+        var nodes_L3 = [];
+        group.related_nodes.forEach(function (node, node_index) {
             if (node.data.type == "event" && node.id != d.id) {
-                node_L3.push({
+                nodes_L3.push({
                     id: node.id,
                     data: node.data,
                     x: 0,
@@ -631,16 +635,52 @@ function visualizeDataEvent(d) {
             }
         });
 
-        var base_angle = 2 * Math.PI / nodes_L3.length;
-        nodes_L3.forEach(function (event, event_index) {
-            event.x = d.x + Math.cos(machine_index * base_angle) * center.radius;
-            event.y = d.y + Math.sin(machine_index * base_angle) * center.radius;
+        var step_angle = 2 * Math.PI / (nodes_L3.length + nodes_L2.length);
+        var base_angle = group.a - nodes_L3.length / 2 * step_angle;
+        nodes_L3.forEach(function (machine, machine_index) {
+            machine.x = center.x + Math.cos(machine_index * step_angle + base_angle) * center.radius * 2;
+            machine.y = center.y + Math.sin(machine_index * step_angle + base_angle) * center.radius * 2;
+            machine.a = machine_index * step_angle / Math.PI * 180;
+        });
+        
+        nodes_L1.forEach(function (machine, machine_index) {
+            var index = nodes_L3.length + machine_index;
+            machine.sx = center.x + Math.cos(index * step_angle + base_angle) * center.radius * 2;
+            machine.sy = center.y + Math.sin(index * step_angle + base_angle) * center.radius * 2;
+            machine.a = index * step_angle / Math.PI * 180;
         });
 
         var node_L3_group = svg.selectAll(".L3-group")
-            .data(node_L3)
+            .data(nodes_L3)
             .enter().append("g")
             .attr("class", "event-group")
+            .attr('id', function (d) {
+                return "group" + d.id;
+            })
+            .on("mouseover", event_mouseover)
+            .on("mouseout", event_mouseout)
+            .on("click", event_click);
+
+        var node_L3 = node_L3_group.append("rect")
+            .attr("class", "event")
+            .attr('id', function (d) {
+                return d.id;
+            })
+            .attr("x", function (d) {
+                console.log(d);
+                return d.x - L2_radius / 2;
+            })
+            .attr("y", function (d) {
+                return d.y - L2_radius / 2;
+            })
+            .attr("width", L2_radius)
+            .attr("height", L2_radius);
+        
+        svg.selectAll(".L2-group").remove();
+        var node_L2_group = svg.selectAll(".L2-group")
+            .data(nodes_L1)
+            .enter().append("g")
+            .attr("class", "event-group L2-group")
             .attr('id', function (d) {
                 return "group" + d.id;
             })
@@ -648,7 +688,7 @@ function visualizeDataEvent(d) {
             .on("mouseout", machine_mouseout)
             .on("click", null);
 
-        var node_L3 = node_L3_group.append("rect")
+        var node_L2 = node_L2_group.append("rect")
             .attr("class", "event")
             .attr('id', function (d) {
                 return d.id;
@@ -685,7 +725,7 @@ function visualizeDataEvent(d) {
         });
 
     //draw center
-    var center_group = svg.selectAll(".event-group")
+    var node_L0_group = svg.selectAll(".event-group")
         .data([d])
         .enter().append("g")
         .attr("class", "event-group")
@@ -696,7 +736,7 @@ function visualizeDataEvent(d) {
         .on("mouseout", machine_mouseout)
         .on("click", machine_click);
 
-    var center = center_group.append("rect")
+    var node_L0 = node_L0_group.append("rect")
         .attr("class", "event")
         .attr('id', function (d) {
             return d.id;
@@ -793,7 +833,7 @@ function visualizeDataEvent(d) {
     var node_L2_group = svg.selectAll(".L2-group")
         .data(nodes_L1)
         .enter().append("g")
-        .attr("class", "event-group")
+        .attr("class", "event-group L2-group")
         .attr('id', function (d) {
             return "group" + d.id;
         })
@@ -834,7 +874,13 @@ function visualizeDataEvent(d) {
             return d.sy;
         })
         .text(function (d) {
-            return d.related_nodes.length - 1;
+            var count = 0;
+            d.related_nodes.forEach(function (node, index) {
+                if (node.data.type == "event") {
+                    count++;
+                }
+            });
+            return count - 1;
         });
 }
 
@@ -1014,5 +1060,3 @@ function visualizeData(source_machines, target_machines, events, links) {
 }
 
 runTest();
-
-if ()
