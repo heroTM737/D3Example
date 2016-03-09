@@ -12,6 +12,7 @@ function processData(data) {
             var id = "e" + index + "e";
             events.set(id, {
                 id: id,
+                type: "event",
                 related_links: d3.map(),
                 related_nodes: d3.map(),
                 sources: d3.map(),
@@ -55,6 +56,7 @@ function processData(data) {
 
             source.related_links.set(link.id, link);
             source.related_nodes.set(e_id, event);
+            source.related_events.set(e_id, event);
 
             link.source = source;
             link.target = event;
@@ -84,6 +86,7 @@ function processData(data) {
 
             target.related_links.set(link.id, link);
             target.related_nodes.set(e_id, event);
+            target.related_events.set(e_id, event);
 
             link.source = event;
             link.target = target;
@@ -97,7 +100,10 @@ function processData(data) {
         event.sources.forEach(function (source_key, source) {
             event.targets.forEach(function (target_key, target) {
                 source.related_nodes.set(target.id, target);
+                source.related_machines.set(target.id, target);
+
                 target.related_nodes.set(source.id, source);
+                target.related_machines.set(source.id, source);
 
                 link_id = "from" + event.id + "to" + target.id;
                 source.related_links.set(link_id, links.get(link_id));

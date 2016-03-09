@@ -4,6 +4,14 @@
     fill: pink;
 }
 
+.machine.source {
+    fill: white;
+}
+
+.machine.target {
+    /*    fill: white;*/
+}
+
 .link {
     stroke: pink;
     fill: none;
@@ -20,17 +28,12 @@
     stroke-width: 2px;
 }
 
-.event-group .text {
-    font-size: 14px;
-    fill: black;
-}
-
 .group {
     overflow: hidden;
 }
 
 .text {
-    background: white;
+    stroke-width: 1px !important
 }
 
 .textbg {
@@ -50,7 +53,6 @@
     stroke: red;
 }
 
-.group-highlight .text,
-.event-text-highlight {
-    fill: black !important;
+.group-highlight .text {
+    fill: steelblue;
 }

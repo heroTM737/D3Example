@@ -1,4 +1,4 @@
-function runTest() {
+function main() {
     var data = getFakedEventData();
     processData(data);
 

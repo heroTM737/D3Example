@@ -1,4 +1,4 @@
-function visualizeDataEvent(d) {
+var event_center_graph = function (d) {
     //clear
     d3.select("svg").selectAll("*").remove();
 

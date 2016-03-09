@@ -32,16 +32,30 @@ function getFakedEventData() {
     }
 
     for (var i = 0; i < numberOfEvent; i++) {
-        var link_machine_source = Math.floor(Math.random() * numberOfMachine) + numberOfEvent;
         var link_event = i;
 
+        //generate source
+        var number_of_source = Math.floor(Math.random() * (numberOfMachine / 2));
+        if (number_of_source < 1) {
+            number_of_source = 1;
+        }
+        var link_machine_source = Math.floor(Math.random() * numberOfMachine) + numberOfEvent;
+        var source = d3.map();
+        for (var j = 0; j < number_of_source; j++) {
+            while (source.has(link_machine_source)) {
+                link_machine_source = Math.floor(Math.random() * numberOfMachine) + numberOfEvent;
+            }
+            source.set(link_machine_source, true);
 
-        links.push({
-            "source": link_machine_source,
-            "target": link_event
-        });
+            if (link_machine_source) {
+                links.push({
+                    "source": link_machine_source,
+                    "target": link_event
+                });
+            }
+        }
 
-        var previous = numberOfEvent;
+        //generate target
         var number_of_target = Math.floor(Math.random() * (numberOfMachine / 2));
         if (number_of_target < 1) {
             number_of_target = 1;
