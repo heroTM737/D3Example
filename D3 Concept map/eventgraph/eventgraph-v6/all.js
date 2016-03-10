@@ -30,21 +30,38 @@ var diagonal = d3.svg.diagonal()
         return [d.y, d.x];
     });
 
+//var diagonal_machine = d3.svg.diagonal()
+//        .source(function (d) {
+//            return {
+//                "x": d.source.y,
+//                "y": d.source.x
+//            };
+//        })
+//        .target(function (d) {
+//            return {
+//                "x": d.target.y,
+//                "y": d.target.x
+//            };
+//        })
+//        .projection(function (d) {
+//            return [d.y, d.x];
+//        });
+
 var diagonal_machine = d3.svg.diagonal()
     .source(function (d) {
         return {
-            "x": d.source.y,
-            "y": d.source.x
+            "x": d.source.x,
+            "y": d.source.y
         };
     })
     .target(function (d) {
         return {
-            "x": d.target.y,
-            "y": d.target.x
+            "x": d.target.x,
+            "y": d.target.y
         };
     })
     .projection(function (d) {
-        return [d.y, d.x];
+        return [d.x, d.y];
     });
 
 function getTooltips(d) {
