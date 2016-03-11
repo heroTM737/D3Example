@@ -613,6 +613,12 @@ function event_center_graph(node_center) {
         });
 
     //draw L2
+    var event_combine_click = function (d) {
+        d3.event.stopPropagation();
+        hideTooltips();
+        //        event_center_graph_extend(node_center, d);
+    }
+
     var node_L2_group = svg.selectAll(".L2_group")
         .data(nodes_L2)
         .enter().append("g")
@@ -624,7 +630,7 @@ function event_center_graph(node_center) {
         .on("mouseout", null)
         .on("click", null);
 
-    var node_L2 = node_L2_group.append("circle")
+    var node_L2 = node_L2_group.append("rect")
         .attr("class", "event")
         .attr('id', function (d) {
             return d.id;
@@ -634,14 +640,17 @@ function event_center_graph(node_center) {
             rotate += " " + d.x + " " + d.y;
             return "rotate(" + rotate + ")";
         })
-        .attr("cx", function (d) {
-            return d.x;
+        .attr("x", function (d) {
+            return d.x - L2_circle_radius;
         })
-        .attr("cy", function (d) {
-            return d.y;
+        .attr("y", function (d) {
+            return d.y - L2_circle_radius;
         })
-        .attr("r", function (d) {
-            return L2_circle_radius;
+        .attr("width", function (d) {
+            return L2_circle_radius * 2;
+        })
+        .attr("height", function (d) {
+            return L2_circle_radius * 2;
         });
 
     var node_L2_text = node_L2_group.append("text")
@@ -734,7 +743,7 @@ function machine_center_graph_extend(node_center, combine_extend) {
         nodes_L1[i].a = (base_angle + index * step_angle) / Math.PI * 180;
 
         var combine = {
-            id: "c" + center.id + "" + nodes_L1[i].id,
+            id: "c" + node_center.id + "" + nodes_L1[i].id,
             count: 0,
             source: nodes_L1[i]
         };
@@ -822,6 +831,14 @@ function machine_center_graph_extend(node_center, combine_extend) {
             return d.target.y;
         });
 
+    var mycurve = function (d) {
+        var m = "M " + d.source.x + " " + d.source.y;
+        var x = center.x + Math.cos(d.target.a * Math.PI / 180) * L2_radius;
+        var y = center.y + Math.sin(d.target.a * Math.PI / 180) * L2_radius;
+        var c = "C " + ((center.x + x) / 2) + " " + ((center.y + y) / 2) + " " + x + " " + y + " " + d.target.x + " " + d.target.y;
+        return m + c;
+    }
+
     var linkx = svg.selectAll("path ")
         .data(linkxs)
         .enter().append("path")
@@ -829,7 +846,7 @@ function machine_center_graph_extend(node_center, combine_extend) {
         .attr("id", function (d) {
             return d.id;
         })
-        .attr("d", diagonal_machine);
+        .attr("d", mycurve);
 
     //draw L0 or center
     var node_L0_group = svg.selectAll(".L0-group")

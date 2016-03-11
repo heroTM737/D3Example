@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<!-- saved from url=(0040)http://bl.ocks.org/mbostock/raw/1153292/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta charset="utf-8">
+<style>
+
+.link {
+  fill: none;
+  stroke: #666;
+  stroke-width: 1.5px;
+}
+
+#licensing {
+  fill: green;
+}
+
+.link.licensing {
+  stroke: green;
+}
+
+.link.resolved {
+  stroke-dasharray: 0,2 1;
+}
+
+circle {
+  fill: #ccc;
+  stroke: #333;
+  stroke-width: 1.5px;
+}
+
+text {
+  font: 10px sans-serif;
+  pointer-events: none;
+  text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+}
+
+</style>
+</head><body>
+<script src="./1153292_files/d3.v3.min.js"></script>
+<script>
+
+// http://blog.thomsonreuters.com/index.php/mobile-patent-suits-graphic-of-the-day/
+var links = [
+  {source: "Microsoft", target: "Amazon", type: "licensing"},
+  {source: "Microsoft", target: "HTC", type: "licensing"},
+  {source: "Samsung", target: "Apple", type: "suit"},
+  {source: "Motorola", target: "Apple", type: "suit"},
+  {source: "Nokia", target: "Apple", type: "resolved"},
+  {source: "HTC", target: "Apple", type: "suit"},
+  {source: "Kodak", target: "Apple", type: "suit"},
+  {source: "Microsoft", target: "Barnes & Noble", type: "suit"},
+  {source: "Microsoft", target: "Foxconn", type: "suit"},
+  {source: "Oracle", target: "Google", type: "suit"},
+  {source: "Apple", target: "HTC", type: "suit"},
+  {source: "Microsoft", target: "Inventec", type: "suit"},
+  {source: "Samsung", target: "Kodak", type: "resolved"},
+  {source: "LG", target: "Kodak", type: "resolved"},
+  {source: "RIM", target: "Kodak", type: "suit"},
+  {source: "Sony", target: "LG", type: "suit"},
+  {source: "Kodak", target: "LG", type: "resolved"},
+  {source: "Apple", target: "Nokia", type: "resolved"},
+  {source: "Qualcomm", target: "Nokia", type: "resolved"},
+  {source: "Apple", target: "Motorola", type: "suit"},
+  {source: "Microsoft", target: "Motorola", type: "suit"},
+  {source: "Motorola", target: "Microsoft", type: "suit"},
+  {source: "Huawei", target: "ZTE", type: "suit"},
+  {source: "Ericsson", target: "ZTE", type: "suit"},
+  {source: "Kodak", target: "Samsung", type: "resolved"},
+  {source: "Apple", target: "Samsung", type: "suit"},
+  {source: "Kodak", target: "RIM", type: "suit"},
+  {source: "Nokia", target: "Qualcomm", type: "suit"}
+];
+
+var nodes = {};
+
+// Compute the distinct nodes from the links.
+links.forEach(function(link) {
+  link.source = nodes[link.source] || (nodes[link.source] = {name: link.source});
+  link.target = nodes[link.target] || (nodes[link.target] = {name: link.target});
+});
+
+var width = 960,
+    height = 500;
+
+var force = d3.layout.force()
+    .nodes(d3.values(nodes))
+    .links(links)
+    .size([width, height])
+    .linkDistance(60)
+    .charge(-300)
+    .on("tick", tick)
+    .start();
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+// Per-type markers, as they don't inherit styles.
+svg.append("defs").selectAll("marker")
+    .data(["suit", "licensing", "resolved"])
+  .enter().append("marker")
+    .attr("id", function(d) { return d; })
+    .attr("viewBox", "0 -5 10 10")
+    .attr("refX", 15)
+    .attr("refY", -1.5)
+    .attr("markerWidth", 6)
+    .attr("markerHeight", 6)
+    .attr("orient", "auto")
+  .append("path")
+    .attr("d", "M0,-5L10,0L0,5");
+
+var path = svg.append("g").selectAll("path")
+    .data(force.links())
+  .enter().append("path")
+    .attr("class", function(d) { return "link " + d.type; })
+    .attr("marker-end", function(d) { return "url(#" + d.type + ")"; });
+
+var circle = svg.append("g").selectAll("circle")
+    .data(force.nodes())
+  .enter().append("circle")
+    .attr("r", 6)
+    .call(force.drag);
+
+var text = svg.append("g").selectAll("text")
+    .data(force.nodes())
+  .enter().append("text")
+    .attr("x", 8)
+    .attr("y", ".31em")
+    .text(function(d) { return d.name; });
+
+// Use elliptical arc path segments to doubly-encode directionality.
+function tick() {
+  path.attr("d", linkArc);
+  circle.attr("transform", transform);
+  text.attr("transform", transform);
+}
+
+function linkArc(d) {
+  var dx = d.target.x - d.source.x,
+      dy = d.target.y - d.source.y,
+      dr = Math.sqrt(dx * dx + dy * dy);
+  return "M" + d.source.x + "," + d.source.y + "C 0 0 " + d.target.x + "," + d.target.y;
+}
+
+function transform(d) {
+  return "translate(" + d.x + "," + d.y + ")";
+}
+
+</script><svg width="960" height="500"><defs><marker id="suit" viewBox="0 -5 10 10" refX="15" refY="-1.5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,-5L10,0L0,5"></path></marker><marker id="licensing" viewBox="0 -5 10 10" refX="15" refY="-1.5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,-5L10,0L0,5"></path></marker><marker id="resolved" viewBox="0 -5 10 10" refX="15" refY="-1.5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,-5L10,0L0,5"></path></marker></defs><g><path class="link licensing" marker-end="url(#licensing)" d="M435.4234381258535,358.49801310766344A71.9675738456269,71.9675738456269 0 0,1 506.7038654920838,348.57670474065213"></path><path class="link licensing" marker-end="url(#licensing)" d="M435.4234381258535,358.49801310766344A70.74534850701114,70.74534850701114 0 0,1 388.9737057324778,305.13766550795"></path><path class="link suit" marker-end="url(#suit)" d="M342.29256400905575,242.11584201022836A65.86483555444863,65.86483555444863 0 0,1 408.15427390362544,241.4741782524071"></path><path class="link suit" marker-end="url(#suit)" d="M446.51208954479733,294.69448388650295A65.60276634829285,65.60276634829285 0 0,1 408.15427390362544,241.4741782524071"></path><path class="link resolved" marker-end="url(#resolved)" d="M473.6601820767788,224.20748870474023A67.74335815063432,67.74335815063432 0 0,1 408.15427390362544,241.4741782524071"></path><path class="link suit" marker-end="url(#suit)" d="M388.9737057324778,305.13766550795A66.49010305981416,66.49010305981416 0 0,1 408.15427390362544,241.4741782524071"></path><path class="link suit" marker-end="url(#suit)" d="M368.4992364226639,185.25433349105793A68.79820450132885,68.79820450132885 0 0,1 408.15427390362544,241.4741782524071"></path><path class="link suit" marker-end="url(#suit)" d="M435.4234381258535,358.49801310766344A69.50361931579337,69.50361931579337 0 0,1 446.71335326653957,427.07855636966184"></path><path class="link suit" marker-end="url(#suit)" d="M435.4234381258535,358.49801310766344A68.5760400736542,68.5760400736542 0 0,1 379.60036182658604,398.3283711862646"></path><path class="link suit" marker-end="url(#suit)" d="M521.5249637353572,51.29054287230906A67.18299703890975,67.18299703890975 0 0,1 454.81284153508983,43.350275706354005"></path><path class="link suit" marker-end="url(#suit)" d="M408.15427390362544,241.4741782524071A66.49010305981416,66.49010305981416 0 0,1 388.9737057324778,305.13766550795"></path><path class="link suit" marker-end="url(#suit)" d="M435.4234381258535,358.49801310766344A72.71054452428653,72.71054452428653 0 0,1 496.31877137416546,398.2293819941653"></path><path class="link resolved" marker-end="url(#resolved)" d="M342.29256400905575,242.11584201022836A62.61006971781665,62.61006971781665 0 0,1 368.4992364226639,185.25433349105793"></path><path class="link resolved" marker-end="url(#resolved)" d="M407.7534928825941,134.1569605213617A64.43475905616638,64.43475905616638 0 0,1 368.4992364226639,185.25433349105793"></path><path class="link suit" marker-end="url(#suit)" d="M312.35008899901584,155.14071313124896A63.71465206353454,63.71465206353454 0 0,1 368.4992364226639,185.25433349105793"></path><path class="link suit" marker-end="url(#suit)" d="M477.401601394349,127.21938236716696A69.99277826969536,69.99277826969536 0 0,1 407.7534928825941,134.1569605213617"></path><path class="link resolved" marker-end="url(#resolved)" d="M368.4992364226639,185.25433349105793A64.43475905616638,64.43475905616638 0 0,1 407.7534928825941,134.1569605213617"></path><path class="link resolved" marker-end="url(#resolved)" d="M408.15427390362544,241.4741782524071A67.74335815063432,67.74335815063432 0 0,1 473.6601820767788,224.20748870474023"></path><path class="link resolved" marker-end="url(#resolved)" d="M538.8566205461335,214.36691513056297A65.93491091491022,65.93491091491022 0 0,1 473.6601820767788,224.20748870474023"></path><path class="link suit" marker-end="url(#suit)" d="M408.15427390362544,241.4741782524071A65.60276634829285,65.60276634829285 0 0,1 446.51208954479733,294.69448388650295"></path><path class="link suit" marker-end="url(#suit)" d="M435.4234381258535,358.49801310766344A64.75992998271636,64.75992998271636 0 0,1 446.51208954479733,294.69448388650295"></path><path class="link suit" marker-end="url(#suit)" d="M446.51208954479733,294.69448388650295A64.75992998271636,64.75992998271636 0 0,1 435.4234381258535,358.49801310766344"></path><path class="link suit" marker-end="url(#suit)" d="M647.4697717104156,315.88182371514563A65.17541866311552,65.17541866311552 0 0,1 662.8179169961843,252.53934480723328"></path><path class="link suit" marker-end="url(#suit)" d="M653.5172992724715,187.78188238195358A65.42194150133541,65.42194150133541 0 0,1 662.8179169961843,252.53934480723328"></path><path class="link resolved" marker-end="url(#resolved)" d="M368.4992364226639,185.25433349105793A62.61006971781665,62.61006971781665 0 0,1 342.29256400905575,242.11584201022836"></path><path class="link suit" marker-end="url(#suit)" d="M408.15427390362544,241.4741782524071A65.86483555444863,65.86483555444863 0 0,1 342.29256400905575,242.11584201022836"></path><path class="link suit" marker-end="url(#suit)" d="M368.4992364226639,185.25433349105793A63.71465206353454,63.71465206353454 0 0,1 312.35008899901584,155.14071313124896"></path><path class="link suit" marker-end="url(#suit)" d="M473.6601820767788,224.20748870474023A65.93491091491022,65.93491091491022 0 0,1 538.8566205461335,214.36691513056297"></path></g><g><circle r="6" transform="translate(435.4234381258535,358.49801310766344)"></circle><circle r="6" transform="translate(506.7038654920838,348.57670474065213)"></circle><circle r="6" transform="translate(388.9737057324778,305.13766550795)"></circle><circle r="6" transform="translate(342.29256400905575,242.11584201022836)"></circle><circle r="6" transform="translate(408.15427390362544,241.4741782524071)"></circle><circle r="6" transform="translate(446.51208954479733,294.69448388650295)"></circle><circle r="6" transform="translate(473.6601820767788,224.20748870474023)"></circle><circle r="6" transform="translate(368.4992364226639,185.25433349105793)"></circle><circle r="6" transform="translate(446.71335326653957,427.07855636966184)"></circle><circle r="6" transform="translate(379.60036182658604,398.3283711862646)"></circle><circle r="6" transform="translate(521.5249637353572,51.29054287230906)"></circle><circle r="6" transform="translate(454.81284153508983,43.350275706354005)"></circle><circle r="6" transform="translate(496.31877137416546,398.2293819941653)"></circle><circle r="6" transform="translate(407.7534928825941,134.1569605213617)"></circle><circle r="6" transform="translate(312.35008899901584,155.14071313124896)"></circle><circle r="6" transform="translate(477.401601394349,127.21938236716696)"></circle><circle r="6" transform="translate(538.8566205461335,214.36691513056297)"></circle><circle r="6" transform="translate(647.4697717104156,315.88182371514563)"></circle><circle r="6" transform="translate(662.8179169961843,252.53934480723328)"></circle><circle r="6" transform="translate(653.5172992724715,187.78188238195358)"></circle></g><g><text x="8" y=".31em" transform="translate(435.4234381258535,358.49801310766344)">Microsoft</text><text x="8" y=".31em" transform="translate(506.7038654920838,348.57670474065213)">Amazon</text><text x="8" y=".31em" transform="translate(388.9737057324778,305.13766550795)">HTC</text><text x="8" y=".31em" transform="translate(342.29256400905575,242.11584201022836)">Samsung</text><text x="8" y=".31em" transform="translate(408.15427390362544,241.4741782524071)">Apple</text><text x="8" y=".31em" transform="translate(446.51208954479733,294.69448388650295)">Motorola</text><text x="8" y=".31em" transform="translate(473.6601820767788,224.20748870474023)">Nokia</text><text x="8" y=".31em" transform="translate(368.4992364226639,185.25433349105793)">Kodak</text><text x="8" y=".31em" transform="translate(446.71335326653957,427.07855636966184)">Barnes &amp; Noble</text><text x="8" y=".31em" transform="translate(379.60036182658604,398.3283711862646)">Foxconn</text><text x="8" y=".31em" transform="translate(521.5249637353572,51.29054287230906)">Oracle</text><text x="8" y=".31em" transform="translate(454.81284153508983,43.350275706354005)">Google</text><text x="8" y=".31em" transform="translate(496.31877137416546,398.2293819941653)">Inventec</text><text x="8" y=".31em" transform="translate(407.7534928825941,134.1569605213617)">LG</text><text x="8" y=".31em" transform="translate(312.35008899901584,155.14071313124896)">RIM</text><text x="8" y=".31em" transform="translate(477.401601394349,127.21938236716696)">Sony</text><text x="8" y=".31em" transform="translate(538.8566205461335,214.36691513056297)">Qualcomm</text><text x="8" y=".31em" transform="translate(647.4697717104156,315.88182371514563)">Huawei</text><text x="8" y=".31em" transform="translate(662.8179169961843,252.53934480723328)">ZTE</text><text x="8" y=".31em" transform="translate(653.5172992724715,187.78188238195358)">Ericsson</text></g></svg>
+</body></html>
