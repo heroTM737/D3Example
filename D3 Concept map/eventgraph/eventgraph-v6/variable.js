@@ -18,7 +18,7 @@ var node_node_margin = center.radius;
 var L0_radius = 0;
 var L0_circle_radius = 100;
 var L1_radius = node_node_margin;
-var L1_circle_radius = 15;
+var L1_circle_radius = radius;
 var L2_radius = node_node_margin * 2;
 var L2_circle_radius = 15;
 
