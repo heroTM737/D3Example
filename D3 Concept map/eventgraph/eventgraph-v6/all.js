@@ -30,57 +30,6 @@ var diagonal = d3.svg.diagonal()
         return [d.y, d.x];
     });
 
-//var diagonal_combine = d3.svg.diagonal()
-//        .source(function (d) {
-//            return {
-//                "x": d.source.y,
-//                "y": d.source.x
-//            };
-//        })
-//        .target(function (d) {
-//            return {
-//                "x": d.target.y,
-//                "y": d.target.x
-//            };
-//        })
-//        .projection(function (d) {
-//            return [d.y, d.x];
-//        });
-
-//var diagonal_combine = d3.svg.diagonal()
-//    .source(function (d) {
-//        return {
-//            "x": center.y + Math.sin(d.source.a * Math.PI / 180) * (L1_radius + rh / 2),
-//            "y": center.x + Math.cos(d.source.a * Math.PI / 180) * (L1_radius + rh / 2)
-//        };
-//    })
-//    .target(function (d) {
-//        return {
-//            "x": center.y + Math.sin(d.target.a * Math.PI / 180) * (L1_radius - radius),
-//            "y": center.x + Math.cos(d.target.a * Math.PI / 180) * (L1_radius - radius)
-//        };
-//    })
-//    .projection(function (d) {
-//        return [d.y, d.x];
-//    });
-
-var diagonal_combine = d3.svg.diagonal.radial()
-    .source(function (d) {
-        return {
-            "x": d.source.y,
-            "y": d.source.x
-        };
-    })
-    .target(function (d) {
-        return {
-            "x": d.target.y,
-            "y": d.target.x
-        };
-    })
-    .projection(function (d) {
-        return [d.y, d.x / 180 * Math.PI];
-    });
-
 function getTooltips(d) {
     var tip = "";
     tip += d.data.typeLabel + ": ";

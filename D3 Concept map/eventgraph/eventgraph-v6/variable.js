@@ -21,6 +21,3 @@ var L1_radius = node_node_margin;
 var L1_circle_radius = radius;
 var L2_radius = node_node_margin * 2;
 var L2_circle_radius = 15;
-
-var event_center_graph = null;
-var machine_center_graph = null;

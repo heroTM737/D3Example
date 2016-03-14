@@ -1462,13 +1462,13 @@ function event_center_graph_extend(node_center, combine_extend) {
             return "rotate(" + rotate + ")";
         })
         .attr("x", function (d) {
-            return d.x - L2_circle_radius / 2;
+            return d.x - L2_circle_radius;
         })
         .attr("y", function (d) {
-            return d.y - L2_circle_radius / 2;
+            return d.y - L2_circle_radius;
         })
-        .attr("width", L2_circle_radius)
-        .attr("height", L2_circle_radius);
+        .attr("width", L2_circle_radius * 2)
+        .attr("height", L2_circle_radius * 2);
 
     var node_L2_text = node_L2_group.append("text")
         .attr("class", "text")
@@ -1508,6 +1508,11 @@ function event_center_graph_extend(node_center, combine_extend) {
         .attr("class", "event")
         .attr('id', function (d) {
             return d.id;
+        })
+        .attr("transform", function (d) {
+            var rotate = d.x < center.x ? (d.a + 180) : d.a;
+            rotate += " " + d.x + " " + d.y;
+            return "rotate(" + rotate + ")";
         })
         .attr("x", function (d) {
             return d.x - rh / 2;
