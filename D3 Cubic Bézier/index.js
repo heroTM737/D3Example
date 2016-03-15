@@ -34,11 +34,12 @@ var link = [
 ]
 
 var radius = 10;
-
+var width = $(window).width();
+var height = $(window).height() - 4;
 var svg = d3.select("body")
     .append("svg")
-    .attr("width", "1000px")
-    .attr("height", "1000px");
+    .attr("width", width + "px")
+    .attr("height", height + "px");
 
 var extend_curve = function (d) {
     var source = data[0];
