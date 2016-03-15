@@ -917,9 +917,9 @@ function event_center_graph(node_center) {
         .attr('id', function (d) {
             return "g" + d.id;
         })
-        .on("mouseover", machine_mouseover)
-        .on("mouseout", machine_mouseout)
-        .on("click", null);
+        .on("mouseover", event_mouseover)
+        .on("mouseout", event_mouseout)
+        .on("click", event_click);
 
     var node_L0 = node_L0_group.append("rect")
         .attr("class", "machine")
@@ -1500,9 +1500,9 @@ function event_center_graph_extend(node_center, combine_extend) {
         .attr('id', function (d) {
             return "g" + d.id;
         })
-        .on("mouseover", machine_mouseover)
-        .on("mouseout", machine_mouseout)
-        .on("click", machine_click);
+        .on("mouseover", event_mouseover)
+        .on("mouseout", event_mouseout)
+        .on("click", event_click);
 
     var node_L2x = node_L2x_group.append("rect")
         .attr("class", "event")

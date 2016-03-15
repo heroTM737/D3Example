@@ -1,0 +1,25 @@
+.source {
+    fill: black;
+}
+
+.target {
+    fill: red;
+}
+
+.control1 {
+    fill: blue;
+}
+
+.control2 {
+    fill: yellow;
+}
+
+.link {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 1.5px;
+}
+
+svg {
+    background: pink;
+}
