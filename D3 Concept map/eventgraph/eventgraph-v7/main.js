@@ -1,6 +1,6 @@
 function main() {
-    doFakedData();
-    //    doTestData();
+    //    doFakedData();
+    doTestData();
 }
 
 function doFakedData() {
@@ -11,11 +11,10 @@ function doFakedData() {
 function doTestData() {
     $.ajax({
         type: "GET",
-        url: "data/EventGraphData.json",
+        url: "data/EventGraphData_v3.json",
         dataType: "text",
         cache: false,
         success: function (data) {
-            console.log("success");
             var result = JSON.parse(data);
             processData(result);
         },

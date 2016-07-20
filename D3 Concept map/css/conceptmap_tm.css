@@ -1,15 +1,19 @@
+svg {
+    border: 1px solid black;
+}
+
 .machine {
-    stroke: steelblue;
-    stroke-width: 2px;
-    fill: pink;
+    stroke: #01a982;
+    stroke-width: 3px;
+    fill: white;
 }
 
 .machine.source {
-    fill: whitesmoke;
+    stroke: #01a982;
 }
 
 .machine.target {
-    /*    fill: white;*/
+    stroke: #241bf7;
 }
 
 .link {
@@ -23,9 +27,11 @@
 }
 
 .event {
-    fill: steelblue;
+    fill: #f0f0ef;
+    /*
     stroke: pink;
     stroke-width: 2px;
+*/
 }
 
 .group {

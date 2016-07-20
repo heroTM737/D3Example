@@ -30,35 +30,40 @@ function main_graph(source_machines, target_machines, events) {
     var target_start = shift_y + (max - target_machines.size()) / 2 * (radius * 2 + y_margin);
     var event_start = shift_y + (max - events.size()) / 2 * (rh + y_margin);
 
-    var center = {};
-    center.radius = 400;
-    center.x = shift_x + x_margin;
-    center.y = shift_y + center.radius;
+    center.radius = events.size() * (rh + y_margin) / 2;
+    center.x = center.radius + shift_y + max_text_length * character_length;
+    center.y = center.radius + shift_y;
+    var svg_height = events.size() * (rh + y_margin) + shift_y * 2;
+    var svg_width = svg_height + max_text_length * character_length * 2;
 
-    var angle;
+    var angle, step_angle, base_angle;
     var ratio = 0.5;
     source_machines.values().forEach(function (node, index) {
-        angle = (index + 1 - source_machines.size() / 2) * Math.PI / source_machines.size();
+        step_angle = Math.PI / source_machines.size();
+        base_angle = step_angle / 2 - Math.PI / 2;
+        angle = index * step_angle + base_angle;
         angle = angle * ratio;
-        node.x = shift_x + center.radius - center.radius * Math.cos(angle);
-        node.y = shift_y + center.radius - center.radius * Math.sin(angle);
+        node.x = center.x - center.radius * Math.cos(angle);
+        node.y = center.y - center.radius * Math.sin(angle);
     });
 
     target_machines.values().forEach(function (node, index) {
-        angle = (index + 1 - target_machines.size() / 2) * Math.PI / target_machines.size();
+        step_angle = Math.PI / target_machines.size();
+        base_angle = step_angle / 2 - Math.PI / 2;
+        angle = index * step_angle + base_angle;
         angle = angle * ratio;
-        node.x = shift_x + center.radius + center.radius * Math.cos(angle);
-        node.y = shift_y + center.radius - center.radius * Math.sin(angle);
+        node.x = center.x + center.radius * Math.cos(angle);
+        node.y = center.y - center.radius * Math.sin(angle);
     });
 
     events.values().forEach(function (event, index) {
-        event.x = shift_x + center.radius;
+        event.x = center.x;
         event.y = event_start + index * (rh + y_margin);
     });
 
     //render
     var svg = d3.select("svg");
-    svg.attr("height", events.size() * (rh + y_margin) + shift_y);
+    svg.attr("viewBox", "0 0 " + svg_width + " " + svg_height);
 
     var link = svg.selectAll("path ")
         .data(links.values())
@@ -93,7 +98,7 @@ function main_graph(source_machines, target_machines, events) {
         })
         .attr("r", function (d) {
             return radius;
-        })
+        });
 
     var source_text = source_group.append("text")
         .attr("class", "text machine-text")
@@ -176,6 +181,11 @@ function main_graph(source_machines, target_machines, events) {
         })
         .attr("width", rw)
         .attr("height", rh);
+
+    var event_title = event_group.append("title")
+        .text(function (d) {
+            return d.data.name;
+        });
 
     var event_text = event_group.append("text")
         .attr("class", "text event-text")

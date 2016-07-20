@@ -91,12 +91,14 @@ function event_click(d) {
 }
 
 function machine_center_graph(node_center) {
-    //clear
-    d3.select("svg").selectAll("*").remove();
-
     //define coordinate
-    node_center.x = center.x;
-    node_center.y = center.y;
+    L1_radius = node_center.related_events.values().length * L1_circle_radius / Math.PI + L1_circle_radius * 2;
+    L1_radius = Math.max(L1_radius, L0_circle_radius * 2);
+    L2_radius = 2 * L1_radius;
+    var svg_view_width = L2_radius * 2 + L1_circle_radius * 2 + max_text_length * character_length + 30;
+    var svg_view_height = svg_view_width;
+    node_center.x = svg_view_width / 2;
+    node_center.y = svg_view_height / 2;
 
     var links = [];
     var nodes_L1 = node_center.related_events.values();
@@ -141,17 +143,21 @@ function machine_center_graph(node_center) {
             });
         }
 
-        event.x = center.x + Math.cos(index * step_angle) * L1_radius;
-        event.y = center.y + Math.sin(index * step_angle) * L1_radius;
+        event.x = node_center.x + Math.cos(index * step_angle) * L1_radius;
+        event.y = node_center.y + Math.sin(index * step_angle) * L1_radius;
         event.a = index * step_angle / Math.PI * 180;
 
-        combine.x = center.x + Math.cos(index * step_angle) * L2_radius;
-        combine.y = center.y + Math.sin(index * step_angle) * L2_radius;
+        combine.x = node_center.x + Math.cos(index * step_angle) * L2_radius;
+        combine.y = node_center.y + Math.sin(index * step_angle) * L2_radius;
         combine.a = event.a;
     });
 
+    //clear
+    d3.select("svg").selectAll("*").remove();
+
     //render
     var svg = d3.select("svg");
+    svg.attr("viewBox", "0 0 " + svg_view_width + " " + svg_view_height);
 
     //draw links
     var link = svg.selectAll("line")
@@ -831,12 +837,14 @@ function machine_center_graph_extend(node_center, combine_extend) {
 }
 
 function event_center_graph(node_center) {
-    //clear
-    d3.select("svg").selectAll("*").remove();
-
     //define coordinate
-    node_center.x = center.x;
-    node_center.y = center.y;
+    L1_radius = (node_center.sources.values().length + node_center.targets.values().length) * L1_circle_radius / Math.PI + L1_circle_radius * 2;
+    L1_radius = Math.max(L1_radius, L0_circle_radius * 2);
+    L2_radius = 2 * L1_radius;
+    var svg_view_width = L2_radius * 2 + L1_circle_radius * 2 + max_text_length * character_length + 30;
+    var svg_view_height = svg_view_width;
+    node_center.x = svg_view_width / 2;
+    node_center.y = svg_view_height / 2;
 
     var links = [];
     var nodes_L1 = [];
@@ -864,8 +872,8 @@ function event_center_graph(node_center) {
 
     var step_angle = 2 * Math.PI / nodes_L1.length;
     nodes_L1.forEach(function (machine, index) {
-        machine.x = center.x + Math.cos(index * step_angle) * L1_radius;
-        machine.y = center.y + Math.sin(index * step_angle) * L1_radius;
+        machine.x = node_center.x + Math.cos(index * step_angle) * L1_radius;
+        machine.y = node_center.y + Math.sin(index * step_angle) * L1_radius;
         machine.a = index * step_angle / Math.PI * 180;
 
         var combine = {
@@ -873,8 +881,8 @@ function event_center_graph(node_center) {
             count: (machine.related_events.size() - 1),
             source: machine
         }
-        combine.x = center.x + Math.cos(index * step_angle) * L2_radius;
-        combine.y = center.y + Math.sin(index * step_angle) * L2_radius;
+        combine.x = node_center.x + Math.cos(index * step_angle) * L2_radius;
+        combine.y = node_center.y + Math.sin(index * step_angle) * L2_radius;
         combine.a = machine.a;
         nodes_L2.push(combine);
 
@@ -885,8 +893,12 @@ function event_center_graph(node_center) {
         });
     });
 
+    //clear
+    d3.select("svg").selectAll("*").remove();
+
     //render
     var svg = d3.select("svg");
+    svg.attr("viewBox", "0 0 " + svg_view_width + " " + svg_view_height);
 
     //draw links
     var link = svg.selectAll("line")
@@ -935,22 +947,27 @@ function event_center_graph(node_center) {
         .attr("width", L0_circle_radius)
         .attr("height", L0_circle_radius);
 
-    var node_L0_text = node_L0_group.append("text")
-        .attr("class", "text")
-        .attr('id', function (d) {
-            return "x" + d.id;
-        })
-        .attr("text-anchor", "middle")
-        .attr("alignment-baseline", "central")
-        .attr("x", function (d) {
-            return d.x;
-        })
-        .attr("y", function (d) {
-            return d.y;
-        })
+    var node_L0_title = node_L0_group.append("title")
         .text(function (d) {
-            return shortenText(d.data.name);
+            return d.data.name;
         });
+
+    //    var node_L0_text = node_L0_group.append("text")
+    //        .attr("class", "text")
+    //        .attr('id', function (d) {
+    //            return "x" + d.id;
+    //        })
+    //        .attr("text-anchor", "middle")
+    //        .attr("alignment-baseline", "central")
+    //        .attr("x", function (d) {
+    //            return d.x;
+    //        })
+    //        .attr("y", function (d) {
+    //            return d.y;
+    //        })
+    //        .text(function (d) {
+    //            return shortenText(d.data.name);
+    //        });
 
     //draw L1
     var node_L1_group = svg.selectAll(".L1_group")

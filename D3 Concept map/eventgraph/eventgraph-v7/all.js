@@ -1,7 +1,8 @@
 var svg = d3.select("body")
     .append("svg")
-    .attr("width", "1000px")
-    .attr("height", "1000px");
+    .attr("viewBox", "0 0 1000 1000")
+    .attr("width", "800")
+    .attr("height", "800");
 
 var diagonal = d3.svg.diagonal()
     .source(function (d) {
@@ -75,25 +76,26 @@ function hideTooltips() {
 }
 
 function shortenText(text) {
-    if (text.length > 20) {
-        return text.substring(0, 20) + "...";
+    if (text.length > max_text_length) {
+        return text.substring(0, max_text_length) + "...";
     } else {
         return text;
     }
 }
 
+var baseurl = "eventgraph/eventgraph-v7/";
 var scriptList = [
-    "eventgraph/eventgraph-v6/main.js",
-    "eventgraph/eventgraph-v6/variable.js",
-    "eventgraph/eventgraph-v6/processData.js",
-    "eventgraph/eventgraph-v6/center_graph.js",
-    "eventgraph/eventgraph-v6/main_graph.js",
+    "main.js",
+    "variable.js",
+    "processData.js",
+    "center_graph.js",
+    "/main_graph.js",
 ];
 
 //load all widgets in scriptList
 scriptList.forEach(function (entry) {
     $.ajax({
-        url: entry,
+        url: baseurl + entry,
         dataType: "script",
         async: false
     });
