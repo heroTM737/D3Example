@@ -61,7 +61,6 @@ function processData(data) {
             link.source = source;
             link.target = event;
         } else {
-            console.log("dm co vao day k = " + nodes_data[target_index].type);
             var t_id = "t" + target_index + "t";
             var target = target_machines.get(t_id);
             if (target == null) {

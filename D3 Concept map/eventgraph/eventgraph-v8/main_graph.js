@@ -60,6 +60,7 @@ function main_graph(source_machines, target_machines, events) {
 
     //clear
     d3.select("svg").selectAll("*").remove();
+    legend();
 
     //render
     var svg = d3.select("svg");
@@ -81,9 +82,9 @@ function main_graph(source_machines, target_machines, events) {
         .attr('id', function (d) {
             return "g" + d.id;
         })
-        .on("mouseover", machine_mouseover)
-        .on("mouseout", machine_mouseout)
-        .on("click", machine_click);
+        .on("mouseover", node_mouseover)
+        .on("mouseout", node_mouseout)
+        .on("click", node_click);
 
     var source_machine = source_group.append("circle")
         .attr("class", "machine source")
@@ -105,12 +106,13 @@ function main_graph(source_machines, target_machines, events) {
         .attr('id', function (d) {
             return "x" + d.id;
         })
+        .attr("alignment-baseline", "central")
         .attr("text-anchor", "end")
         .attr("x", function (d) {
             return d.x - radius * 2;
         })
         .attr("y", function (d) {
-            return d.y + radius;
+            return d.y;
         })
         .text(function (d) {
             return d.data.name;
@@ -123,9 +125,9 @@ function main_graph(source_machines, target_machines, events) {
         .attr('id', function (d) {
             return "g" + d.id;
         })
-        .on("mouseover", machine_mouseover)
-        .on("mouseout", machine_mouseout)
-        .on("click", machine_click);
+        .on("mouseover", node_mouseover)
+        .on("mouseout", node_mouseout)
+        .on("click", node_click);
 
     var target_machine = target_group.append("circle")
         .attr("class", "machine target")
@@ -147,11 +149,12 @@ function main_graph(source_machines, target_machines, events) {
         .attr('id', function (d) {
             return "x" + d.id;
         })
+        .attr("alignment-baseline", "central")
         .attr("x", function (d) {
             return d.x + radius * 2;
         })
         .attr("y", function (d) {
-            return d.y + radius;
+            return d.y;
         })
         .text(function (d) {
             return d.data.name;
@@ -164,9 +167,9 @@ function main_graph(source_machines, target_machines, events) {
         .attr('id', function (d) {
             return "g" + d.id;
         })
-        .on("mouseover", event_mouseover)
-        .on("mouseout", event_mouseout)
-        .on("click", event_click);
+        .on("mouseover", node_mouseover)
+        .on("mouseout", node_mouseout)
+        .on("click", node_click);
 
     var event = event_group.append("rect")
         .attr("class", "event")

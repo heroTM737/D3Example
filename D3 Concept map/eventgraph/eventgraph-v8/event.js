@@ -1,3 +1,31 @@
+function node_mouseover(d) {
+    if (d.type == "event") {
+        event_mouseover(d);
+    } else if (d.type == "source" || d.type == "target") {
+        machine_mouseover(d);
+    }
+}
+
+function node_mouseout(d) {
+    if (d.type == "event") {
+        event_mouseout(d);
+    } else if (d.type == "source" || d.type == "target") {
+        machine_mouseout(d);
+    }
+}
+
+function node_click(d) {
+    d3.event.stopPropagation();
+    hideTooltips();
+    center_graph(d, null);
+}
+
+function node_combine_click(d) {
+    d3.event.stopPropagation();
+    hideTooltips();
+    center_graph(d.center, d.source);
+}
+
 function machine_mouseover(d) {
     // bring related link to front
     d3.selectAll('.link').sort(function (a, b) {
@@ -39,12 +67,6 @@ function machine_mouseout(d) {
     hideTooltips();
 }
 
-function machine_click(d) {
-    d3.event.stopPropagation();
-    hideTooltips();
-    machine_center_graph(d);
-}
-
 function event_mouseover(d) {
     // bring related link to front
     d3.selectAll('.link').sort(function (a, b) {
@@ -82,10 +104,4 @@ function event_mouseout(d) {
     });
 
     hideTooltips();
-}
-
-function event_click(d) {
-    d3.event.stopPropagation();
-    hideTooltips();
-    event_center_graph(d);
 }

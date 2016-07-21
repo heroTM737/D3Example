@@ -1,7 +1,7 @@
 var svg = d3.select("body")
     .append("svg")
     .attr("viewBox", "0 0 1000 1000")
-    .attr("width", "800")
+    .attr("width", "100%")
     .attr("height", "800");
 
 var diagonal = d3.svg.diagonal()
@@ -22,6 +22,27 @@ var diagonal = d3.svg.diagonal()
         if (d.target.data.type == "event") {
             y = y - rw / 2;
         }
+        return {
+            "x": x,
+            "y": y
+        };
+    })
+    .projection(function (d) {
+        return [d.y, d.x];
+    });
+
+var diagonal_extend = d3.svg.diagonal()
+    .source(function (d) {
+        var x = d.source.y;
+        var y = d.source.x + L3_circle_radius;
+        return {
+            "x": x,
+            "y": y
+        };
+    })
+    .target(function (d) {
+        var x = d.target.y;
+        var y = d.target.x - L3_circle_radius;
         return {
             "x": x,
             "y": y

@@ -2,6 +2,7 @@ var baseurl = "eventgraph/eventgraph-v8/";
 var scriptList = [
     "util.js",
     "variable.js",
+    "legend.js",
     "processData.js",
     "event.js",
     "center_graph.js",
