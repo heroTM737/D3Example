@@ -1,5 +1,5 @@
-var shift_x = 100;
-var shift_y = 40;
+var shift_x = 200;
+var shift_y = 30;
 var y_margin = 1;
 var x_margin = 300;
 var max_text_length = 10;
@@ -24,6 +24,6 @@ var L1_radius = 100;
 var L1_circle_radius = radius;
 var L2_radius = L1_radius * 2;
 var L2_circle_radius = 15;
-var L3_circle_radius = 15;
+var L3_circle_radius = 10;
 var svg_view_width = 1000;
 var svg_view_height = svg_view_width;

@@ -21,6 +21,11 @@ svg {
     fill: none;
 }
 
+.linkx {
+    stroke: pink;
+    fill: none;
+}
+
 .link-highlight {
     stroke: #FD6E6E;
     stroke-width: 3px;

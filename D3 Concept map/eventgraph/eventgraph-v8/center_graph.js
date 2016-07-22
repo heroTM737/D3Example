@@ -18,8 +18,8 @@ function center_graph(node_center, node_extend) {
     L1_radius = Math.max(L1_radius, L0_circle_radius * 2);
     L1_radius = Math.max(L1_radius, max_text_length * character_length * 2);
     L2_radius = 2 * L1_radius;
-    svg_view_width = L2_radius * 2 + max_text_length * character_length + 30;
-    svg_view_height = svg_view_width;
+    svg_view_width = L2_radius * 2 + max_text_length * character_length + shift_x;
+    svg_view_height = svg_view_width + shift_y;
     node_center.x = svg_view_width / 2;
     node_center.y = svg_view_height / 2;
     center.x = node_center.x;
@@ -89,6 +89,7 @@ function center_graph(node_center, node_extend) {
 
     var nodes_L3 = [];
     var links_extend = [];
+    var combine_source;
     if (node_extend != null && node_extend != undefined) {
         switch (node_center.type) {
         case "source":
@@ -110,7 +111,7 @@ function center_graph(node_center, node_extend) {
             }
         }
 
-        var combine_source;
+        //look for combine source
         for (var i = 0; i < nodes_L2.length; i++) {
             if (nodes_L2[i].source.id == node_extend.id) {
                 combine_source = nodes_L2[i];
@@ -118,14 +119,32 @@ function center_graph(node_center, node_extend) {
             }
         }
 
+        var combine_transit = {
+            x: node_center.x + L2_radius + L2_circle_radius + 20,
+            y: node_center.y
+        }
+
         //define coordinate
+        var base_y = node_center.y - nodes_L3.length * (L3_circle_radius * 2 + y_margin + 6) / 2;
         nodes_L3.forEach(function (node_L3, index) {
             node_L3.x = svg_view_width + L1_radius;
-            node_L3.y = shift_y + index * (L3_circle_radius * 2 + y_margin + 6);
+            node_L3.y = base_y + index * (L3_circle_radius * 2 + y_margin + 6);
+
+            //            links_extend.push({
+            //                id: "from" + combine_source.id + "to" + node_L3.id,
+            //                source: combine_source,
+            //                target: node_L3
+            //            });
+
+            //            links_extend.push({
+            //                id: "from" + combine_source.id + "to" + node_L3.id,
+            //                source: combine_source,
+            //                target: combine_transit
+            //            });
 
             links_extend.push({
                 id: "from" + combine_source.id + "to" + node_L3.id,
-                source: combine_source,
+                source: combine_transit,
                 target: node_L3
             });
         });
@@ -136,16 +155,15 @@ function center_graph(node_center, node_extend) {
     legend();
 
     //render
-    var extend_width = 0;
     if (nodes_L3.length > 0) {
-        extend_width = L1_radius + L3_circle_radius * 2 + text_node_margin + max_text_length * character_length;
+        svg_view_width += L1_radius + L3_circle_radius * 2 + text_node_margin + max_text_length * character_length;
     }
     if (nodes_L3.length > 0) {
         var extend_height = shift_y * 2 + (L3_circle_radius * 2 + y_margin + 6) * nodes_L3.length;
         svg_view_height = Math.max(extend_height, svg_view_height);
     }
     var svg = d3.select("svg");
-    svg.attr("viewBox", "0 0 " + (svg_view_width + extend_width) + " " + svg_view_height);
+    svg.attr("viewBox", "0 0 " + svg_view_width + " " + svg_view_height);
     var classNameExtend = "";
     var isEventCenter = true;
     if (node_center.type == "event") {
@@ -177,14 +195,62 @@ function center_graph(node_center, node_extend) {
             return d.target.y;
         });
 
-    var link_extend = svg.append("g").selectAll("path ")
+    var extend_curve = function (d) {
+        //        var x1 = d.target.x;        
+        //        var y1 = d.source.y;
+        //        var x2 = node_center.x + L2_radius;
+        //        var y2 = node_center.y;
+
+        //        var x1 = d.target.x;
+        //        var y1 = d.source.y;
+        //        var x2 = d.source.x;
+        //        var y2 = d.target.y;
+
+        var x1 = (d.source.x + d.target.x) / 2;
+        var y1 = d.source.y;
+        var x2 = x1;
+        var y2 = y1;
+
+        var m = "M " + d.source.x + " " + d.source.y;
+        var c = "C " + x1 + " " + y1 + " " + x2 + " " + y2 + " " + (d.target.x - L3_circle_radius) + " " + d.target.y;
+
+        return m + c;
+    }
+
+    var linkx = svg.append("g").selectAll("path")
         .data(links_extend)
         .enter().append("path")
         .attr("class", "link")
         .attr("id", function (d) {
             return d.id;
         })
-        .attr("d", diagonal_extend);
+        .attr("d", extend_curve);
+
+    if (combine_source != null) {
+        var my_curve_group = svg.append("g");
+
+        var curve_center_x = node_center.x;
+        var curve_center_y = node_center.y;
+        var curve_center_r = L2_radius + L2_circle_radius + 10;
+        var curve_center_s = combine_source.a % 360 - 270;
+        var curve_center_e = 89;
+        var my_curve_1 = my_curve_group.append("path")
+            .attr("id", "my_curve_1")
+            .attr("class", "linkx")
+            .attr("d", genArc(curve_center_r, curve_center_s, curve_center_e))
+            .attr("transform", "translate(" + curve_center_x + "," + curve_center_y + ")");
+
+        curve_center_x = node_center.x + L2_radius + L2_circle_radius + 20;
+        curve_center_y = node_center.y - 10;
+        curve_center_r = 10;
+        curve_center_s = 180;
+        curve_center_e = 270;
+        var my_curve_2 = my_curve_group.append("path")
+            .attr("id", "my_curve_2")
+            .attr("class", "linkx")
+            .attr("d", genArc(curve_center_r, curve_center_s, curve_center_e))
+            .attr("transform", "translate(" + curve_center_x + "," + curve_center_y + ")");
+    }
 
     //draw L0 or center
     var node_L0_group = createGroup("L0-group", classNameExtend, [node_center]);
