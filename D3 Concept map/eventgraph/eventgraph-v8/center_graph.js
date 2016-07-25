@@ -120,7 +120,7 @@ function center_graph(node_center, node_extend) {
         }
 
         var combine_transit = {
-            x: node_center.x + L2_radius + L2_circle_radius + 20,
+            x: node_center.x + L2_radius + L2_circle_radius + 10,
             y: node_center.y
         }
 
@@ -152,7 +152,6 @@ function center_graph(node_center, node_extend) {
 
     //clear
     d3.select("svg").selectAll("*").remove();
-    legend();
 
     //render
     if (nodes_L3.length > 0) {
@@ -162,15 +161,24 @@ function center_graph(node_center, node_extend) {
         var extend_height = shift_y * 2 + (L3_circle_radius * 2 + y_margin + 6) * nodes_L3.length;
         svg_view_height = Math.max(extend_height, svg_view_height);
     }
+    box.width = svg_view_width;
+    box.height = svg_view_height;
     var svg = d3.select("svg");
     svg.attr("viewBox", "0 0 " + svg_view_width + " " + svg_view_height);
-    var classNameExtend = "";
+    var classNameExtend = [];
+    var classNameExtendOdd = [];
     var isEventCenter = true;
     if (node_center.type == "event") {
-        classNameExtend = "event-group";
+        classNameExtend = ["event-group"];
+        classNameExtendOdd = ["machine-group"];
         isEventCenter = true;
+    } else if (node_center.type == "source") {
+        classNameExtend = ["machine-group", "target"];
+        classNameExtendOdd = ["event-group"];
+        isEventCenter = false;
     } else {
-        classNameExtend = "machine-group";
+        classNameExtend = ["machine-group", "source"];
+        classNameExtendOdd = ["event-group"];
         isEventCenter = false;
     }
 
@@ -233,77 +241,82 @@ function center_graph(node_center, node_extend) {
         var curve_center_y = node_center.y;
         var curve_center_r = L2_radius + L2_circle_radius + 10;
         var curve_center_s = combine_source.a % 360 - 270;
-        var curve_center_e = 89;
+        var curve_center_e = 90;
+
+        if (curve_center_e - curve_center_s > 180) {
+            curve_center_e = curve_center_s + 360;
+            curve_center_s = 90;
+        }
+
         var my_curve_1 = my_curve_group.append("path")
             .attr("id", "my_curve_1")
             .attr("class", "linkx")
             .attr("d", genArc(curve_center_r, curve_center_s, curve_center_e))
             .attr("transform", "translate(" + curve_center_x + "," + curve_center_y + ")");
 
-        curve_center_x = node_center.x + L2_radius + L2_circle_radius + 20;
-        curve_center_y = node_center.y - 10;
-        curve_center_r = 10;
-        curve_center_s = 180;
-        curve_center_e = 270;
-        var my_curve_2 = my_curve_group.append("path")
-            .attr("id", "my_curve_2")
-            .attr("class", "linkx")
-            .attr("d", genArc(curve_center_r, curve_center_s, curve_center_e))
-            .attr("transform", "translate(" + curve_center_x + "," + curve_center_y + ")");
+        //        curve_center_x = node_center.x + L2_radius + L2_circle_radius + 20;//        curve_center_y = node_center.y - 10;
+        //        curve_center_r = 10;
+        //        curve_center_s = 180;
+        //        curve_center_e = 270;
+        //        var my_curve_2 = my_curve_group.append("path")
+        //            .attr("id", "my_curve_2")
+        //            .attr("class", "linkx")
+        //            .attr("d", genArc(curve_center_r, curve_center_s, curve_center_e))
+        //            .attr("transform", "translate(" + curve_center_x + "," + curve_center_y + ")");
     }
 
     //draw L0 or center
-    var node_L0_group = createGroup("L0-group", classNameExtend, [node_center]);
+    var node_L0_group = createGroup("L0-group", [], [node_center]);
     var node_L1 = draw_L0(node_L0_group, isEventCenter);
 
     //draw L1
-    var node_L1_group = createGroup("L1-group", classNameExtend, nodes_L1);
+    var node_L1_group = createGroup("L1-group", classNameExtendOdd, nodes_L1);
     var node_L1 = draw_L1(node_L1_group, isEventCenter);
-    var node_L1_textbg = node_L1_group.append("text")
-        .attr("class", "text textbg")
-        .attr('id', function (d) {
-            return "xbg" + d.id;
-        })
-        .attr("text-anchor", function (d) {
-            return d.x < center.x ? "end" : "start";
-        })
-        .attr("alignment-baseline", "central")
-        .attr("transform", function (d) {
-            var rotate = d.x < center.x ? (d.a + 180) : d.a;
-            rotate += " " + d.x + " " + d.y;
-            var translate = rh / 2 + text_node_margin;
-            translate = d.x < center.x ? -translate : translate;
-            return "rotate(" + rotate + ")translate(" + translate + ")";
-        })
-        .attr("x", function (d) {
-            return d.x;
-        })
-        .attr("y", function (d) {
-            return d.y;
-        })
-        .text(function (d) {
-            return shortenText(d.data.name);
-        });
-
-    var node_L1_text = node_L1_group.append("text")
-        .attr("class", "text event-text")
-        .attr('id', function (d) {
-            return "x" + d.id;
-        })
-        .attr("text-anchor", function (d) {
-            return d.x < center.x ? "end" : "start";
-        })
-        .attr("alignment-baseline", "central")
-        .attr("transform", rotate_text)
-        .attr("x", function (d) {
-            return d.x;
-        })
-        .attr("y", function (d) {
-            return d.y;
-        })
-        .text(function (d) {
-            return shortenText(d.data.name);
-        });
+    //    var node_L1_textbg = node_L1_group.append("text")
+    //        .attr("class", "text textbg")
+    //        .attr('id', function (d) {
+    //            return "xbg" + d.id;
+    //        })
+    //        .attr("text-anchor", function (d) {
+    //            return d.x < center.x ? "end" : "start";
+    //        })
+    //        .attr("alignment-baseline", "central")
+    //        .attr("transform", function (d) {
+    //            var rotate = d.x < center.x ? (d.a + 180) : d.a;
+    //            rotate += " " + d.x + " " + d.y;
+    //            var translate = rh / 2 + text_node_margin;
+    //            translate = d.x < center.x ? -translate : translate;
+    //            return "rotate(" + rotate + ")translate(" + translate + ")";
+    //        })
+    //        .attr("x", function (d) {
+    //            return d.x;
+    //        })
+    //        .attr("y", function (d) {
+    //            return d.y;
+    //        })
+    //        .text(function (d) {
+    //            return shortenText(d.data.name);
+    //        });
+    //
+    //    var node_L1_text = node_L1_group.append("text")
+    //        .attr("class", "text event-text")
+    //        .attr('id', function (d) {
+    //            return "x" + d.id;
+    //        })
+    //        .attr("text-anchor", function (d) {
+    //            return d.x < center.x ? "end" : "start";
+    //        })
+    //        .attr("alignment-baseline", "central")
+    //        .attr("transform", rotate_text)
+    //        .attr("x", function (d) {
+    //            return d.x;
+    //        })
+    //        .attr("y", function (d) {
+    //            return d.y;
+    //        })
+    //        .text(function (d) {
+    //            return shortenText(d.data.name);
+    //        });
 
     //draw L2
     var node_L2_group = createGroup("L2-group", classNameExtend, nodes_L2, null, null, node_combine_click);
@@ -327,7 +340,7 @@ function center_graph(node_center, node_extend) {
         });
 
     //draw L3
-    var node_L3_group = createGroup("L3-group", classNameExtend, nodes_L3);
+    var node_L3_group = createGroup("L3-group", [], nodes_L3);
     var node_L3 = draw_L3(node_L3_group, isEventCenter);
     var node_L3_text = node_L3_group.append("text")
         .attr("class", "text")
@@ -344,6 +357,8 @@ function center_graph(node_center, node_extend) {
         .text(function (d) {
             return d.data.name;
         });
+
+    legend();
 }
 
 function rotate_text(d) {
@@ -517,7 +532,13 @@ function createGroup(className, classNameExtend, data, mouseOver, mouseOut, clic
     var node_group = svg.selectAll("." + className)
         .data(data)
         .enter().append("g")
-        .attr("class", className + " " + classNameExtend)
+        .attr("class", function (d) {
+            var extendName = "";
+            classNameExtend.forEach(function (node, index) {
+                extendName += " " + node;
+            });
+            return className + " " + extendName;
+        })
         .attr('id', function (d) {
             return "g" + d.id;
         })

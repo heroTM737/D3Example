@@ -19,8 +19,8 @@ scriptList.forEach(function (entry) {
 });
 
 function main() {
-    doFakedData();
-    //    doTestData();
+    //    doFakedData();
+    doTestData();
 }
 
 function doFakedData() {

@@ -4,6 +4,12 @@ var y_margin = 1;
 var x_margin = 300;
 var max_text_length = 10;
 var character_length = 7;
+var box = {
+    x: 0,
+    y: 0,
+    width: 1000,
+    height: 1000
+}
 
 var center = {
     x: shift_x + x_margin,

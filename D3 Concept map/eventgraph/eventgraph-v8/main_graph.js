@@ -60,11 +60,12 @@ function main_graph(source_machines, target_machines, events) {
 
     //clear
     d3.select("svg").selectAll("*").remove();
-    legend();
 
     //render
     var svg = d3.select("svg");
     svg.attr("viewBox", "0 0 " + svg_width + " " + svg_height);
+    box.width = svg_width;
+    box.height = svg_height;
 
     var link = svg.selectAll("path ")
         .data(links.values())
@@ -206,4 +207,6 @@ function main_graph(source_machines, target_machines, events) {
         .text(function (d) {
             return shortenText(d.data.name);
         });
+
+    legend();
 }

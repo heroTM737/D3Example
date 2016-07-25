@@ -43,6 +43,32 @@ svg {
     overflow: hidden;
 }
 
+/*
+.L0-group .source {
+    fill: #01a982;
+}
+
+.L0-group .target {
+    fill: #241bf7;
+}
+*/
+
+.machine-group.source circle {
+    fill: #01a982;
+}
+
+.machine-group.source text {
+    fill: #241bf7;
+}
+
+.machine-group.target circle {
+    fill: #241bf7;
+}
+
+.machine-group.target text {
+    fill: #fff;
+}
+
 .text {
     stroke-width: 1px !important
 }

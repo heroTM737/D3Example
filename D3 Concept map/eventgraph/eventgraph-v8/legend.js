@@ -6,7 +6,8 @@ function legend() {
     var margin = 10;
 
     var legend_group = svg.append("g")
-        .attr("class", "legend-group");
+        .attr("class", "legend-group")
+        .attr("transform", "translate(" + (box.width - (x + radius + margin + 150)) + ", 1)");
 
     var machine_source = legend_group.append("circle")
         .attr("class", "machine source")
@@ -19,7 +20,7 @@ function legend() {
         .attr("alignment-baseline", "central")
         .attr("x", x + radius + margin)
         .attr("y", y)
-        .text("source machine");
+        .text("source node");
 
     var machine_target = legend_group.append("circle")
         .attr("class", "machine target")
@@ -32,7 +33,7 @@ function legend() {
         .attr("alignment-baseline", "central")
         .attr("x", x + radius + margin)
         .attr("y", y * 2)
-        .text("target machine");
+        .text("target node");
 
     var event = legend_group.append("rect")
         .attr("class", "event")
