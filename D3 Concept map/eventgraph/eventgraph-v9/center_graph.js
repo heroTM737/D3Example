@@ -111,11 +111,11 @@ function center_graph(node_center, node_extend) {
             }
         }
 
-        //look for combine source
-        for (var i = 0; i < nodes_L2.length; i++) {
-            if (nodes_L2[i].source.id == node_extend.id) {
-                combine_source = nodes_L2[i];
-                break;
+        //extract combine source from nodes_L2
+        if (node_extend != null && node_extend != undefined) {
+            var combine_index = nodes_L1.indexOf(node_extend);
+            if (combine_index >= 0) {
+                combine_source = nodes_L2.splice(combine_index, 1)[0];
             }
         }
 
@@ -151,7 +151,7 @@ function center_graph(node_center, node_extend) {
     }
 
     //clear
-    d3.select("svg").selectAll("*").remove();
+    d3.select(container).selectAll("*").remove();
 
     //render
     if (nodes_L3.length > 0) {
@@ -163,7 +163,7 @@ function center_graph(node_center, node_extend) {
     }
     box.width = svg_view_width;
     box.height = svg_view_height;
-    var svg = d3.select("svg");
+    var svg = d3.select(container);
     svg.attr("viewBox", "0 0 " + svg_view_width + " " + svg_view_height);
     var L0_className = [];
     var L1_className = [];
@@ -209,16 +209,6 @@ function center_graph(node_center, node_extend) {
         });
 
     var extend_curve = function (d) {
-        //        var x1 = d.target.x;        
-        //        var y1 = d.source.y;
-        //        var x2 = node_center.x + L2_radius;
-        //        var y2 = node_center.y;
-
-        //        var x1 = d.target.x;
-        //        var y1 = d.source.y;
-        //        var x2 = d.source.x;
-        //        var y2 = d.target.y;
-
         var x1 = (d.source.x + d.target.x) / 2;
         var y1 = d.source.y;
         var x2 = x1;
@@ -259,15 +249,19 @@ function center_graph(node_center, node_extend) {
             .attr("d", genArc(curve_center_r, curve_center_s, curve_center_e))
             .attr("transform", "translate(" + curve_center_x + "," + curve_center_y + ")");
 
-        //        curve_center_x = node_center.x + L2_radius + L2_circle_radius + 20;//        curve_center_y = node_center.y - 10;
-        //        curve_center_r = 10;
-        //        curve_center_s = 180;
-        //        curve_center_e = 270;
-        //        var my_curve_2 = my_curve_group.append("path")
-        //            .attr("id", "my_curve_2")
-        //            .attr("class", "linkx")
-        //            .attr("d", genArc(curve_center_r, curve_center_s, curve_center_e))
-        //            .attr("transform", "translate(" + curve_center_x + "," + curve_center_y + ")");
+        var my_curve_2 = my_curve_group.append("line")
+            .attr("x1", function (d) {
+                return combine_source.x;
+            })
+            .attr("y1", function (d) {
+                return combine_source.y;
+            })
+            .attr("x2", function (d) {
+                return node_center.x + Math.cos(deg2rad(combine_source.a)) * (L2_radius + L2_circle_radius + 10);
+            })
+            .attr("y2", function (d) {
+                return node_center.y + Math.sin(deg2rad(combine_source.a)) * (L2_radius + L2_circle_radius + 10);
+            });
     }
 
     //draw L0 or center
@@ -489,7 +483,7 @@ function draw_L3(node_L3_group, isEventCenter) {
 }
 
 function createGroup(className, classNameExtend, data, mouseOver, mouseOut, click) {
-    var node_group = svg.selectAll("." + className)
+    var node_group = d3.select(container).selectAll("." + className)
         .data(data)
         .enter().append("g")
         .attr("class", function (d) {

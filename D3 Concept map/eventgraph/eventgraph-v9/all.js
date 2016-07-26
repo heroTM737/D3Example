@@ -1,4 +1,4 @@
-var baseurl = "eventgraph/eventgraph-v8/";
+var baseurl = "eventgraph/eventgraph-v9/";
 var scriptList = [
     "util.js",
     "variable.js",
@@ -18,14 +18,19 @@ scriptList.forEach(function (entry) {
     });
 });
 
+var container = document.getElementById("eventgraph");
+
 function main() {
     doFakedData();
     //    doTestData();
+
+    legend();
 }
 
 function doFakedData() {
     var data = getFakedEventData();
-    processData(data);
+    var processedData = processData(data);
+    main_graph(processedData);
 }
 
 function doTestData() {
@@ -35,8 +40,9 @@ function doTestData() {
         dataType: "text",
         cache: false,
         success: function (data) {
-            var result = JSON.parse(data);
-            processData(result);
+            var data = JSON.parse(data);
+            var processedData = processData(data);
+            main_graph(processedData);
         },
         error: function (response) {
             console.log("error ");

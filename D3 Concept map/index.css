@@ -1,9 +1,12 @@
 /*@import url("css/conceptmap.css");*/
 
-@import url("css/conceptmap_tm.css");
+
+/*@import url("css/conceptmap_tm.css");*/
+
 
 /*@import url("css/conceptmap_bw.css");*/
 
+@import url("css/eventgraph.css");
 .hidden {
     display: none;
 }
