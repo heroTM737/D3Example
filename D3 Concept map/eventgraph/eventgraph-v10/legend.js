@@ -1,13 +1,13 @@
 function legend() {
-    var svg = d3.select(document.getElementById("legend"));
+    var svg = d3.select(container_legend);
 
-    var padding = 5;
+    var padding = 10;
     var x = radius + padding;
     var y = radius + padding;
     var margin = 10;
 
-    var w = radius * 2 + margin + 100;
-    var h = (radius * 2 + margin) * 3;
+    var w = radius * 2 + 100 + padding * 2;
+    var h = (radius * 2 + margin) * 3 - margin + padding * 2;
     svg.attr("width", w)
         .attr("height", h)
         .attr("viewBox", "0 0 " + w + " " + h);

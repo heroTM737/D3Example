@@ -12,14 +12,11 @@ function center_graph(node_center, node_extend) {
     var links = [];
     var nodes_L2 = [];
 
-
     //define coordinate
-    L1_radius = nodes_L1.length * L1_circle_radius / Math.PI + L1_circle_radius * 2;
-    L1_radius = Math.max(L1_radius, L0_circle_radius * 2);
-    L1_radius = Math.max(L1_radius, max_text_length * character_length * 2);
+    L1_radius = Math.max(L1_min_radius, nodes_L1.length * L1_circle_radius / Math.PI);
     L2_radius = 2 * L1_radius;
-    svg_view_width = L2_radius * 2 + max_text_length * character_length + shift_x;
-    svg_view_height = svg_view_width + shift_y;
+    svg_view_width = L2_radius * 2 + L2_circle_radius + padding * 2 + center_extend_margin * 2 + extend_node_width * 2;
+    svg_view_height = (L2_radius + L2_circle_radius + padding) * 2;
     node_center.x = svg_view_width / 2;
     node_center.y = svg_view_height / 2;
     center.x = node_center.x;
@@ -64,18 +61,32 @@ function center_graph(node_center, node_extend) {
             });
         } else {
             combine.count = node_L1.related_events.size() - 1;
+            if (node_L1.type == "source") {
+                links.push({
+                    id: "from" + node_L1.id + "to" + node_center.id,
+                    source: node_L1,
+                    target: node_center
+                });
 
-            links.push({
-                id: "from" + node_L1.id + "to" + node_center.id,
-                source: node_L1,
-                target: node_center
-            });
+                links.push({
+                    id: "from" + node_L1.id + "to" + combine.id,
+                    source: node_L1,
+                    target: combine
+                });
+            } else {
+                links.push({
+                    id: "from" + node_center.id + "to" + node_L1.id,
+                    source: node_center,
+                    target: node_L1
+                });
 
-            links.push({
-                id: "from" + combine.id + "to" + node_L1.id,
-                source: combine,
-                target: node_L1
-            });
+                links.push({
+                    id: "from" + combine.id + "to" + node_L1.id,
+                    source: combine,
+                    target: node_L1
+                });
+            }
+
         }
 
         node_L1.x = node_center.x + Math.cos(index * step_angle) * L1_radius;
@@ -90,6 +101,7 @@ function center_graph(node_center, node_extend) {
     var nodes_L3 = [];
     var links_extend = [];
     var combine_source;
+    var nodes_L3_height = 0;
     if (node_extend != null && node_extend != undefined) {
         switch (node_center.type) {
         case "source":
@@ -119,20 +131,26 @@ function center_graph(node_center, node_extend) {
             }
         }
 
+        var direction = 1;
+        if (combine_source.x < node_center.x) {
+            direction = -1;
+        }
+
         var combine_transit = {
-            x: node_center.x + L2_radius + L2_circle_radius + 10,
+            x: node_center.x + (L2_radius + L2_circle_radius + 10) * direction,
             y: combine_source.y
         }
 
         //define coordinate
-        var nodes_L3_height = nodes_L3.length * (L3_circle_radius * 2 + y_margin + 6);
-        var base_y = combine_source.y - nodes_L3_height / 2;
-        if (base_y < node_center.y - L2_radius) {
+        nodes_L3_height = nodes_L3.length * (L3_circle_radius * 2 + y_margin) - y_margin;
+        var base_y = combine_source.y - nodes_L3_height / 2 + L3_circle_radius;
+        if (base_y < node_center.y - L2_radius || base_y + nodes_L3_height / 2 > node_center.y + L2_radius) {
             base_y = node_center.y - L2_radius
         }
+
         nodes_L3.forEach(function (node_L3, index) {
-            node_L3.x = svg_view_width + L1_radius;
-            node_L3.y = base_y + index * (L3_circle_radius * 2 + y_margin + 6);
+            node_L3.x = node_center.x + (L2_radius + L2_circle_radius + center_extend_margin + L3_circle_radius) * direction;
+            node_L3.y = base_y + index * (L3_circle_radius * 2 + y_margin);
 
             links_extend.push({
                 id: "from" + combine_source.id + "to" + node_L3.id,
@@ -141,17 +159,46 @@ function center_graph(node_center, node_extend) {
             });
         });
     }
+    if (combine_source != null) {
+        combine_highlight_mouseover = function (d) {
+            if (d.id == node_extend.id) {
+                d3.select(container).selectAll(".linkx").classed('link-highlight', true);
+                d3.select(container).selectAll("#extend_line").classed('link-highlight', true);
+
+                if (d.type == "source") {
+                    d3.select(container).select("#from" + d.id + "to" + combine_source.id).classed('link-highlight', true);
+                } else if (d.type == "target") {
+                    d3.select(container).select("#from" + combine_source.id + "to" + d.id).classed('link-highlight', true);
+                } else {
+                    d3.select(container).select("#from" + d.id + "to" + combine_source.id).classed('link-highlight', true);
+                    d3.select(container).select("#from" + combine_source.id + "to" + d.id).classed('link-highlight', true);
+                }
+            }
+        }
+
+        combine_highlight_mouseout = function (d) {
+            if (d.id == node_extend.id) {
+                d3.select(container).selectAll(".linkx").classed('link-highlight', false);
+                d3.select(container).selectAll("#extend_line").classed('link-highlight', false);
+
+                if (d.type == "source") {
+                    d3.select(container).select("#from" + d.id + "to" + combine_source.id).classed('link-highlight', false);
+                } else if (d.type == "target") {
+                    d3.select(container).select("#from" + combine_source.id + "to" + d.id).classed('link-highlight', false);
+                } else {
+                    d3.select(container).select("#from" + d.id + "to" + combine_source.id).classed('link-highlight', false);
+                    d3.select(container).select("#from" + combine_source.id + "to" + d.id).classed('link-highlight', false);
+                }
+            }
+        }
+    }
 
     //clear
     d3.select(container).selectAll("*").remove();
 
     //render
     if (nodes_L3.length > 0) {
-        svg_view_width += L1_radius + L3_circle_radius * 2 + text_node_margin + max_text_length * character_length;
-    }
-    if (nodes_L3.length > 0) {
-        var extend_height = shift_y * 2 + (L3_circle_radius * 2 + y_margin + 6) * nodes_L3.length;
-        svg_view_height = Math.max(extend_height, svg_view_height);
+        svg_view_height = Math.max(svg_view_height, nodes_L3_height + padding * 2);
     }
     box.width = svg_view_width;
     box.height = svg_view_height;
@@ -208,7 +255,7 @@ function center_graph(node_center, node_extend) {
             var y2 = y1;
 
             var m = "M " + d.source.x + " " + d.source.y;
-            var c = "C " + x1 + " " + y1 + " " + x2 + " " + y2 + " " + (d.target.x - L3_circle_radius) + " " + d.target.y;
+            var c = "C " + x1 + " " + y1 + " " + x2 + " " + y2 + " " + (d.target.x - L3_circle_radius * direction) + " " + d.target.y;
 
             return m + c;
         }
@@ -216,13 +263,14 @@ function center_graph(node_center, node_extend) {
         var linkx = svg.append("g").selectAll("path")
             .data(links_extend)
             .enter().append("path")
-            .attr("class", "link")
+            .attr("class", "link linkx")
             .attr("id", function (d) {
                 return d.id;
             })
             .attr("d", extend_curve);
 
         var extend_line = svg.append("line")
+            .attr("id", "extend_line")
             .attr("x1", function (d) {
                 return combine_source.x;
             })
@@ -275,8 +323,9 @@ function center_graph(node_center, node_extend) {
             return "x" + d.id;
         })
         .attr("alignment-baseline", "central")
+        .attr("text-anchor", direction > 0 ? "start" : "end")
         .attr("x", function (d) {
-            return d.x + L3_circle_radius + text_node_margin;
+            return d.x + (L3_circle_radius + text_node_margin) * direction;
         })
         .attr("y", function (d) {
             return d.y;
@@ -313,13 +362,13 @@ function draw_L0(node_L0_group, isEventCenter) {
                 return d.id;
             })
             .attr("x", function (d) {
-                return d.x - L0_circle_radius / 2;
+                return d.x - L0_circle_radius;
             })
             .attr("y", function (d) {
-                return d.y - L0_circle_radius / 2;
+                return d.y - L0_circle_radius;
             })
-            .attr("width", L0_circle_radius)
-            .attr("height", L0_circle_radius);
+            .attr("width", L0_circle_radius * 2)
+            .attr("height", L0_circle_radius * 2);
     } else {
         var node_L0 = node_L0_group.append("circle")
             .attr("class", function (d) {
