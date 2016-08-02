@@ -1,15 +1,6 @@
-.eventgraph-container {
-    border: 1px solid black;
-    position: relative;
-}
-
 .eventgraph-container #eventgraph {}
 
-.eventgraph-container #legend {
-    position: absolute;
-    top: 0;
-    right: 0;
-}
+.eventgraph-container #legend {}
 
 .machine {
     stroke: #01a982;

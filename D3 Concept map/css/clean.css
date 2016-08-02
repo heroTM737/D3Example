@@ -1,0 +1,9 @@
+body {
+    padding: 0;
+    margin: 0;
+}
+
+.legend-container {
+    display: flex;
+    flex-direction: row-reverse;
+}

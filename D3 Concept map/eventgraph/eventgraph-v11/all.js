@@ -1,12 +1,12 @@
-var baseurl = "eventgraph/eventgraph-v10/";
+var baseurl = "eventgraph/eventgraph-v11/";
 var scriptList = [
     "util.js",
     "variable.js",
     "legend.js",
     "processData.js",
     "event.js",
-    "center_graph.js",
-    "main_graph.js",
+    "centerGraph.js",
+    "mainGraph.js",
 ];
 
 //load all widgets in scriptList

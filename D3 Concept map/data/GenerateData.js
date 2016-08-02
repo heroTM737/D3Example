@@ -6,7 +6,7 @@ function getFakedEventData() {
     var nodes = [];
     var links = [];
 
-    var numberOfEvent = 40;
+    var numberOfEvent = Math.floor(Math.random() * 100);
     var numberOfMachine = 10;
 
     for (var i = 0; i < numberOfEvent; i++) {
