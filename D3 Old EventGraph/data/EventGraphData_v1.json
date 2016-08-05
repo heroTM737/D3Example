@@ -1,0 +1,946 @@
+{
+    "nodes": [
+        {
+            "id": "NULLDashboard got attached to [Database Retrieval Time - Last Hour]",
+            "_weight": 5,
+            "name": "Dashboard got attached to [Database Retrieval Time - Last Hour]",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULLUser updated",
+            "_weight": 5,
+            "name": "User updated",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "128.88.242.49Start event: query viewer generation Connectors - Down - Short Term",
+            "_weight": 24,
+            "name": "Start event: query viewer generation Connectors - Down - Short Term",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULLSuccessful Trend-Query Run",
+            "_weight": 6,
+            "name": "Successful Trend-Query Run",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULLScheduled task executed (Resource Search Index Updater)",
+            "_weight": 5,
+            "name": "Scheduled task executed (Resource Search Index Updater)",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "128.88.242.49Login succeeded for user name 'tiennx1'",
+            "_weight": 1,
+            "name": "Login succeeded for user name 'tiennx1'",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULLDashboard got attached to [Current Connector Status]",
+            "_weight": 5,
+            "name": "Dashboard got attached to [Current Connector Status]",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULLStart event: query viewer generation Connectors - Caching - Long Term",
+            "_weight": 5,
+            "name": "Start event: query viewer generation Connectors - Caching - Long Term",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULLDashboard got attached to [Database Insert Time - Last Hour]",
+            "_weight": 5,
+            "name": "Dashboard got attached to [Database Insert Time - Last Hour]",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULLSessionList entry added",
+            "_weight": 12,
+            "name": "SessionList entry added",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULLDashboard got attached to [Connector Connection Status]",
+            "_weight": 5,
+            "name": "Dashboard got attached to [Connector Connection Status]",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULLDashboard got attached to [Event Throughput]",
+            "_weight": 5,
+            "name": "Dashboard got attached to [Event Throughput]",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULLDashboard got attached to [ArcSight User Sessions ]",
+            "_weight": 5,
+            "name": "Dashboard got attached to [ArcSight User Sessions ]",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULLSuccessfully executed regular resource search index update",
+            "_weight": 5,
+            "name": "Successfully executed regular resource search index update",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "128.88.242.49Start event: query viewer generation Connectors - Dropping Events",
+            "_weight": 24,
+            "name": "Start event: query viewer generation Connectors - Dropping Events",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULLStart event: query viewer generation Connectors - Dropping Events",
+            "_weight": 5,
+            "name": "Start event: query viewer generation Connectors - Dropping Events",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULLStart event: query viewer generation Connectors - Down - Long Term",
+            "_weight": 5,
+            "name": "Start event: query viewer generation Connectors - Down - Long Term",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULLTrend Task Ending",
+            "_weight": 6,
+            "name": "Trend Task Ending",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULLDashboard got attached to [event_graph]",
+            "_weight": 5,
+            "name": "Dashboard got attached to [event_graph]",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULLStart event: query viewer generation Connectors - Down - Short Term",
+            "_weight": 5,
+            "name": "Start event: query viewer generation Connectors - Down - Short Term",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULLDashboard got attached to [Event Throughput Statistics]",
+            "_weight": 5,
+            "name": "Dashboard got attached to [Event Throughput Statistics]",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULLTask successfully removed",
+            "_weight": 6,
+            "name": "Task successfully removed",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULLGroup [ActiveChannel] updated",
+            "_weight": 5,
+            "name": "Group [ActiveChannel] updated",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULLData Monitor Entry Timeout",
+            "_weight": 5,
+            "name": "Data Monitor Entry Timeout",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULLDashboard got attached to [Database Free Space]",
+            "_weight": 5,
+            "name": "Dashboard got attached to [Database Free Space]",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "128.88.242.49User Session Timed Out for user name 'tiennx1'",
+            "_weight": 1,
+            "name": "User Session Timed Out for user name 'tiennx1'",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULLLogin succeeded for user name 'admin'",
+            "_weight": 5,
+            "name": "Login succeeded for user name 'admin'",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULLMonitor Event",
+            "_weight": 1475,
+            "name": "Monitor Event",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULLLogin succeeded for user name 'tiennx1'",
+            "_weight": 5,
+            "name": "Login succeeded for user name 'tiennx1'",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "128.88.242.49Start event: query viewer generation Connectors - Caching - Long Term",
+            "_weight": 24,
+            "name": "Start event: query viewer generation Connectors - Caching - Long Term",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULLStarting Trend Task",
+            "_weight": 6,
+            "name": "Starting Trend Task",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULLStarting Trend Query",
+            "_weight": 6,
+            "name": "Starting Trend Query",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULLScheduled task executed (PurgeStaleMarkSimilarConfigs)",
+            "_weight": 5,
+            "name": "Scheduled task executed (PurgeStaleMarkSimilarConfigs)",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULLScheduled task executed (Events Count)",
+            "_weight": 6,
+            "name": "Scheduled task executed (Events Count)",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULLScheduled task executed (Table Stats Updator)",
+            "_weight": 5,
+            "name": "Scheduled task executed (Table Stats Updator)",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULLDashboard got attached to [Connector Cache Status]",
+            "_weight": 5,
+            "name": "Dashboard got attached to [Connector Cache Status]",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULLUser Session Timed Out for user name 'admin'",
+            "_weight": 5,
+            "name": "User Session Timed Out for user name 'admin'",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULLDashboard got attached to [Database Insert Time - Last 24 Hours]",
+            "_weight": 5,
+            "name": "Dashboard got attached to [Database Insert Time - Last 24 Hours]",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULLScheduledTask updated",
+            "_weight": 6,
+            "name": "ScheduledTask updated",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "128.88.242.49QueryViewer Query Succeeded",
+            "_weight": 120,
+            "name": "QueryViewer Query Succeeded",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULL",
+            "_weight": 2013,
+            "name": "NULL",
+            "typeLabel": "Attacker Address, Target Address ",
+            "type": "source_target"
+        },
+        {
+            "id": "NULLUser Session Timed Out for user name 'tiennx1'",
+            "_weight": 6,
+            "name": "User Session Timed Out for user name 'tiennx1'",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "128.88.242.49Start event: query viewer generation Connectors - Down - Long Term",
+            "_weight": 24,
+            "name": "Start event: query viewer generation Connectors - Down - Long Term",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULLDashboard got attached to [Database Retrieval Time - Last 24 Hours]",
+            "_weight": 5,
+            "name": "Dashboard got attached to [Database Retrieval Time - Last 24 Hours]",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULLEvent Throughput",
+            "_weight": 10,
+            "name": "Event Throughput",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULLLicense Audit",
+            "_weight": 12,
+            "name": "License Audit",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULLScheduled task executed (Sortable Fields Updater)",
+            "_weight": 5,
+            "name": "Scheduled task executed (Sortable Fields Updater)",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULLTask successfully scheduled",
+            "_weight": 6,
+            "name": "Task successfully scheduled",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "128.88.242.49Start event: query viewer generation Connectors - Caching - Short Term",
+            "_weight": 24,
+            "name": "Start event: query viewer generation Connectors - Caching - Short Term",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULLSessionList entry updated",
+            "_weight": 12,
+            "name": "SessionList entry updated",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULLScheduled task executed (AUP Updater)",
+            "_weight": 5,
+            "name": "Scheduled task executed (AUP Updater)",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "128.88.242.49User updated",
+            "_weight": 1,
+            "name": "User updated",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULLStart event: query viewer generation Connectors - Caching - Short Term",
+            "_weight": 5,
+            "name": "Start event: query viewer generation Connectors - Caching - Short Term",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "128.88.242.49",
+            "_weight": 1987,
+            "name": "128.88.242.49",
+            "typeLabel": "Attacker Address, Target Address ",
+            "type": "source_target"
+        },
+        {
+            "id": "NULLDatabase Insert Time - Last 24 Hours",
+            "_weight": 7,
+            "name": "Database Insert Time - Last 24 Hours",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULLQueryViewer Query Succeeded",
+            "_weight": 5,
+            "name": "QueryViewer Query Succeeded",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULLGroup [ActiveChannel] inserted",
+            "_weight": 5,
+            "name": "Group [ActiveChannel] inserted",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULLUnassignedResourcesGroup [Dashboard] inserted",
+            "_weight": 5,
+            "name": "UnassignedResourcesGroup [Dashboard] inserted",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULLDatabase Insert Time - Last Hour",
+            "_weight": 10,
+            "name": "Database Insert Time - Last Hour",
+            "typeLabel": "Name ",
+            "type": "event"
+        },
+        {
+            "id": "NULLDashboard got attached to [System Information]",
+            "_weight": 5,
+            "name": "Dashboard got attached to [System Information]",
+            "typeLabel": "Name ",
+            "type": "event"
+        }
+    ],
+    "links": [
+        {
+            "source": 40,
+            "target": 24
+        },
+        {
+            "source": 29,
+            "target": 53
+        },
+        {
+            "source": 40,
+            "target": 41
+        },
+        {
+            "source": 18,
+            "target": 40
+        },
+        {
+            "source": 47,
+            "target": 40
+        },
+        {
+            "source": 52,
+            "target": 40
+        },
+        {
+            "source": 27,
+            "target": 53
+        },
+        {
+            "source": 37,
+            "target": 40
+        },
+        {
+            "source": 47,
+            "target": 53
+        },
+        {
+            "source": 21,
+            "target": 40
+        },
+        {
+            "source": 36,
+            "target": 40
+        },
+        {
+            "source": 40,
+            "target": 37
+        },
+        {
+            "source": 40,
+            "target": 8
+        },
+        {
+            "source": 40,
+            "target": 57
+        },
+        {
+            "source": 57,
+            "target": 40
+        },
+        {
+            "source": 40,
+            "target": 21
+        },
+        {
+            "source": 40,
+            "target": 56
+        },
+        {
+            "source": 1,
+            "target": 40
+        },
+        {
+            "source": 40,
+            "target": 44
+        },
+        {
+            "source": 40,
+            "target": 16
+        },
+        {
+            "source": 19,
+            "target": 40
+        },
+        {
+            "source": 15,
+            "target": 40
+        },
+        {
+            "source": 40,
+            "target": 10
+        },
+        {
+            "source": 58,
+            "target": 40
+        },
+        {
+            "source": 43,
+            "target": 40
+        },
+        {
+            "source": 51,
+            "target": 53
+        },
+        {
+            "source": 40,
+            "target": 52
+        },
+        {
+            "source": 9,
+            "target": 53
+        },
+        {
+            "source": 53,
+            "target": 42
+        },
+        {
+            "source": 28,
+            "target": 40
+        },
+        {
+            "source": 44,
+            "target": 40
+        },
+        {
+            "source": 40,
+            "target": 33
+        },
+        {
+            "source": 53,
+            "target": 48
+        },
+        {
+            "source": 40,
+            "target": 0
+        },
+        {
+            "source": 41,
+            "target": 40
+        },
+        {
+            "source": 40,
+            "target": 46
+        },
+        {
+            "source": 33,
+            "target": 53
+        },
+        {
+            "source": 25,
+            "target": 53
+        },
+        {
+            "source": 11,
+            "target": 40
+        },
+        {
+            "source": 35,
+            "target": 40
+        },
+        {
+            "source": 40,
+            "target": 6
+        },
+        {
+            "source": 31,
+            "target": 53
+        },
+        {
+            "source": 40,
+            "target": 38
+        },
+        {
+            "source": 40,
+            "target": 26
+        },
+        {
+            "source": 55,
+            "target": 40
+        },
+        {
+            "source": 14,
+            "target": 53
+        },
+        {
+            "source": 53,
+            "target": 14
+        },
+        {
+            "source": 40,
+            "target": 15
+        },
+        {
+            "source": 12,
+            "target": 40
+        },
+        {
+            "source": 6,
+            "target": 40
+        },
+        {
+            "source": 33,
+            "target": 40
+        },
+        {
+            "source": 30,
+            "target": 53
+        },
+        {
+            "source": 34,
+            "target": 40
+        },
+        {
+            "source": 49,
+            "target": 53
+        },
+        {
+            "source": 21,
+            "target": 53
+        },
+        {
+            "source": 40,
+            "target": 32
+        },
+        {
+            "source": 48,
+            "target": 53
+        },
+        {
+            "source": 38,
+            "target": 53
+        },
+        {
+            "source": 40,
+            "target": 28
+        },
+        {
+            "source": 23,
+            "target": 40
+        },
+        {
+            "source": 40,
+            "target": 31
+        },
+        {
+            "source": 24,
+            "target": 40
+        },
+        {
+            "source": 22,
+            "target": 40
+        },
+        {
+            "source": 40,
+            "target": 47
+        },
+        {
+            "source": 27,
+            "target": 40
+        },
+        {
+            "source": 10,
+            "target": 40
+        },
+        {
+            "source": 40,
+            "target": 49
+        },
+        {
+            "source": 36,
+            "target": 53
+        },
+        {
+            "source": 4,
+            "target": 40
+        },
+        {
+            "source": 40,
+            "target": 12
+        },
+        {
+            "source": 40,
+            "target": 1
+        },
+        {
+            "source": 53,
+            "target": 5
+        },
+        {
+            "source": 40,
+            "target": 3
+        },
+        {
+            "source": 46,
+            "target": 40
+        },
+        {
+            "source": 53,
+            "target": 51
+        },
+        {
+            "source": 54,
+            "target": 40
+        },
+        {
+            "source": 40,
+            "target": 9
+        },
+        {
+            "source": 32,
+            "target": 40
+        },
+        {
+            "source": 40,
+            "target": 27
+        },
+        {
+            "source": 20,
+            "target": 40
+        },
+        {
+            "source": 45,
+            "target": 40
+        },
+        {
+            "source": 53,
+            "target": 39
+        },
+        {
+            "source": 40,
+            "target": 7
+        },
+        {
+            "source": 31,
+            "target": 40
+        },
+        {
+            "source": 56,
+            "target": 40
+        },
+        {
+            "source": 53,
+            "target": 2
+        },
+        {
+            "source": 40,
+            "target": 30
+        },
+        {
+            "source": 3,
+            "target": 40
+        },
+        {
+            "source": 38,
+            "target": 40
+        },
+        {
+            "source": 40,
+            "target": 20
+        },
+        {
+            "source": 40,
+            "target": 35
+        },
+        {
+            "source": 26,
+            "target": 40
+        },
+        {
+            "source": 40,
+            "target": 55
+        },
+        {
+            "source": 30,
+            "target": 40
+        },
+        {
+            "source": 45,
+            "target": 53
+        },
+        {
+            "source": 40,
+            "target": 11
+        },
+        {
+            "source": 53,
+            "target": 29
+        },
+        {
+            "source": 40,
+            "target": 18
+        },
+        {
+            "source": 59,
+            "target": 40
+        },
+        {
+            "source": 39,
+            "target": 53
+        },
+        {
+            "source": 40,
+            "target": 23
+        },
+        {
+            "source": 40,
+            "target": 4
+        },
+        {
+            "source": 40,
+            "target": 43
+        },
+        {
+            "source": 7,
+            "target": 40
+        },
+        {
+            "source": 40,
+            "target": 19
+        },
+        {
+            "source": 40,
+            "target": 34
+        },
+        {
+            "source": 16,
+            "target": 40
+        },
+        {
+            "source": 0,
+            "target": 40
+        },
+        {
+            "source": 40,
+            "target": 59
+        },
+        {
+            "source": 17,
+            "target": 40
+        },
+        {
+            "source": 40,
+            "target": 50
+        },
+        {
+            "source": 8,
+            "target": 40
+        },
+        {
+            "source": 2,
+            "target": 53
+        },
+        {
+            "source": 5,
+            "target": 53
+        },
+        {
+            "source": 3,
+            "target": 53
+        },
+        {
+            "source": 40,
+            "target": 58
+        },
+        {
+            "source": 49,
+            "target": 40
+        },
+        {
+            "source": 9,
+            "target": 40
+        },
+        {
+            "source": 50,
+            "target": 40
+        },
+        {
+            "source": 40,
+            "target": 36
+        },
+        {
+            "source": 40,
+            "target": 22
+        },
+        {
+            "source": 41,
+            "target": 53
+        },
+        {
+            "source": 40,
+            "target": 45
+        },
+        {
+            "source": 17,
+            "target": 53
+        },
+        {
+            "source": 53,
+            "target": 25
+        },
+        {
+            "source": 42,
+            "target": 53
+        },
+        {
+            "source": 40,
+            "target": 17
+        },
+        {
+            "source": 40,
+            "target": 13
+        },
+        {
+            "source": 40,
+            "target": 54
+        },
+        {
+            "source": 13,
+            "target": 40
+        }
+    ]
+}

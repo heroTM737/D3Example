@@ -1,0 +1,116 @@
+.eventgraph-container {
+    border: 1px solid black;
+}
+
+.tooltip-div {
+    position: fixed;
+    background: white;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid black;
+}
+
+.eventgraph-container #eventgraph {}
+
+.eventgraph-container #legend {}
+
+.machine {
+    stroke: #01a982;
+    stroke-width: 3px;
+    fill: white;
+}
+
+.machine.source {
+    stroke: #01a982;
+}
+
+.machine.target {
+    stroke: #241bf7;
+}
+
+line {
+    stroke: pink;
+}
+
+.link {
+    stroke: pink;
+    fill: none;
+}
+
+.linkx {
+    stroke: pink;
+    fill: none;
+}
+
+.link-highlight {
+    stroke: #FD6E6E;
+    stroke-width: 3px;
+}
+
+.event {
+    fill: #f0f0ef;
+    /*
+    stroke: pink;
+    stroke-width: 2px;
+*/
+}
+
+.group {
+    overflow: hidden;
+}
+
+
+/*
+.L0-group .source {
+    fill: #01a982;
+}
+
+.L0-group .target {
+    fill: #241bf7;
+}
+*/
+
+.even-combine-group rect {
+    stroke: #f0f0ef;
+}
+
+.machine-combine-group.source circle {
+    fill: #01a982;
+}
+
+.machine-combine-group.source text {
+    fill: #241bf7;
+}
+
+.machine-combine-group.target circle {
+    fill: #241bf7;
+}
+
+.machine-combine-group.target text {
+    fill: #fff;
+}
+
+.text {
+    stroke-width: 1px !important
+}
+
+.textbg {
+    stroke: white !important;
+    stroke-width: 5px !important
+}
+
+.group-highlight .event,
+.event-highlight {
+    fill: yellow !important;
+    stroke: red;
+}
+
+.group-highlight .machine,
+.machine-highlight {
+    fill: yellow !important;
+    stroke: red;
+}
+
+.group-highlight .text {
+    fill: steelblue;
+}

@@ -39,7 +39,7 @@ function main_graph(data) {
 
     //define coordinate
     var max = d3.max([source_machines.size(), target_machines.size(), events.size()]);
-    var event_start = center.y - Math.min(center.radius, events.size() * (rh + y_margin) / 2);
+    var event_start = center.y - Math.min(center.radius, events.size() * (rh + y_margin) / 2 - rh / 2);
 
     var angle, step_angle, base_angle;
     var ratio = 0.5;
