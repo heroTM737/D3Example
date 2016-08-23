@@ -26,8 +26,8 @@ var container = document.getElementById("eventgraph");
 var container_legend = document.getElementById("legend");
 
 function main() {
-    doFakedData();
-    //    doTestData();
+    //    doFakedData();
+    doTestData();
 
     legend();
 }
@@ -41,7 +41,7 @@ function doFakedData() {
 function doTestData() {
     $.ajax({
         type: "GET",
-        url: "data/EventGraphData_v3.json",
+        url: "data/EventGraphData_v4.json",
         dataType: "text",
         cache: false,
         success: function (data) {

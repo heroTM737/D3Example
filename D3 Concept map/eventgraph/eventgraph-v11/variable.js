@@ -5,7 +5,7 @@ var x_margin = 300;
 var c_marmin = 1;
 var max_text_length = 10;
 var character_length = 7;
-var padding = 10;
+var padding = 200;
 var box = {
     x: 0,
     y: 0,
