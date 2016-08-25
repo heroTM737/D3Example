@@ -26,8 +26,8 @@ var container = document.getElementById("eventgraph");
 var container_legend = document.getElementById("legend");
 
 function main() {
-    doFakedData();
-    //    doTestData();
+    //    doFakedData();
+    doTestData();
 
     legend();
 }

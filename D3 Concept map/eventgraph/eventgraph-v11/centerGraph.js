@@ -15,6 +15,7 @@ function center_graph(node_center, node_extend) {
     //define coordinate
     L1_radius = Math.max(L1_min_radius, nodes_L1.length * (L1_circle_radius + c_marmin) / Math.PI + L1_circle_radius);
     L2_radius = 2 * L1_radius;
+    extend_node_width = L2_circle_radius * 2 + text_node_margin + unlimit_text_length;
     svg_view_width = L2_radius * 2 + L2_circle_radius + padding * 2 + center_extend_margin * 2 + extend_node_width * 2;
     svg_view_height = (L2_radius + L2_circle_radius + padding) * 2 + shift_y;
     node_center.x = svg_view_width / 2;
