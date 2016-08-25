@@ -32,9 +32,9 @@ function main_graph(data) {
 
     //define svg size
     center.radius = Math.max(events.size() * (rh + y_margin) / 2, rw);
-    center.x = padding + shift_x + center.radius;
+    center.x = padding + shift_x + center.radius + unlimit_text_length;
     center.y = padding + shift_y + center.radius + rh;
-    var svg_width = shift_x + (padding + center.radius) * 2;
+    var svg_width = shift_x + (padding + center.radius + unlimit_text_length) * 2;
     var svg_height = shift_y + (padding + center.radius + rh) * 2;
 
     //define coordinate

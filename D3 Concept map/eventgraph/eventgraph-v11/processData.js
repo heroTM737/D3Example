@@ -19,8 +19,15 @@ function processData(data) {
                 targets: d3.map(),
                 data: node_data
             });
+        } else {
+            var length = node_data.name.length * character_length * 1.5;
+            if (unlimit_text_length < length) {
+                unlimit_text_length = length;
+            }
         }
     });
+
+    console.log("unlimit_text_length = " + unlimit_text_length);
 
     links_data.forEach(function (link_data, index) {
         var source_index = link_data.source;

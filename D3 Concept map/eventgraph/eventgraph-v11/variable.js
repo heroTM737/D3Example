@@ -5,7 +5,8 @@ var x_margin = 300;
 var c_marmin = 1;
 var max_text_length = 10;
 var character_length = 7;
-var padding = 200;
+var padding = 10;
+var unlimit_text_length = 0;
 var box = {
     x: 0,
     y: 0,
@@ -21,7 +22,7 @@ var center = {
 
 var text_node_margin = 5;
 var radius = 9;
-var rw = 200;
+var rw = 150;
 var rh = 22;
 
 //center graph
