@@ -10,6 +10,9 @@ function getFakedEventData() {
     var numberOfEvent = 50;
     var numberOfMachine = 30;
 
+    //    var numberOfEvent = 50;
+    //    var numberOfMachine = 30;
+
     for (var i = 0; i < numberOfEvent; i++) {
         var weight = Math.floor(Math.random() * 10);
         nodes.push({

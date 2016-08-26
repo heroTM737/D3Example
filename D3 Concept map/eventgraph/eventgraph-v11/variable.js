@@ -1,12 +1,17 @@
 var shift_x = 0;
 var shift_y = 0;
-var y_margin = 4;
+var y_margin = 5;
 var x_margin = 300;
 var c_marmin = 1;
-var max_text_length = 10;
-var character_length = 7;
+
+var trim_1_length = 3;
+var trim_2_length = 3;
+var max_text_length = trim_1_length + trim_2_length + 3;
+var character_length = 8;
+
 var padding = 10;
-var unlimit_text_length = 0;
+var padding_y = 20;
+var unlimit_text_length = max_text_length * character_length + padding_y;
 var box = {
     x: 0,
     y: 0,
@@ -21,7 +26,7 @@ var center = {
 };
 
 var text_node_margin = 5;
-var radius = 9;
+var radius = 10;
 var rw = 150;
 var rh = 22;
 

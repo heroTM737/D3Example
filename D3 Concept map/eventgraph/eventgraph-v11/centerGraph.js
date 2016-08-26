@@ -209,6 +209,8 @@ function center_graph(node_center, node_extend) {
     box.height = svg_view_height;
     var svg = d3.select(container);
     svg.attr("viewBox", "0 0 " + svg_view_width + " " + svg_view_height);
+    svg.attr("width", svg_view_width);
+    svg.attr("height", svg_view_height);
     var L0_className = [];
     var L1_className = [];
     var L2_className = [];
@@ -390,8 +392,24 @@ function draw_L0(node_L0_group, isEventCenter) {
             })
             .attr("r", function (d) {
                 return L0_circle_radius;
+            })
+            .attr("text", function (d) {
+                return shortenText(d.data.name);
             });
     }
+
+    var node_L0_text = node_L0_group.append("text")
+        .attr("x", function (d) {
+            return d.x;
+        })
+        .attr("y", function (d) {
+            return d.y;
+        })
+        .attr("alignment-baseline", "central")
+        .attr("text-anchor", "middle")
+        .text(function (d) {
+            return shortenText(d.data.name);
+        });
 }
 
 function draw_L1(node_L1_group, isEventCenter) {

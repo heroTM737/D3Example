@@ -41,7 +41,9 @@ function genArc(radius, startAngle, endAngle) {
 
 function shortenText(text) {
     if (text.length > max_text_length) {
-        return text.substring(0, max_text_length) + "...";
+        var p1 = text.substring(0, trim_1_length);
+        var p2 = text.substring(text.length - trim_2_length, text.length);
+        return p1 + "..." + p2;
     } else {
         return text;
     }

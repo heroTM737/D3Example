@@ -32,9 +32,9 @@ function main_graph(data) {
 
     //define svg size
     center.radius = Math.max(events.size() * (rh + y_margin) / 2, rw);
-    center.x = padding + shift_x + center.radius + unlimit_text_length;
+    center.x = padding + shift_x + center.radius + text_node_margin + unlimit_text_length;
     center.y = padding + shift_y + center.radius + rh;
-    var svg_width = shift_x + (padding + center.radius + unlimit_text_length) * 2;
+    var svg_width = shift_x + (padding + center.radius + text_node_margin + unlimit_text_length) * 2;
     var svg_height = shift_y + (padding + center.radius + rh) * 2;
 
     //define coordinate
@@ -72,6 +72,8 @@ function main_graph(data) {
     //render
     var svg = d3.select(container);
     svg.attr("viewBox", "0 0 " + svg_width + " " + svg_height);
+    svg.attr("width", svg_width);
+    svg.attr("height", svg_height);
     box.width = svg_width;
     box.height = svg_height;
 
@@ -94,6 +96,11 @@ function main_graph(data) {
         .on("mouseover", node_mouseover)
         .on("mouseout", node_mouseout)
         .on("click", node_click);
+
+    var source_title = source_group.append("title")
+        .text(function (d) {
+            return d.data.name;
+        });
 
     var source_machine = source_group.append("circle")
         .attr("class", "machine source")
@@ -124,7 +131,7 @@ function main_graph(data) {
             return d.y;
         })
         .text(function (d) {
-            return d.data.name;
+            return shortenText(d.data.name);
         });
 
     var target_group = svg.selectAll(".target-group")
@@ -137,6 +144,11 @@ function main_graph(data) {
         .on("mouseover", node_mouseover)
         .on("mouseout", node_mouseout)
         .on("click", node_click);
+
+    var target_title = target_group.append("title")
+        .text(function (d) {
+            return d.data.name;
+        });
 
     var target_machine = target_group.append("circle")
         .attr("class", "machine target")
@@ -166,7 +178,7 @@ function main_graph(data) {
             return d.y;
         })
         .text(function (d) {
-            return d.data.name;
+            return shortenText(d.data.name);
         });
 
     var event_group = svg.selectAll(".event-group")

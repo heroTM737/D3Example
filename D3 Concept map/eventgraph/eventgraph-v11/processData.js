@@ -19,11 +19,6 @@ function processData(data) {
                 data: node_data
             });
         }
-
-        var length = node_data.name.length * character_length;
-        if (unlimit_text_length < length) {
-            unlimit_text_length = length;
-        }
     });
 
     links_data.forEach(function (link_data, index) {
