@@ -23,7 +23,9 @@ function node_click(d) {
 
 function node_combine_click(d) {
     d3.event.stopPropagation();
-    center_graph(d.center, d.source);
+    if (d.count > 0) {
+        center_graph(d.center, d.source);
+    }
 }
 
 function machine_mouseover(d) {

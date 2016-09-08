@@ -1,11 +1,43 @@
+.legend-container {
+    text-align: center;
+}
+
+.legend-container #legend {
+    float: left;
+}
+
+.legend-container #buttons {}
+
+.homeGroup {
+    cursor: pointer;
+}
+
+.legend-container .homeGroup.on text {
+    fill: pink;
+}
+
+.legend-container .homeGroup.off text {}
+
+.eventgraph-button {
+    fill: #f0f0ef;
+    stroke: #b2b2b2;
+    stroke-width: 1px;
+    cursor: pointer;
+}
+
+
+/*eventgraph-container*/
+
 .eventgraph-container {
     text-align: center;
-    overflow: auto;
 }
 
 .eventgraph-container #eventgraph {}
 
-.eventgraph-container #legend {}
+.machine:hover,
+.event:hover {
+    cursor: pointer;
+}
 
 .machine {
     stroke: #01a982;
@@ -42,10 +74,8 @@ line {
 
 .event {
     fill: #f0f0ef;
-    /*
-    stroke: pink;
-    stroke-width: 2px;
-*/
+    stroke: #b2b2b2;
+    stroke-width: 1px;
 }
 
 .group {
@@ -83,8 +113,13 @@ line {
     fill: #fff;
 }
 
+.eventgraph-container text {
+    font-size: 14px;
+}
+
 .text {
-    stroke-width: 1px !important
+    stroke-width: 1px !important;
+    font-size: 14px;
 }
 
 .textbg {
@@ -95,7 +130,7 @@ line {
 .group-highlight .event,
 .event-highlight {
     fill: yellow !important;
-    stroke: red;
+    stroke: #ff0000;
 }
 
 .group-highlight .machine,

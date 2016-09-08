@@ -26,7 +26,7 @@ var diagonal = d3.svg.diagonal()
     });
 
 function deg2rad(deg) {
-    return deg * (Math.PI / 180)
+    return deg * (Math.PI / 180);
 }
 
 function genArc(radius, startAngle, endAngle) {
@@ -41,10 +41,28 @@ function genArc(radius, startAngle, endAngle) {
 
 function shortenText(text) {
     if (text.length > max_text_length) {
-        var p1 = text.substring(0, trim_1_length);
-        var p2 = text.substring(text.length - trim_2_length, text.length);
-        return p1 + "..." + p2;
-    } else {
-        return text;
+        return text.substr(0, max_text_length - 3) + "...";
     }
+    return text;
+}
+
+function shortenExtendText(text) {
+    if (text.length > extend_text_length) {
+        return text.substr(0, extend_text_length - 3) + "...";
+    }
+    return text;
+}
+
+function shortenEventText(text) {
+    if (text.length > event_max_text_length) {
+        return text.substr(0, event_max_text_length - 3) + "...";
+    }
+    return text;
+}
+
+function shortenMachineText(text) {
+    if (text.length > machine_max_text_length) {
+        return text.substr(0, machine_max_text_length - 3) + "...";
+    }
+    return text;
 }

@@ -18,12 +18,13 @@ scriptList.forEach(function (entry) {
     });
 });
 
-document.getElementById("eventgraph-container").style.height = (document.documentElement.clientHeight - 100) + "px";
-window.onresize = function (event) {
-    document.getElementById("eventgraph-container").style.height = (document.documentElement.clientHeight - 100) + "px";
-};
+//document.getElementById("eventgraph-container").style.height = (document.documentElement.clientHeight - 100) + "px";
+//window.onresize = function (event) {
+//    document.getElementById("eventgraph-container").style.height = (document.documentElement.clientHeight - 100) + "px";
+//};
 var container = document.getElementById("eventgraph");
 var container_legend = document.getElementById("legend");
+var container_buttons = document.getElementById("buttons");
 
 function main() {
     doFakedData();
@@ -34,8 +35,7 @@ function main() {
 
 function doFakedData() {
     var data = getFakedEventData();
-    var processedData = processData(data);
-    main_graph(processedData);
+    start(data);
 }
 
 function doTestData() {
@@ -46,14 +46,19 @@ function doTestData() {
         cache: false,
         success: function (data) {
             var data = JSON.parse(data);
-            var processedData = processData(data);
-            main_graph(processedData);
+            start(data);
         },
         error: function (response) {
             console.log("error ");
             console.log(response.responseText);
         }
     });
+}
+
+function start(data) {
+    var processedData = processData(data);
+    eventgraphCurrentData = processedData;
+    main_graph(processedData);
 }
 
 main();

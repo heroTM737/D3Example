@@ -4,14 +4,16 @@ var y_margin = 5;
 var x_margin = 300;
 var c_marmin = 1;
 
-var trim_1_length = 3;
-var trim_2_length = 3;
-var max_text_length = trim_1_length + trim_2_length + 3;
+var event_max_text_length = 25;
+var machine_max_text_length = 40;
+var max_text_length = 9;
 var character_length = 8;
+var extend_text_length = Math.max(event_max_text_length, machine_max_text_length);
+var current_data_max_machine_text_length = 0;
+var current_data_max_event_text_length = 0;
 
 var padding = 10;
 var padding_y = 20;
-var unlimit_text_length = max_text_length * character_length + padding_y;
 var box = {
     x: 0,
     y: 0,
@@ -27,7 +29,7 @@ var center = {
 
 var text_node_margin = 5;
 var radius = 10;
-var rw = 150;
+var rw = (event_max_text_length + 3) * character_length + 10;
 var rh = 22;
 
 //center graph
@@ -44,3 +46,6 @@ var svg_view_width = 1000;
 var svg_view_height = svg_view_width;
 var extend_node_width = L2_circle_radius * 2 + text_node_margin + max_text_length * character_length;
 var center_extend_margin = L1_radius;
+
+//current data
+var eventgraphCurrentData;

@@ -1,8 +1,10 @@
 function main_graph(data) {
     //bind action to go back to main graph when user clicks on white space
-    d3.select(container).on("click", function () {
-        main_graph(data);
-    });
+    //    d3.select(container).on("click", function () {
+    //        main_graph(data);
+    //    });
+
+    buttons(true);
 
     var source_machines = data.source_machines;
     var target_machines = data.target_machines;
@@ -31,10 +33,11 @@ function main_graph(data) {
     });
 
     //define svg size
+    var maingraph_max_text_length = Math.min(current_data_max_machine_text_length, machine_max_text_length) * character_length + text_node_margin * 2;
     center.radius = Math.max(events.size() * (rh + y_margin) / 2, rw);
-    center.x = padding + shift_x + center.radius + text_node_margin + unlimit_text_length;
+    center.x = padding + shift_x + Math.min(center.radius, center.radius / 2 + 100) + text_node_margin + maingraph_max_text_length;
     center.y = padding + shift_y + center.radius + rh;
-    var svg_width = shift_x + (padding + center.radius + text_node_margin + unlimit_text_length) * 2;
+    var svg_width = shift_x + (padding + Math.min(center.radius, center.radius / 2 + 100) + text_node_margin + maingraph_max_text_length) * 2;
     var svg_height = shift_y + (padding + center.radius + rh) * 2;
 
     //define coordinate
@@ -50,6 +53,10 @@ function main_graph(data) {
         angle = angle * ratio;
         node.x = center.x - center.radius * Math.cos(angle);
         node.y = center.y - center.radius * Math.sin(angle);
+
+        if (node.x < center.x - center.radius / 2) {
+            node.x = node.x + center.radius / 2 - 100;
+        }
     });
 
     target_machines.values().forEach(function (node, index) {
@@ -59,6 +66,10 @@ function main_graph(data) {
         angle = angle * ratio;
         node.x = center.x + center.radius * Math.cos(angle);
         node.y = center.y - center.radius * Math.sin(angle);
+
+        if (node.x > center.x + center.radius / 2) {
+            node.x = node.x - center.radius / 2 + 100;
+        }
     });
 
     events.values().forEach(function (event, index) {
@@ -95,7 +106,11 @@ function main_graph(data) {
         })
         .on("mouseover", node_mouseover)
         .on("mouseout", node_mouseout)
-        .on("click", node_click);
+        .on("click", node_click)
+        .on("contextmenu", function (d, i) {
+            d3.event.preventDefault();
+            console.log(d.data.name);
+        });
 
     var source_title = source_group.append("title")
         .text(function (d) {
@@ -131,7 +146,7 @@ function main_graph(data) {
             return d.y;
         })
         .text(function (d) {
-            return shortenText(d.data.name);
+            return shortenMachineText(d.data.name);
         });
 
     var target_group = svg.selectAll(".target-group")
@@ -178,7 +193,7 @@ function main_graph(data) {
             return d.y;
         })
         .text(function (d) {
-            return shortenText(d.data.name);
+            return shortenMachineText(d.data.name);
         });
 
     var event_group = svg.selectAll(".event-group")
@@ -225,6 +240,6 @@ function main_graph(data) {
             return d.y;
         })
         .text(function (d) {
-            return shortenText(d.data.name);
+            return shortenEventText(d.data.name);
         });
 }

@@ -7,10 +7,29 @@ function getFakedEventData() {
     var links = [];
 
     var numberOfEvent = Math.floor(Math.random() * 100);
-    var numberOfEvent = 50;
-    var numberOfMachine = 30;
+    var pairEM = [
+        {
+            e: 50,
+            m: 30
+        },
+        {
+            e: 8,
+            m: 3
+        },
+        {
+            e: 100,
+            m: 50
+        },
+        {
+            e: 20,
+            m: 10
+        },
+    ];
+    var chosenIndex = 3;
+    var numberOfEvent = pairEM[chosenIndex].e;
+    var numberOfMachine = pairEM[chosenIndex].m;
 
-    //    var numberOfEvent = 50;
+    //        var numberOfEvent = 50;
     //    var numberOfMachine = 30;
 
     for (var i = 0; i < numberOfEvent; i++) {
