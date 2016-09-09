@@ -8,21 +8,33 @@
 
 .legend-container #buttons {}
 
-.homeGroup {
+.legend-container .playGroup {
     cursor: pointer;
 }
 
+.legend-container .playGroup path {
+    fill: #5a5a5a;
+}
+
+.legend-container .homeGroup {
+    cursor: pointer;
+    fill: #5a5a5a;
+}
+
+.legend-container .homeGroup text {
+    font-size: 14px;
+}
+
 .legend-container .homeGroup.on text {
-    fill: pink;
+    fill: #b2b2b2;
 }
 
 .legend-container .homeGroup.off text {}
 
-.eventgraph-button {
+.legend-container .eventgraph-button {
     fill: #f0f0ef;
     stroke: #b2b2b2;
     stroke-width: 1px;
-    cursor: pointer;
 }
 
 

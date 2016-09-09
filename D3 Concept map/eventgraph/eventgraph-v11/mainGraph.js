@@ -1,9 +1,5 @@
 function main_graph(data) {
-    //bind action to go back to main graph when user clicks on white space
-    //    d3.select(container).on("click", function () {
-    //        main_graph(data);
-    //    });
-
+    //create buttons
     buttons(true);
 
     var source_machines = data.source_machines;

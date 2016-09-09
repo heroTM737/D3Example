@@ -311,7 +311,6 @@ function center_graph(node_center, node_extend) {
         })
         .attr("text-anchor", "middle")
         .attr("alignment-baseline", "central")
-        .attr("transform", rotate_node)
         .attr("x", function (d) {
             return d.x;
         })

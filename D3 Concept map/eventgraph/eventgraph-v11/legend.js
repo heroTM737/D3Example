@@ -128,7 +128,7 @@ function buttons(eventgraphIsMainGraphOn) {
         .attr("class", "eventgraph-button")
         .attr("x", x + radius * 2)
         .attr("y", y - radius)
-        .attr("width", 47)
+        .attr("width", 43)
         .attr("height", radius * 2)
         .attr("rx", 5)
         .attr("ry", 5);
