@@ -84,6 +84,20 @@ function main_graph(data) {
     box.width = svg_width;
     box.height = svg_height;
 
+    var menu = function (data) {
+        var name = data.data.name;
+        return [
+            {
+                title: function (d) {
+                    return 'copy ' + name + ' to clipboard';
+                },
+                action: function (elm, d, i) {
+                    copyToClipBoard(name);
+                }
+            }
+        ]
+    };
+
     var link = svg.selectAll("path ")
         .data(links.values())
         .enter().append("path")
@@ -103,10 +117,7 @@ function main_graph(data) {
         .on("mouseover", node_mouseover)
         .on("mouseout", node_mouseout)
         .on("click", node_click)
-        .on("contextmenu", function (d, i) {
-            d3.event.preventDefault();
-            console.log(d.data.name);
-        });
+        .on("contextmenu", d3.contextMenu(menu));
 
     var source_title = source_group.append("title")
         .text(function (d) {

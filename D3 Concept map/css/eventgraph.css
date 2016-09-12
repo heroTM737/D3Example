@@ -154,3 +154,14 @@ line {
 .group-highlight .text {
     fill: steelblue;
 }
+
+
+/*context menu*/
+
+#eventgraphContextMenu {
+    min-width: 100px;
+    min-height: 100px;
+    background: red;
+    position: fixed;
+    z-index: 100;
+}

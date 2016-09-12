@@ -39,6 +39,26 @@ function genArc(radius, startAngle, endAngle) {
     return arc;
 }
 
+function copyToClipBoard(text) {
+    //fast, easy, work for all browser but require extra action
+    //    window.prompt("Copy to clipboard: Ctrl+C, Enter", text);
+
+    //feel better for user but work only in modern browser
+    $("body").append("<textarea id='temporaryHiddenInput'></textarea>");
+    var copyTextarea = $('#temporaryHiddenInput');
+    copyTextarea.html(text);
+    copyTextarea.select();
+    try {
+        var successful = document.execCommand('copy');
+        var msg = successful ? 'successful' : 'unsuccessful';
+        console.log('Copying text command was ' + msg);
+    } catch (err) {
+        console.log('Oops, unable to copy');
+    }
+
+    $('#temporaryHiddenInput').remove();
+}
+
 function shortenText(text) {
     if (text.length > max_text_length) {
         return text.substr(0, max_text_length - 3) + "...";
