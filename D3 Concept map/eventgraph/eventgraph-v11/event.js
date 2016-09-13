@@ -19,6 +19,7 @@ function node_mouseout(d) {
 function node_click(d) {
     d3.event.stopPropagation();
     center_graph(d, null);
+    closeContextMenu();
 }
 
 function node_combine_click(d) {
@@ -26,6 +27,11 @@ function node_combine_click(d) {
     if (d.count > 0) {
         center_graph(d.center, d.source);
     }
+    closeContextMenu();
+}
+
+function closeContextMenu() {
+    d3.select('.d3-context-menu').style('display', 'none');
 }
 
 function machine_mouseover(d) {

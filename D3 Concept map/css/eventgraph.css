@@ -70,17 +70,17 @@ line {
 }
 
 .link {
-    stroke: pink;
+    stroke: #ffcad3;
     fill: none;
 }
 
 .linkx {
-    stroke: pink;
+    stroke: #ffcad3;
     fill: none;
 }
 
 .link-highlight {
-    stroke: #FD6E6E;
+    stroke: #fd6e6e;
     stroke-width: 3px;
 }
 
@@ -94,34 +94,29 @@ line {
     overflow: hidden;
 }
 
-
-/*
-.L0-group .source {
-    fill: #01a982;
+.event-combine-group,
+.machine-combine-group {
+    cursor: pointer;
 }
 
-.L0-group .target {
-    fill: #241bf7;
+.event-combine-group rect {
+    fill: #f0f0ef;
 }
-*/
 
-.even-combine-group rect {
-    stroke: #f0f0ef;
+.machine-combine-group:hover circle {
+    stroke: #ff0000;
+    stroke-width: 3px;
 }
 
 .machine-combine-group.source circle {
     fill: #01a982;
 }
 
-.machine-combine-group.source text {
-    fill: #241bf7;
-}
-
 .machine-combine-group.target circle {
     fill: #241bf7;
 }
 
-.machine-combine-group.target text {
+.machine-combine-group text {
     fill: #fff;
 }
 
@@ -148,7 +143,7 @@ line {
 .group-highlight .machine,
 .machine-highlight {
     fill: yellow !important;
-    stroke: red;
+    stroke: #ff0000;
 }
 
 .group-highlight .text {

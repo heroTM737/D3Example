@@ -89,7 +89,7 @@ function main_graph(data) {
         return [
             {
                 title: function (d) {
-                    return 'copy ' + name + ' to clipboard';
+                    return 'copy to clipboard: <b>' + name + '</b>';
                 },
                 action: function (elm, d, i) {
                     copyToClipBoard(name);
@@ -97,6 +97,7 @@ function main_graph(data) {
             }
         ]
     };
+    var menuFN = d3.contextMenu(menu);
 
     var link = svg.selectAll("path ")
         .data(links.values())
@@ -117,7 +118,7 @@ function main_graph(data) {
         .on("mouseover", node_mouseover)
         .on("mouseout", node_mouseout)
         .on("click", node_click)
-        .on("contextmenu", d3.contextMenu(menu));
+        .on("contextmenu", menuFN);
 
     var source_title = source_group.append("title")
         .text(function (d) {
@@ -165,7 +166,8 @@ function main_graph(data) {
         })
         .on("mouseover", node_mouseover)
         .on("mouseout", node_mouseout)
-        .on("click", node_click);
+        .on("click", node_click)
+        .on("contextmenu", menuFN);
 
     var target_title = target_group.append("title")
         .text(function (d) {
@@ -212,7 +214,8 @@ function main_graph(data) {
         })
         .on("mouseover", node_mouseover)
         .on("mouseout", node_mouseout)
-        .on("click", node_click);
+        .on("click", node_click)
+        .on("contextmenu", menuFN);
 
     var event = event_group.append("rect")
         .attr("class", "event")

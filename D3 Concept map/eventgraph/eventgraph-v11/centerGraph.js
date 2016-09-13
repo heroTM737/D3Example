@@ -451,7 +451,7 @@ function draw_L1(node_L1_group, isEventCenter) {
 function draw_L2(node_L2_group, isEventCenter) {
     if (isEventCenter) {
         var node_L2 = node_L2_group.append("rect")
-            .attr("class", "event")
+            .attr("class", "")
             .attr('id', function (d) {
                 return d.id;
             })
@@ -470,7 +470,7 @@ function draw_L2(node_L2_group, isEventCenter) {
             });
     } else {
         var node_L2 = node_L2_group.append("circle")
-            .attr("class", "event")
+            .attr("class", "")
             .attr('id', function (d) {
                 return d.id;
             })
@@ -528,6 +528,19 @@ function draw_L3(node_L3_group, isEventCenter) {
 }
 
 function createGroup(className, classNameExtend, data, mouseOver, mouseOut, click) {
+    var menu = function (data) {
+        var name = data.data.name;
+        return [
+            {
+                title: function (d) {
+                    return 'copy to clipboard: <b>' + name + '</b>';
+                },
+                action: function (elm, d, i) {
+                    copyToClipBoard(name);
+                }
+            }
+        ]
+    };
     var node_group = d3.select(container).selectAll("." + className)
         .data(data)
         .enter().append("g")
@@ -543,7 +556,8 @@ function createGroup(className, classNameExtend, data, mouseOver, mouseOut, clic
         })
         .on("mouseover", mouseOver == undefined ? node_mouseover : mouseOver)
         .on("mouseout", mouseOut == undefined ? node_mouseout : mouseOut)
-        .on("click", click == undefined ? node_click : click);
+        .on("click", click == undefined ? node_click : click)
+        .on("contextmenu", d3.contextMenu(menu));
 
     var node_title = node_group.append("title")
         .text(function (d) {

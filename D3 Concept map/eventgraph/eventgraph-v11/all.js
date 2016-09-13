@@ -18,17 +18,13 @@ scriptList.forEach(function (entry) {
     });
 });
 
-//document.getElementById("eventgraph-container").style.height = (document.documentElement.clientHeight - 100) + "px";
-//window.onresize = function (event) {
-//    document.getElementById("eventgraph-container").style.height = (document.documentElement.clientHeight - 100) + "px";
-//};
 var container = document.getElementById("eventgraph");
 var container_legend = document.getElementById("legend");
 var container_buttons = document.getElementById("buttons");
 
 function main() {
-    doFakedData();
-    //    doTestData();
+    //    doFakedData();
+    doTestData();
 
     legend();
 }
