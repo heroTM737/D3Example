@@ -101,6 +101,8 @@ line {
 
 .event-combine-group rect {
     fill: #f0f0ef;
+    stroke: #b2b2b2;
+    stroke-width: 1px;
 }
 
 .machine-combine-group:hover circle {
@@ -153,10 +155,6 @@ line {
 
 /*context menu*/
 
-#eventgraphContextMenu {
-    min-width: 100px;
-    min-height: 100px;
-    background: red;
-    position: fixed;
-    z-index: 100;
+#temporaryHiddenInput {
+    display: hidden;
 }

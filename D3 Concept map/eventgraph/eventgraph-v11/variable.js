@@ -30,7 +30,7 @@ var center = {
 var text_node_margin = 5;
 var radius = 10;
 var rw = (event_max_text_length + 3) * character_length + 10;
-var rh = 44;
+var rh = 22;
 
 //center graph
 var node_node_margin = center.radius;

@@ -214,7 +214,8 @@ function main_graph(data) {
         })
         .on("mouseover", node_mouseover)
         .on("mouseout", node_mouseout)
-        .on("click", node_click);
+        .on("click", node_click)
+        .on("contextmenu", menuFN);
 
     var event = event_group.append("rect")
         .attr("class", "event")

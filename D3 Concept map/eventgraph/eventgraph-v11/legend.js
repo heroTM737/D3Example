@@ -57,8 +57,6 @@ function legend() {
         .text("event");
 }
 
-var eventgraphAutoRefreshState = true;
-
 function buttons(eventgraphIsMainGraphOn) {
     var svg = d3.select(container_buttons);
     svg.selectAll("*").remove();
@@ -77,44 +75,6 @@ function buttons(eventgraphIsMainGraphOn) {
 
     var group = svg.append("g")
         .attr("class", "buttons-group");
-
-    var playGroup = group.append("g")
-        .attr("class", "playGroup")
-        .on("click", function () {
-            eventgraphAutoRefreshState = !eventgraphAutoRefreshState;
-            buttons(eventgraphIsMainGraphOn);
-        });
-
-    var playButton = playGroup.append("rect")
-        .attr("class", "eventgraph-button")
-        .attr("x", x - radius)
-        .attr("y", y - radius)
-        .attr("width", radius * 2)
-        .attr("height", radius * 2)
-        .attr("rx", 5)
-        .attr("ry", 5);
-    if (eventgraphAutoRefreshState) {
-        playGroup.append("path")
-            .attr("d", function () {
-                var p1 = (x - radius / 2) + " " + (y - radius / 2);
-                var p2 = (x - radius / 2) + " " + (y + radius / 2);
-                var p3 = (x + radius / 2) + " " + (y);
-
-                return "M " + p1 + " L " + p2 + " L " + p3 + " L " + p1;
-            });
-    } else {
-        playGroup.append("rect")
-            .attr("x", x - radius * 3 / 8)
-            .attr("y", y - radius / 2)
-            .attr("width", radius / 4)
-            .attr("height", radius);
-
-        playGroup.append("rect")
-            .attr("x", x + radius / 8)
-            .attr("y", y - radius / 2)
-            .attr("width", radius / 4)
-            .attr("height", radius);
-    }
 
     var homeGroup = group.append("g")
         .attr("class", function () {

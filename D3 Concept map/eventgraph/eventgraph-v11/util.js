@@ -40,11 +40,8 @@ function genArc(radius, startAngle, endAngle) {
 }
 
 function copyToClipBoard(text) {
-    //fast, easy, work for all browser but require extra action
-    //    window.prompt("Copy to clipboard: Ctrl+C, Enter", text);
-
-    //feel better for user but work only in modern browser
-    $("body").append("<textarea id='temporaryHiddenInput'></textarea>");
+    var id = "temporaryHiddenInput"
+    $("body").append("<textarea id='" + id + "'></textarea>");
     var copyTextarea = $('#temporaryHiddenInput');
     copyTextarea.html(text);
     copyTextarea.select();
@@ -56,7 +53,7 @@ function copyToClipBoard(text) {
         console.log('Oops, unable to copy');
     }
 
-    $('#temporaryHiddenInput').remove();
+    $("#" + id).remove();
 }
 
 function shortenText(text) {
