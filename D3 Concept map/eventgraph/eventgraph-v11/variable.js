@@ -10,7 +10,6 @@ var max_text_length = 9;
 var character_length = 8;
 var extend_text_length = Math.max(event_max_text_length, machine_max_text_length);
 var current_data_max_machine_text_length = 0;
-var current_data_max_event_text_length = 0;
 
 var padding = 10;
 var padding_y = 20;

@@ -18,14 +18,6 @@ function processData(data) {
                 targets: d3.map(),
                 data: node_data
             });
-
-            if (node_data.name.length > current_data_max_event_text_length) {
-                current_data_max_event_text_length = node_data.name.length;
-            }
-        } else {
-            if (node_data.name.length > current_data_max_machine_text_length) {
-                current_data_max_machine_text_length = node_data.name.length;
-            }
         }
     });
 
