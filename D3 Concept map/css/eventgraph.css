@@ -105,6 +105,11 @@ line {
     stroke-width: 1px;
 }
 
+.event-combine-group:hover rect {
+    stroke: #ff0000;
+    stroke-width: 3px;
+}
+
 .machine-combine-group:hover circle {
     stroke: #ff0000;
     stroke-width: 3px;

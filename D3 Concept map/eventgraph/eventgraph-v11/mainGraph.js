@@ -29,7 +29,7 @@ function main_graph(data) {
     });
 
     //define svg size
-    var maingraph_max_text_length = Math.min(current_data_max_machine_text_length, machine_max_text_length) * character_length + text_node_margin * 2;
+    var maingraph_max_text_length = machine_max_text_length * character_length + text_node_margin * 2;
     center.radius = Math.max(events.size() * (rh + y_margin) / 2, rw);
     center.x = padding + shift_x + Math.min(center.radius, center.radius / 2 + 100) + text_node_margin + maingraph_max_text_length;
     center.y = padding + shift_y + center.radius + rh;
