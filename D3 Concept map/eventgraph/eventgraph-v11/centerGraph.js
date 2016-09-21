@@ -166,34 +166,41 @@ function center_graph(node_center, node_extend) {
         });
     }
     if (combine_source != null) {
-        combine_highlight_mouseover = function (d) {
+
+        combine_highlight = function (d, state) {
             if (d.id == node_extend.id) {
-                d3.select(container).selectAll(".linkx").classed('link-highlight', true);
-                d3.select(container).selectAll("#extend_line").classed('link-highlight', true);
+                d3.select(container).selectAll(".linkx").classed('link-highlight', state);
+                d3.select(container).selectAll("#extend_line").classed('link-highlight', state);
 
                 if (d.type == "source") {
-                    d3.select(container).select("#from" + d.id + "to" + combine_source.id).classed('link-highlight', true);
+                    d3.select(container).select("#from" + node_extend.id + "to" + combine_source.id).classed('link-highlight', state);
                 } else if (d.type == "target") {
-                    d3.select(container).select("#from" + combine_source.id + "to" + d.id).classed('link-highlight', true);
+                    d3.select(container).select("#from" + combine_source.id + "to" + node_extend.id).classed('link-highlight', state);
                 } else {
-                    d3.select(container).select("#from" + d.id + "to" + combine_source.id).classed('link-highlight', true);
-                    d3.select(container).select("#from" + combine_source.id + "to" + d.id).classed('link-highlight', true);
+                    d3.select(container).select("#from" + node_extend.id + "to" + combine_source.id).classed('link-highlight', state);
+                    d3.select(container).select("#from" + combine_source.id + "to" + node_extend.id).classed('link-highlight', state);
                 }
-            }
-        }
+            } else if (node_extend.related_nodes.get(d.id) != null && d.id != node_center.id && d.type == node_center.type) {
+                var target_link_id = "from" + combine_source.id + "to" + d.id;
+                if (state) {
+                    // bring related link to front
+                    d3.select(container).selectAll('.linkx').sort(function (a, b) {
+                        return a.id == target_link_id;
+                    });
+                }
 
-        combine_highlight_mouseout = function (d) {
-            if (d.id == node_extend.id) {
-                d3.select(container).selectAll(".linkx").classed('link-highlight', false);
-                d3.select(container).selectAll("#extend_line").classed('link-highlight', false);
+                d3.select(container).selectAll(".linkx").classed('link-highlight', function (dl) {
+                    return (dl.id == target_link_id) && state;
+                });
+                d3.select(container).selectAll("#extend_line").classed('link-highlight', state);
 
                 if (d.type == "source") {
-                    d3.select(container).select("#from" + d.id + "to" + combine_source.id).classed('link-highlight', false);
+                    d3.select(container).select("#from" + node_extend.id + "to" + combine_source.id).classed('link-highlight', state);
                 } else if (d.type == "target") {
-                    d3.select(container).select("#from" + combine_source.id + "to" + d.id).classed('link-highlight', false);
+                    d3.select(container).select("#from" + combine_source.id + "to" + node_extend.id).classed('link-highlight', state);
                 } else {
-                    d3.select(container).select("#from" + d.id + "to" + combine_source.id).classed('link-highlight', false);
-                    d3.select(container).select("#from" + combine_source.id + "to" + d.id).classed('link-highlight', false);
+                    d3.select(container).select("#from" + node_extend.id + "to" + combine_source.id).classed('link-highlight', state);
+                    d3.select(container).select("#from" + combine_source.id + "to" + node_extend.id).classed('link-highlight', state);
                 }
             }
         }
