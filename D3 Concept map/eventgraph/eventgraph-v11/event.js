@@ -9,25 +9,27 @@ function node_mouseout(d) {
 }
 
 function node_mouse(d, state) {
-    if (state) {
-        // bring related link to front
-        d3.select(container).selectAll('.link').sort(function (a, b) {
-            return d.related_links.has(a.id);
-        });
-    }
-
-    //hightlight related link
-    d.related_links.values().forEach(function (link, index) {
-        d3.select(container).selectAll('#' + link.id).classed('link-highlight', state);
-    });
-
     //hightlight current node
     d3.select(container).selectAll('#g' + d.id).classed('group-highlight', state);
 
-    //hight light related node
-    d.related_nodes.forEach(function (key, node) {
-        d3.select(container).selectAll('#g' + node.id).classed('group-highlight', state);
-    });
+    if (d.type) {
+        if (state) {
+            // bring related link to front
+            d3.select(container).selectAll('.link').sort(function (a, b) {
+                return d.related_links.has(a.id);
+            });
+        }
+
+        //hightlight related link
+        d.related_links.values().forEach(function (link, index) {
+            d3.select(container).selectAll('#' + link.id).classed('link-highlight', state);
+        });
+
+        //hight light related node
+        d.related_nodes.forEach(function (key, node) {
+            d3.select(container).selectAll('#g' + node.id).classed('group-highlight', state);
+        });
+    }
 }
 
 function node_click(d) {

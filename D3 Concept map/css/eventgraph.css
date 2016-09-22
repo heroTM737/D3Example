@@ -79,9 +79,11 @@ line {
     fill: none;
 }
 
-.link-highlight {
+.link-highlight,
+line.link-highlight {
     stroke: #fd6e6e;
     stroke-width: 3px;
+    stroke-opacity: 1;
 }
 
 .event {
