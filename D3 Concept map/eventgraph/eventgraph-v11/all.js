@@ -23,8 +23,8 @@ var container_legend = document.getElementById("legend");
 var container_buttons = document.getElementById("buttons");
 
 function main() {
-    //    doFakedData();
-    doTestData();
+    doFakedData();
+    //    doTestData();
 
     legend();
 }

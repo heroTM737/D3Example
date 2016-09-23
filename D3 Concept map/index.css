@@ -23,3 +23,9 @@
     border-radius: 5px;
     color: black;
 }
+
+.graph-container {
+    width: 49%;
+    float: left;
+    border: 1px solid black;
+}
