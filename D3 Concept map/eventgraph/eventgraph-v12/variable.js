@@ -8,8 +8,6 @@ function getConfigVariable() {
     var L3_text_length_char = Math.max(event_max_text_length_char, machine_max_text_length_char);
     var machine_max_text_length_px = machine_max_text_length_char * character_length + text_node_margin * 2;
 
-    //    var padding_y = 20;
-
     var rw = (event_max_text_length_char + 3) * character_length + 10;
     var rh = 22;
 
@@ -37,6 +35,7 @@ function getConfigVariable() {
         shift_y: 0,
         padding: 10,
         y_margin: 5,
+        padding_y: 20,
         node_radius: node_radius,
         text_node_margin: text_node_margin,
         event_max_text_length_char: event_max_text_length_char,

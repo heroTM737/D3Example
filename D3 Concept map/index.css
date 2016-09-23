@@ -28,4 +28,9 @@
     width: 49%;
     float: left;
     border: 1px solid black;
+    overflow: auto;
+}
+
+.legend-svg {
+    float: left;
 }

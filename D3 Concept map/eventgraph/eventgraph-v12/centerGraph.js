@@ -1,5 +1,36 @@
-function center_graph(node_center, node_extend) {
-    buttons(false);
+function center_graph(node_center, node_extend, configVar) {
+    //create buttons
+    buttons(false, configVar);
+
+    //define in use variables
+    var node_radius = configVar.node_radius;
+
+    var L0_circle_radius = configVar.L0_circle_radius;
+    var L1_circle_radius = configVar.L1_circle_radius;
+    var L2_circle_radius = configVar.L2_circle_radius;
+    var L3_circle_radius = configVar.L3_circle_radius;
+
+    var L1_min_radius = configVar.L1_min_radius;
+    var L2_min_radius = configVar.L2_min_radius;
+
+    var L0_radius = configVar.L0_radius;
+    var L1_radius = configVar.L1_radius;
+    var L2_radius = configVar.L2_radius;
+
+    var L3_width = configVar.L3_width;
+    var L3_margin = configVar.L3_margin;
+
+    var c_marmin = 1;
+    var text_node_margin = configVar.text_node_margin;
+    var y_margin = configVar.y_margin;
+    var radius = configVar.node_radius;
+    var character_length = configVar.character_length;
+    var padding_y = configVar.padding_y;
+    var padding = configVar.padding;
+    var shift_x = configVar.shift_x;
+    var shift_y = configVar.shift_y;
+
+    //compute 3 levels of node
     var nodes_L1;
     var step_angle;
     if (node_center.type == "event") {
@@ -16,13 +47,11 @@ function center_graph(node_center, node_extend) {
     //define coordinate
     L1_radius = Math.max(L1_min_radius, nodes_L1.length * (L1_circle_radius + c_marmin) / Math.PI + L1_circle_radius);
     L2_radius = 2 * L1_radius;
-    extend_node_width = L2_circle_radius * 2 + text_node_margin + extend_text_length * character_length + padding_y;
-    svg_view_width = L2_radius * 2 + L2_circle_radius + padding * 2 + center_extend_margin * 2 + extend_node_width * 2;
-    svg_view_height = (L2_radius + L2_circle_radius + padding) * 2 + shift_y;
-    node_center.x = svg_view_width / 2;
+    extend_node_width = L2_circle_radius * 2 + text_node_margin + L3_width * character_length + padding_y;
+    svg_width = L2_radius * 2 + L2_circle_radius + padding * 2 + L3_margin * 2 + extend_node_width * 2;
+    svg_height = (L2_radius + L2_circle_radius + padding) * 2 + shift_y;
+    node_center.x = svg_width / 2;
     node_center.y = L2_radius + L2_circle_radius + padding + shift_y;
-    center.x = node_center.x;
-    center.y = node_center.y;
 
     nodes_L1.forEach(function (node_L1, index) {
         var combine = {
@@ -155,7 +184,7 @@ function center_graph(node_center, node_extend) {
         }
 
         nodes_L3.forEach(function (node_L3, index) {
-            node_L3.x = node_center.x + (L2_radius + L2_circle_radius + center_extend_margin + L3_circle_radius) * direction;
+            node_L3.x = node_center.x + (L2_radius + L2_circle_radius + L3_margin + L3_circle_radius) * direction;
             node_L3.y = base_y + L3_circle_radius + index * (L3_circle_radius * 2 + y_margin);
 
             links_extend.push({
@@ -207,18 +236,17 @@ function center_graph(node_center, node_extend) {
     }
 
     //clear
-    d3.select(container).selectAll("*").remove();
+    d3.select(configVar.container).selectAll("*").remove();
 
     //render
     if (nodes_L3.length > 0) {
-        svg_view_height = Math.max(svg_view_height, nodes_L3_height + padding * 2 + shift_y);
+        svg_height = Math.max(svg_height, nodes_L3_height + padding * 2 + shift_y);
     }
-    box.width = svg_view_width;
-    box.height = svg_view_height;
-    var svg = d3.select(container);
-    svg.attr("viewBox", "0 0 " + svg_view_width + " " + svg_view_height);
-    svg.attr("width", svg_view_width);
-    svg.attr("height", svg_view_height);
+
+    var svg = d3.select(configVar.container);
+    svg.attr("viewBox", "0 0 " + svg_width + " " + svg_height);
+    svg.attr("width", svg_width);
+    svg.attr("height", svg_height);
     var L0_className = [];
     var L1_className = [];
     var L2_className = [];
@@ -301,15 +329,15 @@ function center_graph(node_center, node_extend) {
     }
 
     //draw L0 or center
-    var node_L0_group = createGroup("L0-group", L0_className, [node_center]);
+    var node_L0_group = createGroup(configVar, "L0-group", L0_className, [node_center]);
     var node_L0 = draw_L0(node_L0_group, isEventCenter);
 
     //draw L1
-    var node_L1_group = createGroup("L1-group", L1_className, nodes_L1);
+    var node_L1_group = createGroup(configVar, "L1-group", L1_className, nodes_L1);
     var node_L1 = draw_L1(node_L1_group, isEventCenter);
 
     //draw L2
-    var node_L2_group = createGroup("L2-group", L2_className, nodes_L2, null, null, node_combine_click);
+    var node_L2_group = createGroup(configVar, "L2-group", L2_className, nodes_L2, null, null, node_combine_click);
     var node_L2 = draw_L2(node_L2_group, isEventCenter);
     var node_L2_text = node_L2_group.append("text")
         .attr("class", "text")
@@ -329,7 +357,7 @@ function center_graph(node_center, node_extend) {
         });
 
     //draw L3
-    var node_L3_group = createGroup("L3-group", [], nodes_L3);
+    var node_L3_group = createGroup(configVar, "L3-group", [], nodes_L3);
     var node_L3 = draw_L3(node_L3_group, isEventCenter);
     var node_L3_text = node_L3_group.append("text")
         .attr("class", "text")
@@ -347,16 +375,6 @@ function center_graph(node_center, node_extend) {
         .text(function (d) {
             return shortenExtendText(d.data.name);
         });
-
-    legend();
-}
-
-function rotate_text(d) {
-    var rotate = d.x < center.x ? (d.a + 180) : d.a;
-    rotate += " " + d.x + " " + d.y;
-    var translate = rh / 2 + text_node_margin;
-    translate = d.x < center.x ? -translate : translate;
-    return "rotate(" + rotate + ")translate(" + translate + ")";
 }
 
 function rotate_node(d) {
@@ -534,7 +552,7 @@ function draw_L3(node_L3_group, isEventCenter) {
     }
 }
 
-function createGroup(className, classNameExtend, data, mouseOver, mouseOut, click) {
+function createGroup(configVar, className, classNameExtend, data, mouseOver, mouseOut, click) {
     var menu = function (data) {
         var name = data.data.name;
         return [
@@ -548,7 +566,13 @@ function createGroup(className, classNameExtend, data, mouseOver, mouseOut, clic
             }
         ]
     };
-    var node_group = d3.select(container).selectAll("." + className)
+
+    var mouseEvents = getEvents(configVar);
+    var node_mouseover = mouseEvents.node_mouseover;
+    var node_mouseout = mouseEvents.node_mouseout;
+    var node_click = mouseEvents.node_click;
+
+    var node_group = d3.select(configVar.container).selectAll("." + className)
         .data(data)
         .enter().append("g")
         .attr("class", function (d) {
