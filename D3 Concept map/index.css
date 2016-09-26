@@ -16,7 +16,6 @@
     position: fixed;
     top: 10;
     left: 10;
-    /*    background: rgba(0, 0, 0, 0.5);*/
     background: white;
     border: 1px solid red;
     padding: 3px;
@@ -25,10 +24,15 @@
 }
 
 .graph-container {
-    width: 49%;
+    width: 50%;
+    height: 100vh;
     float: left;
-    border: 1px solid black;
     overflow: auto;
+}
+
+.graph-container:first-child {
+    width: calc(50% - 1px);
+    border-right: 1px solid black;
 }
 
 .legend-svg {

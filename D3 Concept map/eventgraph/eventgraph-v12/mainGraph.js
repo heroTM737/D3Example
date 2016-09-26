@@ -93,7 +93,7 @@ function main_graph(configVar) {
     svg.attr("width", svg_width);
     svg.attr("height", svg_height);
 
-    var mouseEvents = getEvents(configVar);
+    var mouseEvents = configVar.events;
     var node_mouseover = mouseEvents.node_mouseover;
     var node_mouseout = mouseEvents.node_mouseout;
     var node_click = mouseEvents.node_click;

@@ -1,10 +1,10 @@
 function getEvents(configVar) {
     var container = configVar.container;
+    var outer;
 
     var node_mouse = function (d, state) {
         //hightlight current node
         d3.select(container).selectAll('#g' + d.id).classed('group-highlight', state);
-
         if (d.type) {
             if (state) {
                 // bring related link to front
@@ -29,12 +29,12 @@ function getEvents(configVar) {
 
     var node_mouseover = function (d) {
         node_mouse(d, true);
-        combine_highlight(d, true);
+        outer.combine_highlight(d, true);
     }
 
     var node_mouseout = function (d) {
         node_mouse(d, false);
-        combine_highlight(d, false);
+        outer.combine_highlight(d, false);
     }
 
     var node_click = function (d) {
@@ -51,13 +51,15 @@ function getEvents(configVar) {
         closeContextMenu();
     }
 
-    return {
+    outer = {
         node_mouseover: node_mouseover,
         node_mouseout: node_mouseout,
         node_click: node_click,
         node_combine_click: node_combine_click,
         combine_highlight: combine_highlight,
     }
+
+    return outer;
 }
 
 function closeContextMenu() {

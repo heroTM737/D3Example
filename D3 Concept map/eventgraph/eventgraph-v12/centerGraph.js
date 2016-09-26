@@ -197,7 +197,8 @@ function center_graph(node_center, node_extend, configVar) {
     }
     if (combine_source != null) {
 
-        combine_highlight = function (d, state) {
+        configVar.events.combine_highlight = function (d, state) {
+            var container = configVar.container;
             if (d.id == node_extend.id) {
                 d3.select(container).selectAll(".linkx").classed('link-highlight', state);
                 d3.select(container).selectAll("#extend_line").classed('link-highlight', state);
@@ -575,7 +576,7 @@ function createGroup(configVar, className, classNameExtend, data, mouseOver, mou
         ]
     };
 
-    var mouseEvents = getEvents(configVar);
+    var mouseEvents = configVar.events;
     var node_mouseover = mouseEvents.node_mouseover;
     var node_mouseout = mouseEvents.node_mouseout;
     var node_click = mouseEvents.node_click;

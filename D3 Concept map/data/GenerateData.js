@@ -6,7 +6,6 @@ function getFakedEventData() {
     var nodes = [];
     var links = [];
 
-    var numberOfEvent = Math.floor(Math.random() * 100);
     var pairEM = [
         {
             e: 50,
@@ -28,9 +27,6 @@ function getFakedEventData() {
     var chosenIndex = 3;
     var numberOfEvent = pairEM[chosenIndex].e;
     var numberOfMachine = pairEM[chosenIndex].m;
-
-    //        var numberOfEvent = 50;
-    //    var numberOfMachine = 30;
 
     for (var i = 0; i < numberOfEvent; i++) {
         var weight = Math.floor(Math.random() * 10);
@@ -100,9 +96,91 @@ function getFakedEventData() {
         }
     }
 
-    var container = {};
-    container.nodes = nodes;
-    container.links = links;
+    return {
+        nodes: nodes,
+        links: links
+    };
+}
 
-    return container;
+function getFakedEventData2() {
+    var nodes = [];
+    var links = [];
+
+    var testCollections = [
+        {
+            s: 1,
+            e: 1,
+            t: 40
+        },
+        {
+            s: 10,
+            e: 10,
+            t: 10
+        },
+        {
+            s: 20,
+            e: 20,
+            t: 20
+        },
+    ];
+    var chosenIndex = 0;
+    var numberOfSource = testCollections[chosenIndex].s;
+    var numberOfEvent = testCollections[chosenIndex].e;
+    var numberOfTarget = testCollections[chosenIndex].t;
+
+    for (var i = 0; i < numberOfSource; i++) {
+        var weight = Math.floor(Math.random() * 10);
+        nodes.push({
+            "id": "source" + i,
+            "_weight": weight,
+            "name": "source " + i,
+            "typeLabel": "Attacker Address, Target Address ",
+            "type": "source"
+        });
+    }
+
+    for (var i = 0; i < numberOfTarget; i++) {
+        var weight = Math.floor(Math.random() * 10);
+        nodes.push({
+            "id": "target" + i,
+            "_weight": weight,
+            "name": "target " + i,
+            "typeLabel": "Attacker Address, Target Address ",
+            "type": "target"
+        });
+    }
+
+    for (var i = 0; i < numberOfEvent; i++) {
+        var weight = Math.floor(Math.random() * 10);
+        nodes.push({
+            "id": "event" + i,
+            "_weight": weight,
+            "name": "event " + i,
+            "typeLabel": "Name ",
+            "type": "event"
+        });
+    }
+
+    for (var i = 0; i < numberOfSource; i++) {
+        for (var j = 0; j < numberOfEvent; j++) {
+            links.push({
+                "source": i,
+                "target": j + numberOfSource + numberOfTarget
+            });
+        }
+    }
+
+    for (var i = 0; i < numberOfTarget; i++) {
+        for (var j = 0; j < numberOfEvent; j++) {
+            links.push({
+                "source": j + numberOfSource + numberOfTarget,
+                "target": i + numberOfSource
+            });
+        }
+    }
+
+    return {
+        nodes: nodes,
+        links: links
+    };
 }

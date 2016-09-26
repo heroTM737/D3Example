@@ -24,7 +24,8 @@ function main() {
 }
 
 function doFakedData() {
-    var data = getFakedEventData();
+    //    var data = getFakedEventData();
+    var data = getFakedEventData2();
     loadChart(data);
 }
 
@@ -54,6 +55,8 @@ function loadChart(data) {
     configVar.container_legend = container.getElementsByClassName("legend-svg")[0];
     configVar.container_buttons = container.getElementsByClassName("buttons-svg")[0];
 
+    configVar.events = getEvents(configVar);
+
     configVar.data = processData(data);
     main_graph(configVar);
     legend(configVar);
@@ -66,7 +69,9 @@ function loadChart(data) {
     configVar.container_legend = container.getElementsByClassName("legend-svg")[0];
     configVar.container_buttons = container.getElementsByClassName("buttons-svg")[0];
 
+    configVar.events = getEvents(configVar);
     configVar.data = processData(data);
+
     main_graph(configVar);
     legend(configVar);
 }
