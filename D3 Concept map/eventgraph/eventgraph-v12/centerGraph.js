@@ -48,10 +48,12 @@ function center_graph(node_center, node_extend, configVar) {
     L1_radius = Math.max(L1_min_radius, nodes_L1.length * (L1_circle_radius + c_marmin) / Math.PI + L1_circle_radius);
     L2_radius = 2 * L1_radius;
     extend_node_width = L2_circle_radius * 2 + text_node_margin + L3_width * character_length + padding_y;
-    svg_width = L2_radius * 2 + L2_circle_radius + padding * 2 + L3_margin * 2 + extend_node_width * 2;
+    svg_width = L2_radius * 2 + L2_circle_radius + padding * 2 + L3_margin * 2 + L3_width * 2;
     svg_height = (L2_radius + L2_circle_radius + padding) * 2 + shift_y;
     node_center.x = svg_width / 2;
     node_center.y = L2_radius + L2_circle_radius + padding + shift_y;
+    configVar.center.x = node_center.x;
+    configVar.center.y = node_center.y;
 
     nodes_L1.forEach(function (node_L1, index) {
         var combine = {
@@ -330,15 +332,15 @@ function center_graph(node_center, node_extend, configVar) {
 
     //draw L0 or center
     var node_L0_group = createGroup(configVar, "L0-group", L0_className, [node_center]);
-    var node_L0 = draw_L0(node_L0_group, isEventCenter);
+    var node_L0 = draw_L0(node_L0_group, isEventCenter, configVar);
 
     //draw L1
     var node_L1_group = createGroup(configVar, "L1-group", L1_className, nodes_L1);
-    var node_L1 = draw_L1(node_L1_group, isEventCenter);
+    var node_L1 = draw_L1(node_L1_group, isEventCenter, configVar);
 
     //draw L2
-    var node_L2_group = createGroup(configVar, "L2-group", L2_className, nodes_L2, null, null, node_combine_click);
-    var node_L2 = draw_L2(node_L2_group, isEventCenter);
+    var node_L2_group = createGroup(configVar, "L2-group", L2_className, nodes_L2, null, null, getEvents(configVar).node_combine_click);
+    var node_L2 = draw_L2(node_L2_group, isEventCenter, configVar);
     var node_L2_text = node_L2_group.append("text")
         .attr("class", "text")
         .attr('id', function (d) {
@@ -358,7 +360,7 @@ function center_graph(node_center, node_extend, configVar) {
 
     //draw L3
     var node_L3_group = createGroup(configVar, "L3-group", [], nodes_L3);
-    var node_L3 = draw_L3(node_L3_group, isEventCenter);
+    var node_L3 = draw_L3(node_L3_group, isEventCenter, configVar);
     var node_L3_text = node_L3_group.append("text")
         .attr("class", "text")
         .attr('id', function (d) {
@@ -373,20 +375,22 @@ function center_graph(node_center, node_extend, configVar) {
             return d.y;
         })
         .text(function (d) {
-            return shortenExtendText(d.data.name);
+            return shortenExtendText(d.data.name, configVar);
         });
 }
 
-function rotate_node(d) {
+function rotate_node(d, config) {
     if (d.a == null || d.a == undefined) {
         d.a = 0;
     }
-    var rotate = d.x < center.x ? (d.a + 180) : d.a;
+    var rotate = d.x < config.center.x ? (d.a + 180) : d.a;
+    rotate %= 360;
     rotate += " " + d.x + " " + d.y;
     return "rotate(" + rotate + ")";
 }
 
-function draw_L0(node_L0_group, isEventCenter) {
+function draw_L0(node_L0_group, isEventCenter, configVar) {
+    var L0_circle_radius = configVar.L0_circle_radius;
     if (isEventCenter) {
         var node_L0 = node_L0_group.append("rect")
             .attr("class", "event")
@@ -419,7 +423,7 @@ function draw_L0(node_L0_group, isEventCenter) {
                 return L0_circle_radius;
             })
             .attr("text", function (d) {
-                return shortenText(d.data.name);
+                return shortenText(d.data.name, configVar);
             });
     }
 
@@ -433,11 +437,12 @@ function draw_L0(node_L0_group, isEventCenter) {
         .attr("alignment-baseline", "central")
         .attr("text-anchor", "middle")
         .text(function (d) {
-            return shortenText(d.data.name);
+            return shortenText(d.data.name, configVar);
         });
 }
 
-function draw_L1(node_L1_group, isEventCenter) {
+function draw_L1(node_L1_group, isEventCenter, configVar) {
+    var L1_circle_radius = configVar.L1_circle_radius;
     if (isEventCenter) {
         var node_L1 = node_L1_group.append("circle")
             .attr("class", function (d) {
@@ -461,7 +466,9 @@ function draw_L1(node_L1_group, isEventCenter) {
             .attr('id', function (d) {
                 return d.id;
             })
-            .attr("transform", rotate_node)
+            .attr("transform", function (d) {
+                return rotate_node(d, configVar);
+            })
             .attr("x", function (d) {
                 return d.x - L1_circle_radius;
             })
@@ -473,14 +480,17 @@ function draw_L1(node_L1_group, isEventCenter) {
     }
 }
 
-function draw_L2(node_L2_group, isEventCenter) {
+function draw_L2(node_L2_group, isEventCenter, configVar) {
+    var L2_circle_radius = configVar.L2_circle_radius;
     if (isEventCenter) {
         var node_L2 = node_L2_group.append("rect")
             .attr("class", "")
             .attr('id', function (d) {
                 return d.id;
             })
-            .attr("transform", rotate_node)
+            .attr("transform", function (d) {
+                return rotate_node(d, configVar);
+            })
             .attr("x", function (d) {
                 return d.x - L2_circle_radius;
             })
@@ -499,7 +509,6 @@ function draw_L2(node_L2_group, isEventCenter) {
             .attr('id', function (d) {
                 return d.id;
             })
-            .attr("transform", rotate_node)
             .attr("cx", function (d) {
                 return d.x;
             })
@@ -512,8 +521,8 @@ function draw_L2(node_L2_group, isEventCenter) {
     }
 }
 
-function draw_L3(node_L3_group, isEventCenter) {
-    var radius = L3_circle_radius;
+function draw_L3(node_L3_group, isEventCenter, configVar) {
+    var radius = configVar.L3_circle_radius;
     if (isEventCenter) {
         var node_L3 = node_L3_group.append("rect")
             .attr("class", "event")

@@ -83,7 +83,7 @@ function buttons(eventgraphIsMainGraphOn, configVar) {
             return "homeGroup " + (eventgraphIsMainGraphOn ? "on" : "off")
         })
         .on("click", function () {
-            main_graph(eventgraphCurrentData);
+            main_graph(configVar);
         });
 
     var homeButton = homeGroup.append("rect")
