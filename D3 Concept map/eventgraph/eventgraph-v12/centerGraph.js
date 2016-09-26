@@ -30,7 +30,7 @@ function center_graph(node_center, node_extend, configVar) {
     var shift_x = configVar.shift_x;
     var shift_y = configVar.shift_y;
 
-    //compute 3 levels of node
+    //computation
     var nodes_L1;
     var step_angle;
     if (node_center.type == "event") {
@@ -44,12 +44,11 @@ function center_graph(node_center, node_extend, configVar) {
     var links = [];
     var nodes_L2 = [];
 
-    //define coordinate
     L1_radius = Math.max(L1_min_radius, nodes_L1.length * (L1_circle_radius + c_marmin) / Math.PI + L1_circle_radius);
     L2_radius = 2 * L1_radius;
     extend_node_width = L2_circle_radius * 2 + text_node_margin + L3_width * character_length + padding_y;
-    svg_width = L2_radius * 2 + L2_circle_radius + padding * 2 + L3_margin * 2 + L3_width * 2;
-    svg_height = (L2_radius + L2_circle_radius + padding) * 2 + shift_y;
+    var svg_width = L2_radius * 2 + L2_circle_radius + padding * 2 + L3_margin * 2 + L3_width * 2;
+    var svg_height = (L2_radius + L2_circle_radius + padding) * 2 + shift_y;
     node_center.x = svg_width / 2;
     node_center.y = L2_radius + L2_circle_radius + padding + shift_y;
     configVar.center.x = node_center.x;
