@@ -25,9 +25,7 @@ function processData(data) {
         var source_index = link_data.source;
         var target_index = link_data.target;
 
-        var link = {
-            id: "from" + source_index + "to" + target_index
-        };
+        var link = {};
 
         if (nodes_data[source_index].type == "source_target" || nodes_data[source_index].type == "source" || nodes_data[source_index].type == "target") {
             var s_id = "s" + source_index + "s";
@@ -46,7 +44,7 @@ function processData(data) {
             }
 
             var e_id = "e" + target_index + "e";
-            link.id = "from" + s_id + "to" + e_id;
+            link.id = "from_" + s_id + "_to_" + e_id;
 
             var event = events.get(e_id);
             event.related_nodes.set(source.id, source);
@@ -76,7 +74,7 @@ function processData(data) {
             }
 
             var e_id = "e" + source_index + "e";
-            link.id = "from" + e_id + "to" + t_id;
+            link.id = "from_" + t_id + "_to_" + e_id;
 
             var event = events.get(e_id);
             event.related_nodes.set(target.id, target);
@@ -94,7 +92,7 @@ function processData(data) {
         links.set(link.id, link);
     });
 
-    var link_id = "id";
+    var link_id;
     events.values().forEach(function (event, event_index) {
         event.sources.forEach(function (source_key, source) {
             event.targets.forEach(function (target_key, target) {
@@ -104,10 +102,10 @@ function processData(data) {
                 target.related_nodes.set(source.id, source);
                 target.related_machines.set(source.id, source);
 
-                link_id = "from" + event.id + "to" + target.id;
+                link_id = "from_" + event.id + "_to_" + target.id;
                 source.related_links.set(link_id, links.get(link_id));
 
-                link_id = "from" + source.id + "to" + event.id;
+                link_id = "from_" + source.id + "_to_" + event.id;
                 target.related_links.set(link_id, links.get(link_id));
             });
         });

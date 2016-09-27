@@ -24,8 +24,8 @@ function main() {
 }
 
 function doFakedData() {
-    //    var data = getFakedEventData();
-    var data = getFakedEventData2();
+    var data = getFakedEventData();
+    //    var data = getFakedEventData2();
     loadChart(data);
 }
 

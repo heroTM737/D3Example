@@ -23,7 +23,7 @@ function main_graph(configVar) {
     events.forEach(function (event_key, event) {
         event.sources.forEach(function (source_key, source) {
             var link = {
-                id: "from" + source.id + "to" + event.id,
+                id: "from_" + source.id + "_to_" + event.id,
                 source: source,
                 target: event
             }
@@ -32,9 +32,9 @@ function main_graph(configVar) {
 
         event.targets.forEach(function (target_key, target) {
             var link = {
-                id: "from" + event.id + "to" + target.id,
-                source: event,
-                target: target
+                id: "from_" + target.id + "_to_" + event.id,
+                source: target,
+                target: event
             }
             links.set(link.id, link);
         });

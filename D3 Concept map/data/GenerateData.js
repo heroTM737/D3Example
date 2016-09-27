@@ -24,7 +24,7 @@ function getFakedEventData() {
             m: 10
         },
     ];
-    var chosenIndex = 3;
+    var chosenIndex = 2;
     var numberOfEvent = pairEM[chosenIndex].e;
     var numberOfMachine = pairEM[chosenIndex].m;
 
