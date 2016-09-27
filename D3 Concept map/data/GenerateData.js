@@ -123,7 +123,7 @@ function getFakedEventData2() {
             t: 20
         },
     ];
-    var chosenIndex = 0;
+    var chosenIndex = 1;
     var numberOfSource = testCollections[chosenIndex].s;
     var numberOfEvent = testCollections[chosenIndex].e;
     var numberOfTarget = testCollections[chosenIndex].t;
@@ -163,19 +163,25 @@ function getFakedEventData2() {
 
     for (var i = 0; i < numberOfSource; i++) {
         for (var j = 0; j < numberOfEvent; j++) {
-            links.push({
-                "source": i,
-                "target": j + numberOfSource + numberOfTarget
-            });
+            var random = Math.floor(Math.random() * 10) > 5 ? true : false;
+            if (random) {
+                links.push({
+                    "source": i,
+                    "target": j + numberOfSource + numberOfTarget
+                });
+            }
         }
     }
 
     for (var i = 0; i < numberOfTarget; i++) {
         for (var j = 0; j < numberOfEvent; j++) {
-            links.push({
-                "source": j + numberOfSource + numberOfTarget,
-                "target": i + numberOfSource
-            });
+            var random = Math.floor(Math.random() * 10) > 5 ? true : false;
+            if (random) {
+                links.push({
+                    "source": j + numberOfSource + numberOfTarget,
+                    "target": i + numberOfSource
+                });
+            }
         }
     }
 

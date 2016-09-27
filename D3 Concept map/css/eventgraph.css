@@ -155,9 +155,7 @@ line.link-highlight {
     stroke: #ff0000;
 }
 
-.group-highlight .text {
-    fill: steelblue;
-}
+.group-highlight .text {}
 
 
 /*context menu*/
