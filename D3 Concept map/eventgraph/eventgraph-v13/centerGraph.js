@@ -164,7 +164,7 @@ function center_graph(node_center, node_extend, configVar) {
             node_L3.y = base_y + L3_circle_radius + index * (L3_circle_radius * 2 + y_margin);
 
             links_extend.push({
-                id: "from" + combine_source.id + "to" + node_L3.id,
+                id: "from_" + combine_source.id + "_to_" + node_L3.id,
                 source: combine_transit,
                 target: node_L3
             });
@@ -178,13 +178,10 @@ function center_graph(node_center, node_extend, configVar) {
                 d3.select(container).selectAll(".linkx").classed('link-highlight', state);
                 d3.select(container).selectAll("#extend_line").classed('link-highlight', state);
 
-                if (d.type == "source") {
-                    d3.select(container).select("#from" + node_extend.id + "to" + combine_source.id).classed('link-highlight', state);
-                } else if (d.type == "target") {
-                    d3.select(container).select("#from" + combine_source.id + "to" + node_extend.id).classed('link-highlight', state);
+                if (d.type == "event") {
+                    d3.select(container).select("#from_" + combine_source.id + "_to_" + node_extend.id).classed('link-highlight', state);
                 } else {
-                    d3.select(container).select("#from" + node_extend.id + "to" + combine_source.id).classed('link-highlight', state);
-                    d3.select(container).select("#from" + combine_source.id + "to" + node_extend.id).classed('link-highlight', state);
+                    d3.select(container).select("#from_" + node_extend.id + "_to_" + combine_source.id).classed('link-highlight', state);
                 }
             } else {
                 var checkRelated = node_extend.related_nodes.get(d.id) != null;
@@ -204,27 +201,28 @@ function center_graph(node_center, node_extend, configVar) {
                 console.log("checkNotCenter = " + checkNotCenter);
                 console.log("checkType = " + checkType);
                 if (checkRelated && checkNotCenter && checkType) {
-                    console.log("bbb");
-                    var target_link_id = "from" + combine_source.id + "to" + d.id;
+                    console.log("inside");
+                    var target_link_id = "from_" + combine_source.id + "_to_" + d.id;
+
+                    //bring related link to front if highlight
                     if (state) {
-                        // bring related link to front
                         d3.select(container).selectAll('.linkx').sort(function (a, b) {
                             return a.id == target_link_id;
                         });
                     }
 
+                    //highlight related link
                     d3.select(container).selectAll(".linkx").classed('link-highlight', function (dl) {
                         return (dl.id == target_link_id) && state;
                     });
+
+                    //highlight extend line
                     d3.select(container).selectAll("#extend_line").classed('link-highlight', state);
 
-                    if (d.type == "source") {
-                        d3.select(container).select("#from" + node_extend.id + "to" + combine_source.id).classed('link-highlight', state);
-                    } else if (d.type == "target") {
-                        d3.select(container).select("#from" + combine_source.id + "to" + node_extend.id).classed('link-highlight', state);
+                    if (d.type == "event") {
+                        d3.select(container).select("#from_" + node_extend.id + "_to_" + combine_source.id).classed('link-highlight', state);
                     } else {
-                        d3.select(container).select("#from" + node_extend.id + "to" + combine_source.id).classed('link-highlight', state);
-                        d3.select(container).select("#from" + combine_source.id + "to" + node_extend.id).classed('link-highlight', state);
+                        d3.select(container).select("#from_" + combine_source.id + "_to_" + node_extend.id).classed('link-highlight', state);
                     }
                 }
             }

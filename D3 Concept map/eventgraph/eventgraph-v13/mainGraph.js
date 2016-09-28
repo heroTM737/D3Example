@@ -93,10 +93,10 @@ function main_graph(configVar) {
     svg.attr("width", svg_width);
     svg.attr("height", svg_height);
 
-    var mouseEvents = configVar.events;
-    var node_mouseover = mouseEvents.node_mouseover;
-    var node_mouseout = mouseEvents.node_mouseout;
-    var node_click = mouseEvents.node_click;
+    configVar.events.combine_highlight = function (d, state) {};
+    var node_mouseover = configVar.events.node_mouseover;
+    var node_mouseout = configVar.events.node_mouseout;
+    var node_click = configVar.events.node_click;
 
     var menu = function (data) {
         var name = data.data.name;
