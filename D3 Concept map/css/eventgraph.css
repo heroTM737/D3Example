@@ -6,32 +6,22 @@
     float: left;
 }
 
-.legend-container #buttons {}
-
-.legend-container .playGroup {
-    cursor: pointer;
-}
-
-.legend-container .playGroup path {
-    fill: #5a5a5a;
-}
-
-.legend-container .homeGroup {
+.homeGroup {
     cursor: pointer;
     fill: #5a5a5a;
 }
 
-.legend-container .homeGroup text {
+.homeGroup text {
     font-size: 14px;
 }
 
-.legend-container .homeGroup.on text {
+.homeGroup.on text {
     fill: #b2b2b2;
 }
 
-.legend-container .homeGroup.off text {}
+.homeGroup.off text {}
 
-.legend-container .eventgraph-button {
+.eventgraph-button {
     fill: #f0f0ef;
     stroke: #b2b2b2;
     stroke-width: 1px;
