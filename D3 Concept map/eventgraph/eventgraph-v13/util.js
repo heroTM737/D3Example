@@ -4,9 +4,6 @@ var diagonal = function (configVar) {
         .source(function (d) {
             var x = d.source.y;
             var y = d.source.x;
-            if (d.source.data.type == "event") {
-                y = y + rw / 2;
-            }
             return {
                 "x": x,
                 "y": y
@@ -15,8 +12,10 @@ var diagonal = function (configVar) {
         .target(function (d) {
             var x = d.target.y;
             var y = d.target.x;
-            if (d.target.data.type == "event") {
+            if (d.source.type == "source") {
                 y = y - rw / 2;
+            } else {
+                y = y + rw / 2;
             }
             return {
                 "x": x,

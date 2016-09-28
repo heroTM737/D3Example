@@ -102,7 +102,7 @@ function processData(data) {
                 target.related_nodes.set(source.id, source);
                 target.related_machines.set(source.id, source);
 
-                link_id = "from_" + event.id + "_to_" + target.id;
+                link_id = "from_" + target.id + "_to_" + event.id;
                 source.related_links.set(link_id, links.get(link_id));
 
                 link_id = "from_" + source.id + "_to_" + event.id;

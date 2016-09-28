@@ -63,62 +63,37 @@ function center_graph(node_center, node_extend, configVar) {
         }
         nodes_L2.push(combine);
 
-        if (node_center.type == "source") {
-            combine.count = node_L1.targets.size();
-
+        if (node_center.type == "event") {
+            combine.count = node_L1.related_events.size() - 1;
             links.push({
-                id: "from" + node_center.id + "to" + node_L1.id,
-                source: node_center,
-                target: node_L1
-            });
-
-            links.push({
-                id: "from" + node_L1.id + "to" + combine.id,
-                source: node_L1,
-                target: combine
-            });
-        } else if (node_center.type == "target") {
-            combine.count = node_L1.sources.size();
-
-            links.push({
-                id: "from" + node_L1.id + "to" + node_center.id,
+                id: "from_" + node_L1.id + "_to_" + node_center.id,
                 source: node_L1,
                 target: node_center
             });
 
             links.push({
-                id: "from" + combine.id + "to" + node_L1.id,
+                id: "from_" + node_L1.id + "_to_" + combine.id,
+                source: node_L1,
+                target: combine
+            });
+        } else {
+            if (node_center.type == "source") {
+                combine.count = node_L1.targets.size();
+            } else {
+                combine.count = node_L1.sources.size();
+            }
+
+            links.push({
+                id: "from_" + node_center.id + "_to_" + node_L1.id,
+                source: node_center,
+                target: node_L1
+            });
+
+            links.push({
+                id: "from_" + combine.id + "_to_" + node_L1.id,
                 source: combine,
                 target: node_L1
             });
-        } else {
-            combine.count = node_L1.related_events.size() - 1;
-            if (node_L1.type == "source") {
-                links.push({
-                    id: "from" + node_L1.id + "to" + node_center.id,
-                    source: node_L1,
-                    target: node_center
-                });
-
-                links.push({
-                    id: "from" + node_L1.id + "to" + combine.id,
-                    source: node_L1,
-                    target: combine
-                });
-            } else {
-                links.push({
-                    id: "from" + node_center.id + "to" + node_L1.id,
-                    source: node_center,
-                    target: node_L1
-                });
-
-                links.push({
-                    id: "from" + combine.id + "to" + node_L1.id,
-                    source: combine,
-                    target: node_L1
-                });
-            }
-
         }
 
         node_L1.x = node_center.x + Math.cos(index * step_angle) * L1_radius;
