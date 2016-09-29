@@ -39,7 +39,11 @@ function main_graph(configVar) {
     });
 
     //define svg size
-    center.radius = Math.max(events.size() * (rh + y_margin) / 2, rw);
+    var radius_by_events_size = events.size() * (rh + y_margin) / 2;
+    var radius_by_event_width = rw;
+    var radius_by_machine_size = Math.max(source_machines.size(), target_machines.size()) * (radius + y_margin) * 4 / Math.PI;
+    center.radius = Math.max(radius_by_events_size, radius_by_event_width);
+    center.radius = Math.max(center.radius, radius_by_machine_size);
     center.x = padding + shift_x + Math.min(center.radius, center.radius / 2 + 100) + text_node_margin + machine_max_text_length_px;
     center.y = padding + shift_y + center.radius + rh;
     configVar.center.x = center.x;
@@ -268,5 +272,6 @@ function main_graph(configVar) {
         });
 
     legend(configVar);
+    configVar.graphDescription = "main graph";
     buttons(true, configVar);
 }

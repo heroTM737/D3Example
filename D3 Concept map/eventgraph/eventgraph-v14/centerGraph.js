@@ -369,6 +369,7 @@ function center_graph(node_center, node_extend, configVar) {
         });
 
     legend(configVar);
+    configVar.graphDescription = "center node: " + node_center.data.name;
     buttons(false, configVar);
 }
 
@@ -414,12 +415,9 @@ function draw_L0(node_L0_group, isEventCenter, configVar) {
             })
             .attr("r", function (d) {
                 return L0_circle_radius;
-            })
-            .attr("text", function (d) {
-                return shortenText(d.data.name, configVar);
             });
     }
-
+    /*
     var node_L0_text = node_L0_group.append("text")
         .attr("x", function (d) {
             return d.x;
@@ -432,6 +430,7 @@ function draw_L0(node_L0_group, isEventCenter, configVar) {
         .text(function (d) {
             return shortenText(d.data.name, configVar);
         });
+        */
 }
 
 function draw_L1(node_L1_group, isEventCenter, configVar) {

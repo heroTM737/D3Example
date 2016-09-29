@@ -88,4 +88,11 @@ function buttons(eventgraphIsMainGraphOn, configVar) {
         .attr("text-anchor", "middle")
         .text("home");
 
+    var graphText = homeGroup.append("text")
+        .attr("x", configVar.center.x)
+        .attr("y", padding + radius * 3)
+        .attr("alignment-baseline", "central")
+        .attr("text-anchor", "middle")
+        .text(configVar.graphDescription);
+
 }
