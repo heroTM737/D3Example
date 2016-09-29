@@ -164,6 +164,9 @@ function getFakedEventData2() {
     for (var i = 0; i < numberOfSource; i++) {
         for (var j = 0; j < numberOfEvent; j++) {
             var random = Math.floor(Math.random() * 10) > 5 ? true : false;
+            if (i == 0) {
+                random = true;
+            }
             if (random) {
                 links.push({
                     "source": i,
@@ -176,6 +179,9 @@ function getFakedEventData2() {
     for (var i = 0; i < numberOfTarget; i++) {
         for (var j = 0; j < numberOfEvent; j++) {
             var random = Math.floor(Math.random() * 10) > 5 ? true : false;
+            if (i == 0) {
+                random = true;
+            }
             if (random) {
                 links.push({
                     "source": j + numberOfSource + numberOfTarget,
