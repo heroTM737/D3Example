@@ -1,6 +1,8 @@
 function legend(configVar) {
     var svg = d3.select(configVar.container);
 
+    var textConstants = configVar.textConstants;
+
     var radius = configVar.node_radius;
     var padding = 10;
     var x = radius + padding;
@@ -24,7 +26,7 @@ function legend(configVar) {
         .attr("alignment-baseline", "central")
         .attr("x", x + radius + margin)
         .attr("y", y)
-        .text("source node");
+        .text(textConstants.sourceNode);
 
     var machine_target = legend_group.append("circle")
         .attr("class", "machine target")
@@ -37,7 +39,7 @@ function legend(configVar) {
         .attr("alignment-baseline", "central")
         .attr("x", x + radius + margin)
         .attr("y", padding + radius * 2 + margin + radius)
-        .text("target node");
+        .text(textConstants.targetNode);
 
     var event = legend_group.append("rect")
         .attr("class", "event")
@@ -51,15 +53,17 @@ function legend(configVar) {
         .attr("alignment-baseline", "central")
         .attr("x", x + radius + margin)
         .attr("y", padding + (radius * 2 + margin) * 2 + radius)
-        .text("event");
+        .text(textConstants.event);
 }
 
 function buttons(eventgraphIsMainGraphOn, configVar) {
     var svg = d3.select(configVar.container);
 
+    var textConstants = configVar.textConstants;
+
     var radius = configVar.node_radius;
     var padding = 5;
-    var button_width = 44;
+    var button_width = textConstants.home.length * configVar.character_length;
 
     var group = svg.append("g")
         .attr("class", "buttons-group");
@@ -86,7 +90,7 @@ function buttons(eventgraphIsMainGraphOn, configVar) {
         .attr("y", padding + radius)
         .attr("alignment-baseline", "central")
         .attr("text-anchor", "middle")
-        .text("home");
+        .text(textConstants.home);
 
     var graphText = homeGroup.append("text")
         .attr("x", configVar.center.x)

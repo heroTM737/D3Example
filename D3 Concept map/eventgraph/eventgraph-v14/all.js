@@ -26,7 +26,7 @@ function main() {
 function doFakedData() {
     //    var data = getFakedEventData();
     var data = getFakedEventData2();
-    loadChart(data);
+    drawEventGraph(data);
 }
 
 function doTestData() {
@@ -37,7 +37,7 @@ function doTestData() {
         cache: false,
         success: function (data) {
             var data = JSON.parse(data);
-            loadChart(data);
+            drawEventGraph(data);
         },
         error: function (response) {
             console.log("error ");
@@ -46,7 +46,18 @@ function doTestData() {
     });
 }
 
-function loadChart(data) {
+function getTextConstants() {
+    return {
+        centerNode: "center node in France",
+        event: "event in France",
+        mainGraph: "main graph in France",
+        sourceNode: "source node in France",
+        targetNode: "target node in France",
+        home: "home in France"
+    }
+}
+
+function drawEventGraph(data) {
     //chart 1
     var configVar = getConfigVariable();
 
@@ -55,11 +66,11 @@ function loadChart(data) {
     configVar.container_legend = container.getElementsByClassName("legend-svg")[0];
     configVar.container_buttons = container.getElementsByClassName("buttons-svg")[0];
 
+    configVar.textConstants = getTextConstants();
     configVar.events = getEvents(configVar);
-
     configVar.data = processData(data);
+
     main_graph(configVar);
-    legend(configVar);
 
     //chart 2
     var configVar = getConfigVariable();
@@ -69,6 +80,7 @@ function loadChart(data) {
     configVar.container_legend = container.getElementsByClassName("legend-svg")[0];
     configVar.container_buttons = container.getElementsByClassName("buttons-svg")[0];
 
+    configVar.textConstants = getTextConstants();
     configVar.events = getEvents(configVar);
     configVar.data = processData(data);
 
