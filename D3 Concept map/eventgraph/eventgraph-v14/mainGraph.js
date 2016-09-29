@@ -272,6 +272,6 @@ function main_graph(configVar) {
         });
 
     legend(configVar);
-    configVar.graphDescription = "main graph";
+    configVar.graphDescription = configVar.textConstants.mainGraph;
     buttons(true, configVar);
 }
