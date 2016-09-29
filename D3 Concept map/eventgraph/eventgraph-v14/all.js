@@ -48,7 +48,7 @@ function doTestData() {
 
 function getTextConstants() {
     return {
-        centerNode: "center node in France",
+        centerNode: "investigating node in France",
         event: "event in France",
         mainGraph: "main graph in France",
         sourceNode: "source node in France",
