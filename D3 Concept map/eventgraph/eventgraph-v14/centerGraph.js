@@ -369,7 +369,7 @@ function center_graph(node_center, node_extend, configVar) {
         });
 
     legend(configVar);
-    configVar.graphDescription = "center node: " + node_center.data.name;
+    configVar.graphDescription = node_center.data.name;
     buttons(false, configVar);
 }
 

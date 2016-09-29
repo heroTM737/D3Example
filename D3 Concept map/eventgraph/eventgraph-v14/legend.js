@@ -97,6 +97,8 @@ function buttons(eventgraphIsMainGraphOn, configVar) {
         .attr("y", padding + radius * 3)
         .attr("alignment-baseline", "central")
         .attr("text-anchor", "middle")
-        .text(configVar.graphDescription);
+        .text(function (d) {
+            return eventgraphIsMainGraphOn ? configVar.graphDescription : textConstants.centerNode + ": " + configVar.graphDescription;
+        });
 
 }
