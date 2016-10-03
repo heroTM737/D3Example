@@ -194,12 +194,8 @@ function center_graph(node_center, node_extend, configVar) {
                         checkType = true;
                     }
                 }
-                console.log("");
-                console.log("checkRelated = " + checkRelated);
-                console.log("checkNotCenter = " + checkNotCenter);
-                console.log("checkType = " + checkType);
+
                 if (checkRelated && checkNotCenter && checkType) {
-                    console.log("inside");
                     var target_link_id = "from_" + combine_source.id + "_to_" + d.id;
 
                     //bring related link to front if highlight
