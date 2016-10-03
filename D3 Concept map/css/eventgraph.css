@@ -2,11 +2,13 @@
     text-align: center;
 }
 
-.legend-container .legend-svg {
-    float: left;
+.legend-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
-.legend-container .buttons-svg {
+.buttons-svg {
     background: red;
 }
 
@@ -36,9 +38,8 @@
 
 .eventgraph-container {
     text-align: center;
+    position: relative;
 }
-
-.eventgraph-container #eventgraph {}
 
 .machine:hover,
 .event:hover {

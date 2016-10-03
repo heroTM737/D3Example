@@ -1,5 +1,5 @@
 function legend(configVar) {
-    var svg = d3.select(configVar.container);
+    var svg = d3.select(configVar.container_legend);
 
     var textConstants = configVar.textConstants;
 
@@ -63,7 +63,7 @@ function buttons(eventgraphIsMainGraphOn, configVar) {
 
     var radius = configVar.node_radius;
     var padding = 5;
-    var button_width = textConstants.home.length * configVar.character_length;
+    var button_width = textConstants.home.length * configVar.character_length + padding * 2;
 
     var group = svg.append("g")
         .attr("class", "buttons-group");
