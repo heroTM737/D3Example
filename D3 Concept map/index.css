@@ -24,15 +24,14 @@
 }
 
 .graph-container {
-    width: 50%;
+    border-right: 1px solid black;
     height: 100vh;
     float: left;
     overflow: auto;
 }
 
-.graph-container:first-child {
-    width: calc(50% - 1px);
-    border-right: 1px solid black;
+.graph-container:last-child {
+    border-right: none;
 }
 
 .legend-svg {

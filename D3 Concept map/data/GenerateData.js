@@ -131,9 +131,9 @@ function getFakedEventData2() {
     for (var i = 0; i < numberOfSource; i++) {
         var weight = Math.floor(Math.random() * 10);
         nodes.push({
-            "id": "source" + i,
+            "id": "source_" + i,
             "_weight": weight,
-            "name": "source " + i,
+            "name": "source " + i + " very longggggggggggggggggggggggggg",
             "typeLabel": "Attacker Address, Target Address ",
             "type": "source"
         });
@@ -142,9 +142,9 @@ function getFakedEventData2() {
     for (var i = 0; i < numberOfTarget; i++) {
         var weight = Math.floor(Math.random() * 10);
         nodes.push({
-            "id": "target" + i,
+            "id": "target_" + i + " very longggggggggggggggggggggggg",
             "_weight": weight,
-            "name": "target " + i,
+            "name": "target " + i + " very longggggggggggggggggggggggggg",
             "typeLabel": "Attacker Address, Target Address ",
             "type": "target"
         });
@@ -153,9 +153,9 @@ function getFakedEventData2() {
     for (var i = 0; i < numberOfEvent; i++) {
         var weight = Math.floor(Math.random() * 10);
         nodes.push({
-            "id": "event" + i,
+            "id": "event_" + i + " very longggggggggggggggggggggggggggggg",
             "_weight": weight,
-            "name": "event " + i,
+            "name": "event " + i + " very longggggggggggggggggggggggggg",
             "typeLabel": "Name ",
             "type": "event"
         });

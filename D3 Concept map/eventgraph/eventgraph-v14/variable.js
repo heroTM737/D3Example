@@ -27,7 +27,7 @@ function getConfigVariable() {
     var L1_radius = L1_min_radius;
     var L2_radius = L1_radius * 2;
 
-    var L3_width = L2_circle_radius * 2 + text_node_margin + max_text_length * character_length;
+    var L3_width = L2_circle_radius * 2 + text_node_margin + L3_text_length_char * character_length;
     var L3_margin = L1_radius;
 
     return {

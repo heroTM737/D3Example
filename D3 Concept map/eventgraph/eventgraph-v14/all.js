@@ -58,33 +58,45 @@ function getTextConstants() {
 }
 
 function drawEventGraph(data) {
-    //chart 1
-    var configVar = getConfigVariable();
+    var numberOfChart = 1;
+    var percent = Math.floor(100 / numberOfChart);
 
-    var container = document.getElementById("graph-1");
-    configVar.container = container.getElementsByClassName("eventgraph-svg")[0];
-    configVar.container_legend = container.getElementsByClassName("legend-svg")[0];
-    configVar.container_buttons = container.getElementsByClassName("buttons-svg")[0];
+    $.ajax({
+        type: "GET",
+        url: "eventgraph/template/template.html",
+        dataType: "text",
+        cache: false,
+        success: function (result) {
+            for (var i = 0; i < numberOfChart; i++) {
+                var html = result.substring(0);
+                html = html.replace("#", (i + 1));
+                $("body").append(html);
+                var configVar = getConfigVariable();
 
-    configVar.textConstants = getTextConstants();
-    configVar.events = getEvents(configVar);
-    configVar.data = processData(data);
+                var container = document.getElementById("graph-" + (i + 1));
+                configVar.container = container.getElementsByClassName("eventgraph-svg")[0];
+                configVar.container_legend = container.getElementsByClassName("legend-svg")[0];
+                configVar.container_buttons = container.getElementsByClassName("buttons-svg")[0];
 
-    main_graph(configVar);
+                configVar.textConstants = getTextConstants();
+                configVar.events = getEvents(configVar);
+                configVar.data = processData(data);
 
-    //chart 2
-    var configVar = getConfigVariable();
+                main_graph(configVar);
+            }
 
-    var container = document.getElementById("graph-2");
-    configVar.container = container.getElementsByClassName("eventgraph-svg")[0];
-    configVar.container_legend = container.getElementsByClassName("legend-svg")[0];
-    configVar.container_buttons = container.getElementsByClassName("buttons-svg")[0];
 
-    configVar.textConstants = getTextConstants();
-    configVar.events = getEvents(configVar);
-    configVar.data = processData(data);
+            $(".graph-container").css("width", "calc(" + percent + "% - 1px)");
+        },
+        error: function (response) {
+            console.log("error ");
+            console.log(response.responseText);
+        }
+    });
+}
 
-    main_graph(configVar);
+function getTemplate() {
+
 }
 
 main();
