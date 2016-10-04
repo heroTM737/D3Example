@@ -3,9 +3,16 @@ function getEvents(configVar) {
     var outer;
 
     var node_mouse = function (d, state) {
+        if (d.type == "combine") {
+            if (d.count == 0) {
+                return;
+            } else {
+                d3.select(container).selectAll('#g' + d.id).style("cursor", state ? "pointer" : "normal");
+            }
+        }
         //hightlight current node
         d3.select(container).selectAll('#g' + d.id).classed('group-highlight', state);
-        if (d.type) {
+        if (d.type != "combine") {
             if (state) {
                 // bring related link to front
                 d3.select(container).selectAll('.link').sort(function (a, b) {

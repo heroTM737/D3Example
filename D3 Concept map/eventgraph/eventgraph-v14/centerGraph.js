@@ -29,11 +29,12 @@ function center_graph(node_center, node_extend, configVar) {
     var shift_y = configVar.shift_y;
 
     //computation
-    var nodes_L1;
-    var step_angle;
+    var nodes_L1, step_angle;
+    var start_angle = 0;
     if (node_center.type == "event") {
         nodes_L1 = node_center.sources.values().concat(node_center.targets.values());
         step_angle = 2 * Math.PI / (node_center.sources.values().length + node_center.targets.values().length);
+        start_angle = Math.PI - (node_center.sources.size() - 1) * step_angle / 2;
     } else {
         nodes_L1 = node_center.related_events.values();
         step_angle = 2 * Math.PI / node_center.related_events.size();
@@ -55,6 +56,7 @@ function center_graph(node_center, node_extend, configVar) {
     nodes_L1.forEach(function (node_L1, index) {
         var combine = {
             id: "c" + node_center.id + "" + node_L1.id,
+            type: "combine",
             count: 0,
             center: node_center,
             source: node_L1
@@ -94,12 +96,13 @@ function center_graph(node_center, node_extend, configVar) {
             });
         }
 
-        node_L1.x = node_center.x + Math.cos(index * step_angle) * L1_radius;
-        node_L1.y = node_center.y + Math.sin(index * step_angle) * L1_radius;
-        node_L1.a = index * step_angle / Math.PI * 180;
+        var angle = start_angle + index * step_angle;
+        node_L1.x = node_center.x + Math.cos(angle) * L1_radius;
+        node_L1.y = node_center.y + Math.sin(angle) * L1_radius;
+        node_L1.a = angle / Math.PI * 180;
 
-        combine.x = node_center.x + Math.cos(index * step_angle) * L2_radius;
-        combine.y = node_center.y + Math.sin(index * step_angle) * L2_radius;
+        combine.x = node_center.x + Math.cos(angle) * L2_radius;
+        combine.y = node_center.y + Math.sin(angle) * L2_radius;
         combine.a = node_L1.a;
     });
 
@@ -551,6 +554,9 @@ function draw_L3(node_L3_group, isEventCenter, configVar) {
 
 function createGroup(configVar, className, classNameExtend, data, mouseOver, mouseOut, click) {
     var menu = function (data) {
+        if (data.type == "combine") {
+            return [];
+        }
         var name = data.data.name;
         return [
             {
@@ -585,7 +591,11 @@ function createGroup(configVar, className, classNameExtend, data, mouseOver, mou
         .on("mouseover", mouseOver == undefined ? node_mouseover : mouseOver)
         .on("mouseout", mouseOut == undefined ? node_mouseout : mouseOut)
         .on("click", click == undefined ? node_click : click)
-        .on("contextmenu", d3.contextMenu(menu));
+        .on("contextmenu", function (d, i) {
+            if (d.type != "combine") {
+                d3.contextMenu(menu)(d, i);
+            }
+        });
 
     var node_title = node_group.append("title")
         .text(function (d) {
@@ -594,7 +604,6 @@ function createGroup(configVar, className, classNameExtend, data, mouseOver, mou
             } else {
                 return d.count;
             }
-
         });
 
     return node_group;

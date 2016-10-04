@@ -103,8 +103,6 @@ function drawEventGraph(data) {
                 configVar.textConstants = getTextConstants("fr");
                 configVar.containerWidth = $("#" + id).width();
                 configVar.containerHeight = $("#" + id).height();
-                console.log(configVar.containerWidth);
-                console.log(configVar.containerHeight);
 
                 configVar.events = getEvents(configVar);
                 configVar.data = processData(data);

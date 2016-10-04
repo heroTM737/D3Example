@@ -92,9 +92,7 @@ line.link-highlight {
 }
 
 .event-combine-group,
-.machine-combine-group {
-    cursor: pointer;
-}
+.machine-combine-group {}
 
 .event-combine-group rect {
     fill: #f0f0ef;
