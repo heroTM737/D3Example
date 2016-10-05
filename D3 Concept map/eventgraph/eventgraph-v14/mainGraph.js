@@ -164,6 +164,7 @@ function main_graph(configVar) {
             return "x" + d.id;
         })
         .attr("alignment-baseline", "central")
+        .attr("dominant-baseline", "central")
         .attr("text-anchor", "end")
         .attr("x", function (d) {
             return d.x - radius * 2;
@@ -213,6 +214,7 @@ function main_graph(configVar) {
             return "x" + d.id;
         })
         .attr("alignment-baseline", "central")
+        .attr("dominant-baseline", "central")
         .attr("x", function (d) {
             return d.x + radius * 2;
         })
@@ -261,6 +263,7 @@ function main_graph(configVar) {
         })
         .attr("text-anchor", "middle")
         .attr("alignment-baseline", "central")
+        .attr("dominant-baseline", "central")
         .attr("x", function (d) {
             return d.x;
         })

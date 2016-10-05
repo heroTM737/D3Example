@@ -337,6 +337,7 @@ function center_graph(node_center, node_extend, configVar) {
         })
         .attr("text-anchor", "middle")
         .attr("alignment-baseline", "central")
+        .attr("dominant-baseline", "central")
         .attr("x", function (d) {
             return d.x;
         })
@@ -356,6 +357,7 @@ function center_graph(node_center, node_extend, configVar) {
             return "x" + d.id;
         })
         .attr("alignment-baseline", "central")
+        .attr("dominant-baseline", "central")
         .attr("text-anchor", direction > 0 ? "start" : "end")
         .attr("x", function (d) {
             return d.x + (L3_circle_radius + text_node_margin) * direction;
