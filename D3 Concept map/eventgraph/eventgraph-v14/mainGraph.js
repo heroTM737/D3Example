@@ -270,8 +270,4 @@ function main_graph(configVar) {
         .text(function (d) {
             return shortenEventText(d.data.name, configVar);
         });
-
-    legend(configVar);
-    configVar.graphDescription = configVar.textConstants.mainGraph;
-    buttons(true, configVar);
 }

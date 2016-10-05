@@ -57,48 +57,49 @@ function legend(configVar) {
 }
 
 function buttons(eventgraphIsMainGraphOn, configVar) {
-    var svg = d3.select(configVar.container);
+    if (!eventgraphIsMainGraphOn) {
+        var svg = d3.select(configVar.container);
 
-    var textConstants = configVar.textConstants;
+        var textConstants = configVar.textConstants;
 
-    var radius = configVar.node_radius;
-    var padding = 5;
-    var button_width = textConstants.home.length * configVar.character_length + padding * 2;
+        var radius = configVar.node_radius;
+        var padding = 5;
+        var button_width = textConstants.home.length * configVar.character_length + padding * 2;
 
-    var group = svg.append("g")
-        .attr("class", "buttons-group");
+        var group = svg.append("g")
+            .attr("class", "buttons-group");
 
-    var homeGroup = group.append("g")
-        .attr("class", function () {
-            return "homeGroup " + (eventgraphIsMainGraphOn ? "on" : "off")
-        })
-        .on("click", function () {
-            main_graph(configVar);
-        });
+        var homeGroup = group.append("g")
+            .attr("class", function () {
+                return "homeGroup off";
+            })
+            .on("click", function () {
+                main_graph(configVar);
+            });
 
-    var homeButton = homeGroup.append("rect")
-        .attr("class", "eventgraph-button")
-        .attr("x", configVar.center.x - button_width / 2)
-        .attr("y", padding)
-        .attr("width", button_width)
-        .attr("height", radius * 2)
-        .attr("rx", 5)
-        .attr("ry", 5);
+        var homeButton = homeGroup.append("rect")
+            .attr("class", "eventgraph-button")
+            .attr("x", configVar.center.x - button_width / 2)
+            .attr("y", padding)
+            .attr("width", button_width)
+            .attr("height", radius * 2)
+            .attr("rx", 5)
+            .attr("ry", 5);
 
-    var homeText = homeGroup.append("text")
-        .attr("x", configVar.center.x)
-        .attr("y", padding + radius)
-        .attr("alignment-baseline", "central")
-        .attr("text-anchor", "middle")
-        .text(textConstants.home);
+        var homeText = homeGroup.append("text")
+            .attr("x", configVar.center.x)
+            .attr("y", padding + radius)
+            .attr("alignment-baseline", "central")
+            .attr("text-anchor", "middle")
+            .text(textConstants.home);
 
-    var graphText = homeGroup.append("text")
-        .attr("x", configVar.center.x)
-        .attr("y", padding + radius * 3)
-        .attr("alignment-baseline", "central")
-        .attr("text-anchor", "middle")
-        .text(function (d) {
-            return eventgraphIsMainGraphOn ? configVar.graphDescription : textConstants.centerNode + ": " + configVar.graphDescription;
-        });
-
+        var graphText = homeGroup.append("text")
+            .attr("x", configVar.center.x)
+            .attr("y", padding + radius * 3)
+            .attr("alignment-baseline", "central")
+            .attr("text-anchor", "middle")
+            .text(function (d) {
+                return textConstants.centerNode + ": " + configVar.graphDescription;
+            });
+    }
 }

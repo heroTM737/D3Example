@@ -367,7 +367,6 @@ function center_graph(node_center, node_extend, configVar) {
             return shortenExtendText(d.data.name, configVar);
         });
 
-    legend(configVar);
     configVar.graphDescription = node_center.data.name;
     buttons(false, configVar);
 }

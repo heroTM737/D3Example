@@ -109,6 +109,7 @@ function drawEventGraph(data) {
 
                 //create graph
                 main_graph(configVar);
+                legend(configVar);
             }
         },
         error: function (response) {
