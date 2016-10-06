@@ -417,20 +417,6 @@ function draw_L0(node_L0_group, isEventCenter, configVar) {
                 return L0_circle_radius;
             });
     }
-    /*
-    var node_L0_text = node_L0_group.append("text")
-        .attr("x", function (d) {
-            return d.x;
-        })
-        .attr("y", function (d) {
-            return d.y;
-        })
-        .attr("alignment-baseline", "central")
-        .attr("text-anchor", "middle")
-        .text(function (d) {
-            return shortenText(d.data.name, configVar);
-        });
-        */
 }
 
 function draw_L1(node_L1_group, isEventCenter, configVar) {

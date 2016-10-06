@@ -48,21 +48,17 @@ function doTestData() {
 
 function getTextConstants(nation) {
     var en = {
-        centerNode: "investigating node",
-        event: "event",
-        mainGraph: "main graph",
-        sourceNode: "source node",
-        targetNode: "target node",
-        home: "home"
+        event: "Event Node",
+        sourceNode: "Source Node",
+        targetNode: "Target Node",
+        centerNode: "Investigating Node"
     }
 
     var fr = {
-        centerNode: "investigating node in France",
-        event: "event in France",
-        mainGraph: "main graph in France",
-        sourceNode: "source node in France",
-        targetNode: "target node in France",
-        home: "home in France"
+        event: "Event in France",
+        sourceNode: "Source Node in France",
+        targetNode: "Target Node in France",
+        centerNode: "Investigating Node in France"
     }
 
     switch (nation) {
@@ -100,7 +96,7 @@ function drawEventGraph(data) {
                 configVar.container_legend = container.getElementsByClassName("legend-svg")[0];
                 configVar.container_buttons = container.getElementsByClassName("buttons-svg")[0];
 
-                configVar.textConstants = getTextConstants("fr");
+                configVar.textConstants = getTextConstants("en");
                 configVar.containerWidth = $("#" + id).width();
                 configVar.containerHeight = $("#" + id).height();
 

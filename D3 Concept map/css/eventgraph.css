@@ -17,20 +17,15 @@
     fill: #5a5a5a;
 }
 
-.homeGroup text {
-    font-size: 14px;
-}
-
-.homeGroup.on text {
-    fill: #b2b2b2;
-}
-
-.homeGroup.off text {}
-
-.eventgraph-button {
-    fill: #f0f0ef;
-    stroke: #b2b2b2;
+.homeImage {
+    stroke: #000000;
+    stroke-miterlimit: 10;
     stroke-width: 1px;
+    fill: #000000;
+}
+
+.homeButton {
+    opacity: 0;
 }
 
 

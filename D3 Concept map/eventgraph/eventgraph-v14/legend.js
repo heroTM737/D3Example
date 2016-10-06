@@ -60,48 +60,45 @@ function buttons(eventgraphIsMainGraphOn, configVar) {
     if (!eventgraphIsMainGraphOn) {
         var svg = d3.select(configVar.container);
 
-        var textConstants = configVar.textConstants;
-
-        var radius = configVar.node_radius;
-        var padding = 5;
-        var button_width = textConstants.home.length * configVar.character_length + padding * 2;
+        var margin = 5;
+        var originalHomeImageSize = 98;
+        var scale = 0.3;
+        var textHeight = 15;
 
         var group = svg.append("g")
             .attr("class", "buttons-group");
 
         var homeGroup = group.append("g")
             .attr("class", function () {
-                return "homeGroup off";
+                return "homeGroup";
             })
             .on("click", function () {
                 main_graph(configVar);
             });
 
-        var homeButton = homeGroup.append("rect")
-            .attr("class", "eventgraph-button")
-            .attr("x", configVar.center.x - button_width / 2)
-            .attr("y", padding)
-            .attr("width", button_width)
-            .attr("height", radius * 2)
-            .attr("rx", 5)
-            .attr("ry", 5);
+        var homeButton = homeGroup.append("circle")
+            .attr("class", "homeButton")
+            .attr("cx", configVar.center.x)
+            .attr("cy", margin + originalHomeImageSize * scale / 2)
+            .attr("r", originalHomeImageSize * scale / 2);
 
-        var homeText = homeGroup.append("text")
-            .attr("x", configVar.center.x)
-            .attr("y", padding + radius)
-            .attr("alignment-baseline", "central")
-            .attr("dominant-baseline", "central")
-            .attr("text-anchor", "middle")
-            .text(textConstants.home);
+        var homeImage = homeGroup.append("path")
+            .attr("class", "homeImage")
+            .attr("transform", function (d) {
+                var tx = configVar.center.x / scale - originalHomeImageSize / 2;
+                var ty = margin / scale;
+                return "scale(" + scale + ") translate(" + tx + " " + ty + ")";
+            })
+            .attr("d", "M50,30.8l17.4,13.6v24.5H55.3V53.8H44.8v15.2H32.7V44.4L50,30.8z M67.4,44.6 M50,1C22.9,1,1,22.9,1,50s21.9,49,49,49s49-21.9,49-49S77.1,1,50,1z");
 
-        var graphText = homeGroup.append("text")
+        var graphText = group.append("text")
             .attr("x", configVar.center.x)
-            .attr("y", padding + radius * 3)
+            .attr("y", originalHomeImageSize * scale + margin + textHeight)
             .attr("alignment-baseline", "central")
             .attr("dominant-baseline", "central")
             .attr("text-anchor", "middle")
             .text(function (d) {
-                return textConstants.centerNode + ": " + configVar.graphDescription;
+                return configVar.textConstants.centerNode + ": " + configVar.graphDescription;
             });
     }
 }
