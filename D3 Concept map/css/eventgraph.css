@@ -36,9 +36,17 @@
     position: relative;
 }
 
+.L3-group:hover,
+.source-group:hover,
+.target-group:hover,
 .machine:hover,
 .event:hover {
     cursor: pointer;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .machine {
