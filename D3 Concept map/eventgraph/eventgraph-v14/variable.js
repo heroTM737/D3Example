@@ -4,7 +4,7 @@ function getConfigVariable() {
     var event_max_text_length_char = 25;
     var machine_max_text_length_char = 40;
     var max_text_length = 9;
-    var character_length = 8;
+    var character_length = 7;
     var L3_text_length_char = Math.max(event_max_text_length_char, machine_max_text_length_char);
     var machine_max_text_length_px = machine_max_text_length_char * character_length + text_node_margin * 2;
 

@@ -28,6 +28,12 @@
     opacity: 0;
 }
 
+.graphBox {
+    fill: #f0f0ef;
+    stroke: #fd6e6e;
+    stroke-width: 1px;
+}
+
 
 /*eventgraph-container*/
 

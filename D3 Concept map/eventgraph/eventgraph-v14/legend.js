@@ -63,6 +63,8 @@ function buttons(eventgraphIsMainGraphOn, configVar) {
         var margin = 5;
         var originalHomeImageSize = 98;
         var scale = 0.3;
+        var text = configVar.textConstants.centerNode + ": " + configVar.graphDescription;
+        var textWidth = text.length * configVar.character_length;
         var textHeight = 15;
 
         var group = svg.append("g")
@@ -91,14 +93,22 @@ function buttons(eventgraphIsMainGraphOn, configVar) {
             })
             .attr("d", "M50,30.8l17.4,13.6v24.5H55.3V53.8H44.8v15.2H32.7V44.4L50,30.8z M67.4,44.6 M50,1C22.9,1,1,22.9,1,50s21.9,49,49,49s49-21.9,49-49S77.1,1,50,1z");
 
+        var graphBox = group.append("rect")
+            .attr("class", "graphBox")
+            .attr("x", configVar.center.x - textWidth / 2)
+            .attr("y", originalHomeImageSize * scale + margin + textHeight / 2)
+            .attr("width", textWidth)
+            .attr("height", textHeight + margin * 2);
+
         var graphText = group.append("text")
+            .attr("class", "graphText")
             .attr("x", configVar.center.x)
-            .attr("y", originalHomeImageSize * scale + margin + textHeight)
+            .attr("y", originalHomeImageSize * scale + margin * 2 + textHeight)
             .attr("alignment-baseline", "central")
             .attr("dominant-baseline", "central")
             .attr("text-anchor", "middle")
             .text(function (d) {
-                return configVar.textConstants.centerNode + ": " + configVar.graphDescription;
+                return text;
             });
     }
 }
