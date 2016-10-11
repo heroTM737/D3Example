@@ -1,4 +1,5 @@
 function main_graph(configVar) {
+    configVar.eventgraphIsMainGraphOn = true;
 
     //define in use variables
     var source_machines = configVar.data.source_machines;

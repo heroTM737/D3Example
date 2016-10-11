@@ -30,6 +30,10 @@ function getEvents(configVar) {
                 d3.select(container).selectAll('#g' + node.id).classed('group-highlight', state);
             });
         }
+
+        if (!configVar.eventgraphIsMainGraphOn) {
+            d3.select(container).selectAll('.graphBox').classed('graphBox-highlight', state);
+        }
     }
 
     var combine_highlight = function (d, state) {}

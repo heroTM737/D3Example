@@ -56,8 +56,8 @@ function legend(configVar) {
         .text(textConstants.event);
 }
 
-function buttons(eventgraphIsMainGraphOn, configVar) {
-    if (!eventgraphIsMainGraphOn) {
+function buttons(configVar) {
+    if (!configVar.eventgraphIsMainGraphOn) {
         var svg = d3.select(configVar.container);
 
         var margin = 5;

@@ -370,7 +370,8 @@ function center_graph(node_center, node_extend, configVar) {
         });
 
     configVar.graphDescription = node_center.data.name;
-    buttons(false, configVar);
+    configVar.eventgraphIsMainGraphOn = false;
+    buttons(configVar);
 }
 
 function rotate_node(d, config) {
