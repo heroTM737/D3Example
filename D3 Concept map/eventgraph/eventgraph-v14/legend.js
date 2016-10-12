@@ -1,6 +1,8 @@
 function legend(configVar) {
     var svg = d3.select(configVar.container_legend);
 
+
+
     var textConstants = configVar.textConstants;
 
     var radius = configVar.node_radius;
@@ -11,6 +13,10 @@ function legend(configVar) {
 
     var w = radius * 2 + 100 + padding * 2;
     var h = (radius * 2 + margin) * 3 - margin + padding * 2;
+
+    var svg_width = x + radius + margin + textConstants.sourceNode.length * configVar.character_length + margin;
+    var svg_height = margin + (radius * 2 + margin) * 3;
+    svg.attr("width", svg_width).attr("height", svg_height);
 
     var legend_group = svg.append("g")
         .attr("class", "legend-group");
