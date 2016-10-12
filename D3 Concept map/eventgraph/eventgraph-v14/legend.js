@@ -1,8 +1,6 @@
 function legend(configVar) {
     var svg = d3.select(configVar.container_legend);
 
-
-
     var textConstants = configVar.textConstants;
 
     var radius = configVar.node_radius;
