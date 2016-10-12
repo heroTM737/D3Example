@@ -1,3 +1,0 @@
-blue source = target
-red source
-white target
