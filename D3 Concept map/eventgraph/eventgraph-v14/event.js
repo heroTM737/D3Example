@@ -31,7 +31,7 @@ function getEvents(configVar) {
             });
         }
 
-        if (!configVar.eventgraphIsMainGraphOn) {
+        if (!configVar.eventgraphIsMainGraphOn && configVar.node_center == d) {
             d3.select(container).selectAll('.graphBox').classed('graphBox-highlight', state);
         }
     }

@@ -98,7 +98,17 @@ function buttons(configVar) {
             .attr("d", "M50,30.8l17.4,13.6v24.5H55.3V53.8H44.8v15.2H32.7V44.4L50,30.8z M67.4,44.6 M50,1C22.9,1,1,22.9,1,50s21.9,49,49,49s49-21.9,49-49S77.1,1,50,1z");
 
         var graphBox = group.append("rect")
-            .attr("class", "graphBox")
+            .attr("class", function () {
+                var additionalClassName = "";
+                if (configVar.node_center.type == "event") {
+                    additionalClassName = "graphBoxEvent"
+                } else if (configVar.node_center.type == "source") {
+                    additionalClassName = "graphBoxSource"
+                } else {
+                    additionalClassName = "graphBoxTarget"
+                }
+                return "graphBox " + additionalClassName;
+            })
             .attr("x", configVar.center.x - textWidth / 2)
             .attr("y", originalHomeImageSize * scale + margin + textHeight / 2)
             .attr("width", textWidth)

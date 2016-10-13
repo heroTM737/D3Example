@@ -30,12 +30,24 @@
 
 .graphBox {
     fill: #f0f0ef;
-    stroke: #fd6e6e;
     stroke-width: 1px;
+}
+
+.graphBoxEvent {
+    stroke: #fd6e6e;
+}
+
+.graphBoxSource {
+    stroke: #01a982;
+}
+
+.graphBoxTarget {
+    stroke: #241bf7;
 }
 
 .graphBox-highlight {
     fill: yellow;
+    stroke: #ff0000;
 }
 
 

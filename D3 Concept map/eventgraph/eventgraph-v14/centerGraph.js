@@ -1,4 +1,7 @@
 function center_graph(node_center, node_extend, configVar) {
+    configVar.graphDescription = node_center.data.name;
+    configVar.eventgraphIsMainGraphOn = false;
+    configVar.node_center = node_center;
 
     //define in use variables
     var node_radius = configVar.node_radius;
@@ -369,8 +372,6 @@ function center_graph(node_center, node_extend, configVar) {
             return shortenExtendText(d.data.name, configVar);
         });
 
-    configVar.graphDescription = node_center.data.name;
-    configVar.eventgraphIsMainGraphOn = false;
     buttons(configVar);
 }
 
