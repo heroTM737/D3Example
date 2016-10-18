@@ -119,8 +119,6 @@ function buttons(configVar) {
             .attr("class", "graphText")
             .attr("x", configVar.center.x)
             .attr("y", text_y)
-            //            .attr("alignment-baseline", "central")
-            //            .attr("dominant-baseline", "central")
             .attr("text-anchor", "middle")
             .text(function (d) {
                 return text;
