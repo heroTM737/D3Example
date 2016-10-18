@@ -164,8 +164,8 @@ function main_graph(configVar) {
         .attr('id', function (d) {
             return "x" + d.id;
         })
-        .attr("alignment-baseline", "central")
-        .attr("dominant-baseline", "central")
+        //        .attr("alignment-baseline", "central")
+        //        .attr("dominant-baseline", "central")
         .attr("text-anchor", "end")
         .attr("x", function (d) {
             return d.x - radius * 2;
@@ -214,8 +214,8 @@ function main_graph(configVar) {
         .attr('id', function (d) {
             return "x" + d.id;
         })
-        .attr("alignment-baseline", "central")
-        .attr("dominant-baseline", "central")
+        //        .attr("alignment-baseline", "central")
+        //        .attr("dominant-baseline", "central")
         .attr("x", function (d) {
             return d.x + radius * 2;
         })
@@ -263,8 +263,8 @@ function main_graph(configVar) {
             return "x" + d.id;
         })
         .attr("text-anchor", "middle")
-        .attr("alignment-baseline", "central")
-        .attr("dominant-baseline", "central")
+        //        .attr("alignment-baseline", "central")
+        //        .attr("dominant-baseline", "central")
         .attr("x", function (d) {
             return d.x;
         })
@@ -274,4 +274,22 @@ function main_graph(configVar) {
         .text(function (d) {
             return shortenEventText(d.data.name, configVar);
         });
+
+    //adjust text position to fix the fukcing stupid IE and Edge
+    var item, item_h;
+    events.values().forEach(function (node, index) {
+        item = event_text[0][index];
+        item_h = item.getBoundingClientRect().height;
+        item.setAttribute("y", node.y + item_h / 4);
+    });
+    source_machines.values().forEach(function (node, index) {
+        item = source_text[0][index];
+        item_h = item.getBoundingClientRect().height;
+        item.setAttribute("y", node.y + item_h / 4);
+    });
+    target_machines.values().forEach(function (node, index) {
+        item = target_text[0][index];
+        item_h = item.getBoundingClientRect().height;
+        item.setAttribute("y", node.y + item_h / 4);
+    });
 }

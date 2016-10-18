@@ -114,15 +114,20 @@ function buttons(configVar) {
             .attr("width", textWidth)
             .attr("height", textHeight + margin * 2);
 
+        var text_y = originalHomeImageSize * scale + margin * 2 + textHeight;
         var graphText = group.append("text")
             .attr("class", "graphText")
             .attr("x", configVar.center.x)
-            .attr("y", originalHomeImageSize * scale + margin * 2 + textHeight)
-            .attr("alignment-baseline", "central")
-            .attr("dominant-baseline", "central")
+            .attr("y", text_y)
+            //            .attr("alignment-baseline", "central")
+            //            .attr("dominant-baseline", "central")
             .attr("text-anchor", "middle")
             .text(function (d) {
                 return text;
             });
+
+        var item = graphText[0][0];
+        var item_h = item.getBoundingClientRect().height;
+        item.setAttribute("y", text_y + item_h / 4);
     }
 }

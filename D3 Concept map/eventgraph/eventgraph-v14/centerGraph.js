@@ -339,8 +339,8 @@ function center_graph(node_center, node_extend, configVar) {
             return "x" + d.id;
         })
         .attr("text-anchor", "middle")
-        .attr("alignment-baseline", "central")
-        .attr("dominant-baseline", "central")
+        //        .attr("alignment-baseline", "central")
+        //        .attr("dominant-baseline", "central")
         .attr("x", function (d) {
             return d.x;
         })
@@ -359,8 +359,8 @@ function center_graph(node_center, node_extend, configVar) {
         .attr('id', function (d) {
             return "x" + d.id;
         })
-        .attr("alignment-baseline", "central")
-        .attr("dominant-baseline", "central")
+        //        .attr("alignment-baseline", "central")
+        //        .attr("dominant-baseline", "central")
         .attr("text-anchor", direction > 0 ? "start" : "end")
         .attr("x", function (d) {
             return d.x + (L3_circle_radius + text_node_margin) * direction;
@@ -372,6 +372,20 @@ function center_graph(node_center, node_extend, configVar) {
             return shortenExtendText(d.data.name, configVar);
         });
 
+    //adjust text position to fix the fukcing stupid IE and Edge
+    var item, item_h;
+    nodes_L2.forEach(function (node, index) {
+        item = node_L2_text[0][index];
+        item_h = item.getBoundingClientRect().height;
+        item.setAttribute("y", node.y + item_h / 4);
+    });
+    nodes_L3.forEach(function (node, index) {
+        item = node_L3_text[0][index];
+        item_h = item.getBoundingClientRect().height;
+        item.setAttribute("y", node.y + item_h / 4);
+    });
+
+    //redraw buttons
     buttons(configVar);
 }
 
