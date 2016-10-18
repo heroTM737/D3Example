@@ -61,6 +61,7 @@
 .L3-group:hover,
 .source-group:hover,
 .target-group:hover,
+.event-group:hover,
 .machine:hover,
 .event:hover {
     cursor: pointer;
@@ -115,9 +116,6 @@ line.link-highlight {
 .group {
     overflow: hidden;
 }
-
-.event-combine-group,
-.machine-combine-group {}
 
 .event-combine-group rect {
     fill: #f0f0ef;
