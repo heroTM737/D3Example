@@ -442,6 +442,17 @@ function draw_L1(node_L1_group, isEventCenter, configVar) {
                 return d.id;
             })
             .attr("cx", function (d) {
+                return configVar.center.x;
+            })
+            .attr("cy", function (d) {
+                return configVar.center.y;
+            })
+            .attr("r", function (d) {
+                return 0;
+            })
+            .transition()
+            .duration(10000)
+            .attr("cx", function (d) {
                 return d.x;
             })
             .attr("cy", function (d) {
@@ -457,16 +468,51 @@ function draw_L1(node_L1_group, isEventCenter, configVar) {
                 return d.id;
             })
             .attr("transform", function (d) {
-                return rotate_node(d, configVar);
+                var x = d.x - L1_circle_radius - configVar.center.x;
+                var y = d.y - L1_circle_radius - configVar.center.y;
+                var cx = configVar.center.x;
+                var cy = configVar.center.y;
+                if (d.a == null || d.a == undefined) {
+                    d.a = 0;
+                }
+                var rotate = d.x < configVar.center.x ? (d.a + 180) : d.a;
+                rotate %= 360;
+                return "rotate(0 " + cx + " " + cy + ")";
+            })
+            .attr("x", function (d) {
+                return configVar.center.x - L1_circle_radius;
+            })
+            .attr("y", function (d) {
+                return configVar.center.y - L1_circle_radius;
+            })
+            .attr("width", L1_circle_radius * 2)
+            .attr("height", L1_circle_radius * 2)
+            .transition()
+            .ease("bounce-in")
+            .duration(1000)
+            .attrTween("transform", function (d, i, a) {
+                if (d.a == null || d.a == undefined) {
+                    d.a = 0;
+                }
+                var rotate = d.x < configVar.center.x ? (d.a + 180) : d.a;
+                rotate %= 360;
+
+                if (rotate > 180) {
+                    rotate = rotate - 360;
+                }
+
+                return function (t) {
+                    var cx = configVar.center.x + (d.x - configVar.center.x) * t;
+                    var cy = configVar.center.y + (d.y - configVar.center.y) * t;
+                    return "rotate(" + (t * rotate) + " " + cx + " " + cy + ")";
+                };;
             })
             .attr("x", function (d) {
                 return d.x - L1_circle_radius;
             })
             .attr("y", function (d) {
                 return d.y - L1_circle_radius;
-            })
-            .attr("width", L1_circle_radius * 2)
-            .attr("height", L1_circle_radius * 2);
+            });
     }
 }
 

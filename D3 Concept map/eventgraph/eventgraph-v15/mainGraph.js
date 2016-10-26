@@ -118,6 +118,8 @@ function main_graph(configVar) {
     };
     var menuFN = d3.contextMenu(menu);
 
+    var dx = dy = 0;
+
     var link = svg.selectAll("path ")
         .data(links.values())
         .enter().append("path")
@@ -172,6 +174,7 @@ function main_graph(configVar) {
         .attr('id', function (d) {
             return "x" + d.id;
         })
+        .attr("opacity", 0)
         .attr("text-anchor", "end")
         .attr("x", function (d) {
             return center.x;
@@ -181,14 +184,21 @@ function main_graph(configVar) {
         })
         .text(function (d) {
             return shortenMachineText(d.data.name, configVar);
-        })
-        .transition()
+        });
+
+    dy = source_text[0][0].getBoundingClientRect().height / 4;
+    source_machines.values().forEach(function (node, index) {
+        source_text[0][index].setAttribute("y", node.y + dy);
+    });
+
+    source_text.transition()
         .duration(1000)
+        .attr("opacity", 1)
         .attr("x", function (d) {
             return d.x - radius * 2;
         })
         .attr("y", function (d) {
-            return d.y;
+            return d.y + dy;
         });
 
     var target_group = svg.selectAll(".target-group")
@@ -223,7 +233,7 @@ function main_graph(configVar) {
             return radius;
         })
         .transition()
-        .duration(2000)
+        .duration(1000)
         .attr("cx", function (d) {
             return d.x;
         })
@@ -236,6 +246,7 @@ function main_graph(configVar) {
         .attr('id', function (d) {
             return "x" + d.id;
         })
+        .attr("opacity", 0)
         .attr("x", function (d) {
             return center.x;
         })
@@ -244,34 +255,21 @@ function main_graph(configVar) {
         })
         .text(function (d) {
             return shortenMachineText(d.data.name, configVar);
-        })
-        .attr("opacity", 0)
-        .transition()
-        .duration(2000)
+        });
+
+    dy = target_text[0][0].getBoundingClientRect().height / 4;
+    target_machines.values().forEach(function (node, index) {
+        target_text[0][index].setAttribute("y", node.y + dy);
+    });
+
+    target_text.transition()
+        .duration(1000)
+        .attr("opacity", 1)
         .attr("x", function (d) {
             return d.x + radius * 2;
         })
         .attr("y", function (d) {
-            return d.y;
-        })
-        .attr("opacity", 1)
-        .each("end", function () {
-            var item, item_h;
-            events.values().forEach(function (node, index) {
-                item = event_text[0][index];
-                item_h = item.getBoundingClientRect().height;
-                item.setAttribute("y", node.y + item_h / 4);
-            });
-            source_machines.values().forEach(function (node, index) {
-                item = source_text[0][index];
-                item_h = item.getBoundingClientRect().height;
-                item.setAttribute("y", node.y + item_h / 4);
-            });
-            target_machines.values().forEach(function (node, index) {
-                item = target_text[0][index];
-                item_h = item.getBoundingClientRect().height;
-                item.setAttribute("y", node.y + item_h / 4);
-            });
+            return d.y + dy;
         });
 
     var event_group = svg.selectAll(".event-group")
@@ -325,16 +323,6 @@ function main_graph(configVar) {
     var item, item_h;
     events.values().forEach(function (node, index) {
         item = event_text[0][index];
-        item_h = item.getBoundingClientRect().height;
-        item.setAttribute("y", node.y + item_h / 4);
-    });
-    source_machines.values().forEach(function (node, index) {
-        item = source_text[0][index];
-        item_h = item.getBoundingClientRect().height;
-        item.setAttribute("y", node.y + item_h / 4);
-    });
-    target_machines.values().forEach(function (node, index) {
-        item = target_text[0][index];
         item_h = item.getBoundingClientRect().height;
         item.setAttribute("y", node.y + item_h / 4);
     });
