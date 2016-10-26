@@ -451,7 +451,8 @@ function draw_L1(node_L1_group, isEventCenter, configVar) {
                 return 0;
             })
             .transition()
-            .duration(10000)
+            .ease("bounce-in")
+            .duration(1000)
             .attr("cx", function (d) {
                 return d.x;
             })

@@ -6,6 +6,7 @@ function main_graph(configVar) {
     var target_machines = configVar.data.target_machines;
     var events = configVar.data.events;
 
+    var duration = configVar.duration;
     var text_node_margin = configVar.text_node_margin;
     var machine_max_text_length_px = configVar.machine_max_text_length_px;
     var rw = configVar.rw;
@@ -127,7 +128,10 @@ function main_graph(configVar) {
         .attr("id", function (d) {
             return d.id;
         })
-        .attr("d", diagonal(configVar));
+        .attr("d", diagonal(configVar))
+        .transition()
+        .duration(duration)
+        .attrTween("d", diagonalTween(configVar));
 
     var source_group = svg.selectAll(".source-group")
         .data(source_machines.values())
@@ -161,7 +165,7 @@ function main_graph(configVar) {
             return radius;
         })
         .transition()
-        .duration(1000)
+        .duration(duration)
         .attr("cx", function (d) {
             return d.x;
         })
@@ -192,7 +196,7 @@ function main_graph(configVar) {
     });
 
     source_text.transition()
-        .duration(1000)
+        .duration(duration)
         .attr("opacity", 1)
         .attr("x", function (d) {
             return d.x - radius * 2;
@@ -233,7 +237,7 @@ function main_graph(configVar) {
             return radius;
         })
         .transition()
-        .duration(1000)
+        .duration(duration)
         .attr("cx", function (d) {
             return d.x;
         })
@@ -263,7 +267,7 @@ function main_graph(configVar) {
     });
 
     target_text.transition()
-        .duration(1000)
+        .duration(duration)
         .attr("opacity", 1)
         .attr("x", function (d) {
             return d.x + radius * 2;
@@ -290,6 +294,16 @@ function main_graph(configVar) {
             return d.id;
         })
         .attr("x", function (d) {
+            return d.x;
+        })
+        .attr("y", function (d) {
+            return configVar.center.y;
+        })
+        .attr("width", 0)
+        .attr("height", 0)
+        .transition()
+        .duration(duration)
+        .attr("x", function (d) {
             return d.x - rw / 2;
         })
         .attr("y", function (d) {
@@ -312,18 +326,21 @@ function main_graph(configVar) {
         .attr("x", function (d) {
             return d.x;
         })
-        .attr("y", function (d) {
-            return d.y;
-        })
+        .attr("y", configVar.center.y)
+        .attr("opacity", 0)
         .text(function (d) {
             return shortenEventText(d.data.name, configVar);
         });
 
-    //adjust text position to work on IE and Edge
-    var item, item_h;
+    dy = event_text[0][0].getBoundingClientRect().height / 4;
     events.values().forEach(function (node, index) {
-        item = event_text[0][index];
-        item_h = item.getBoundingClientRect().height;
-        item.setAttribute("y", node.y + item_h / 4);
+        event_text[0][index].setAttribute("y", configVar.center.y + dy);
     });
+
+    event_text.transition()
+        .duration(duration)
+        .attr("y", function (d) {
+            return d.y + dy;
+        })
+        .attr("opacity", 1);
 }

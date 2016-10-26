@@ -25,8 +25,45 @@ var diagonal = function (configVar) {
         .projection(function (d) {
             return [d.y, d.x];
         });
-
     return diagonal;
+}
+
+var diagonalTween = function (configVar) {
+    var cx = configVar.center.x;
+    var cy = configVar.center.y;
+    var rw = configVar.rw;
+
+    return function (d, i, a) {
+        return function (t) {
+            var diagonal = d3.svg.diagonal()
+                .source(function (d) {
+                    var x = cy + (d.source.y - cy) * t;
+                    var y = cx + (d.source.x - cx) * t;
+                    return {
+                        "x": x,
+                        "y": y
+                    };
+                })
+                .target(function (d) {
+                    var x = cy + (d.target.y - cy) * t;
+                    var y = cx + (d.target.x - cx) * t;
+                    if (d.source.type == "source") {
+                        y = y - rw * t / 2;
+                    } else {
+                        y = y + rw * t / 2;
+                    }
+                    return {
+                        "x": x,
+                        "y": y
+                    };
+                })
+                .projection(function (d) {
+                    return [d.y, d.x];
+                });
+
+            return diagonal(d, i);
+        }
+    }
 }
 
 function shortenText(text, configVar) {

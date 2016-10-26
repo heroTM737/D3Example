@@ -35,6 +35,7 @@ function getConfigVariable() {
         shift_x: 0,
         shift_y: legend_height,
         padding: padding,
+        duration: 1000,
         y_margin: 5,
         padding_y: 20,
         node_radius: node_radius,
