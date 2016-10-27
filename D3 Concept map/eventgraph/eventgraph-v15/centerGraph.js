@@ -278,6 +278,14 @@ function center_graph(node_center, node_extend, configVar) {
             return d.source.y;
         })
         .attr("x2", function (d) {
+            return d.source.x;
+        })
+        .attr("y2", function (d) {
+            return d.source.y;
+        })
+        .transition()
+        .duration(configVar.duration)
+        .attr("x2", function (d) {
             return d.target.x;
         })
         .attr("y2", function (d) {
@@ -403,6 +411,12 @@ function draw_L0(node_L0_group, isEventCenter, configVar) {
             .attr('id', function (d) {
                 return d.id;
             })
+            .attr("x", configVar.center.x)
+            .attr("y", configVar.center.y)
+            .attr("width", 0)
+            .attr("height", 0)
+            .transition()
+            .duration(configVar.duration)
             .attr("x", function (d) {
                 return d.x - L0_circle_radius;
             })
@@ -419,6 +433,11 @@ function draw_L0(node_L0_group, isEventCenter, configVar) {
             .attr('id', function (d) {
                 return d.id;
             })
+            .attr("cx", configVar.center.x)
+            .attr("cy", configVar.center.y)
+            .attr("r", 0)
+            .transition()
+            .duration(configVar.duration)
             .attr("cx", function (d) {
                 return d.x;
             })
@@ -441,18 +460,11 @@ function draw_L1(node_L1_group, isEventCenter, configVar) {
             .attr('id', function (d) {
                 return d.id;
             })
-            .attr("cx", function (d) {
-                return configVar.center.x;
-            })
-            .attr("cy", function (d) {
-                return configVar.center.y;
-            })
-            .attr("r", function (d) {
-                return 0;
-            })
+            .attr("cx", configVar.center.x)
+            .attr("cy", configVar.center.y)
+            .attr("r", 0)
             .transition()
-            .ease("bounce-in")
-            .duration(1000)
+            .duration(configVar.duration)
             .attr("cx", function (d) {
                 return d.x;
             })
@@ -468,18 +480,7 @@ function draw_L1(node_L1_group, isEventCenter, configVar) {
             .attr('id', function (d) {
                 return d.id;
             })
-            .attr("transform", function (d) {
-                var x = d.x - L1_circle_radius - configVar.center.x;
-                var y = d.y - L1_circle_radius - configVar.center.y;
-                var cx = configVar.center.x;
-                var cy = configVar.center.y;
-                if (d.a == null || d.a == undefined) {
-                    d.a = 0;
-                }
-                var rotate = d.x < configVar.center.x ? (d.a + 180) : d.a;
-                rotate %= 360;
-                return "rotate(0 " + cx + " " + cy + ")";
-            })
+            .attr("transform", "rotate(0 " + configVar.center.x + " " + configVar.center.y + ")")
             .attr("x", function (d) {
                 return configVar.center.x - L1_circle_radius;
             })
@@ -489,8 +490,7 @@ function draw_L1(node_L1_group, isEventCenter, configVar) {
             .attr("width", L1_circle_radius * 2)
             .attr("height", L1_circle_radius * 2)
             .transition()
-            .ease("bounce-in")
-            .duration(1000)
+            .duration(configVar.duration)
             .attrTween("transform", function (d, i, a) {
                 if (d.a == null || d.a == undefined) {
                     d.a = 0;
@@ -525,27 +525,51 @@ function draw_L2(node_L2_group, isEventCenter, configVar) {
             .attr('id', function (d) {
                 return d.id;
             })
-            .attr("transform", function (d) {
-                return rotate_node(d, configVar);
+            .attr("transform", "rotate(0 " + configVar.center.x + " " + configVar.center.y + ")")
+            .attr("x", function (d) {
+                return configVar.center.x - -L2_circle_radius;
+            })
+            .attr("y", function (d) {
+                return configVar.center.x - -L2_circle_radius;
+            })
+            .attr("width", L2_circle_radius * 2)
+            .attr("height", L2_circle_radius * 2)
+            .transition()
+            .duration(configVar.duration)
+            .attrTween("transform", function (d, i, a) {
+                if (d.a == null || d.a == undefined) {
+                    d.a = 0;
+                }
+                var rotate = d.x < configVar.center.x ? (d.a + 180) : d.a;
+                rotate %= 360;
+
+                if (rotate > 180) {
+                    rotate = rotate - 360;
+                }
+
+                return function (t) {
+                    var cx = configVar.center.x + (d.x - configVar.center.x) * t;
+                    var cy = configVar.center.y + (d.y - configVar.center.y) * t;
+                    return "rotate(" + (t * rotate) + " " + cx + " " + cy + ")";
+                };;
             })
             .attr("x", function (d) {
                 return d.x - L2_circle_radius;
             })
             .attr("y", function (d) {
                 return d.y - L2_circle_radius;
-            })
-            .attr("width", function (d) {
-                return L2_circle_radius * 2;
-            })
-            .attr("height", function (d) {
-                return L2_circle_radius * 2;
-            });
+            });;
     } else {
         var node_L2 = node_L2_group.append("circle")
             .attr("class", "")
             .attr('id', function (d) {
                 return d.id;
             })
+            .attr("cx", configVar.center.x)
+            .attr("cy", configVar.center.y)
+            .attr("r", 0)
+            .transition()
+            .duration(configVar.duration)
             .attr("cx", function (d) {
                 return d.x;
             })
