@@ -338,8 +338,12 @@ function center_graph(node_center, node_extend, configVar) {
     var node_L1_group = createGroup(configVar, "L1-group", L1_className, nodes_L1);
     var node_L1 = draw_L1(node_L1_group, isEventCenter, configVar);
 
-    //draw L2
-    var node_L2_group = createGroup(configVar, "L2-group", L2_className, nodes_L2, null, null, getEvents(configVar).node_combine_click);
+    //    draw L2
+    //    var fn = configVar.events.node_combine_click;
+    var fn = function (d) {
+        d3.select(configVar.container).select("#g" + d.id).remove();
+    }
+    var node_L2_group = createGroup(configVar, "L2-group", L2_className, nodes_L2, null, null, fn);
     var node_L2 = draw_L2(node_L2_group, isEventCenter, configVar);
     var node_L2_text = node_L2_group.append("text")
         .attr("class", "text")
