@@ -1,3 +1,7 @@
+.hidden {
+    display: none;
+}
+
 .legend-container {
     text-align: center;
 }

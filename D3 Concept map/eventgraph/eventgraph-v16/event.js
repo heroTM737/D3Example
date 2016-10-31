@@ -50,7 +50,7 @@ function getEvents(configVar) {
 
     var node_click = function (d) {
         d3.event.stopPropagation();
-        center_graph(d, null, configVar);
+        center_graph(d, configVar);
         closeContextMenu();
     }
 
