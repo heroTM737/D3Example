@@ -247,7 +247,8 @@ function center_graph(node_center, configVar) {
                 return m + c;
             }
 
-            var linkx = svg.append("g").selectAll("path")
+            var linkx_group = svg.append("g").attr("class", "linkx-group");
+            var linkx = linkx_group.selectAll(".linkx")
                 .data(links_extend)
                 .enter().append("path")
                 .attr("class", "link linkx")
@@ -256,7 +257,7 @@ function center_graph(node_center, configVar) {
                 })
                 .attr("d", extend_curve);
 
-            var extend_line = svg.append("line")
+            var extend_line = linkx_group.append("line")
                 .attr("id", "extend_line")
                 .attr("x1", function (d) {
                     return combine_source.x;
@@ -335,7 +336,9 @@ function center_graph(node_center, configVar) {
     }
 
     //draw links
-    var link = svg.append("g").selectAll("line")
+    var link = svg.append("g")
+        .attr("class", "link-group")
+        .selectAll(".link")
         .data(links)
         .enter().append("line")
         .attr("class", "link")
@@ -659,7 +662,7 @@ function createGroup(configVar, className, classNameExtend, data, mouseOver, mou
             action: function (elm, d, i) {
                 copyToClipBoard(name);
             }
-            }];
+        }];
     };
 
     var mouseEvents = configVar.events;
