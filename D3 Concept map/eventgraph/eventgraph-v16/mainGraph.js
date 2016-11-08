@@ -106,6 +106,7 @@ function main_graph(configVar) {
 
     var menu = function (data) {
         var name = data.data.name;
+        var type = data.data.type;
         return [
             {
                 title: function (d) {
@@ -114,6 +115,22 @@ function main_graph(configVar) {
                 action: function (elm, d, i) {
                     copyToClipBoard(name);
                 }
+            },
+            {
+                title: function (d) {
+                    return 'create channel [' + type + ' = ' + name + ']';
+                },
+                action: function (elm, d, i) {
+                    copyToClipBoard(name);
+                } 
+            },
+            {
+                title: function (d) {
+                    return 'create channel [' + type + ' != ' + name + ']';
+                },
+                action: function (elm, d, i) {
+                    copyToClipBoard(name);
+                } 
             }
         ]
     };
