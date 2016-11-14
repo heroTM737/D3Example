@@ -109,7 +109,8 @@ function center_graph(node_center, configVar) {
         combine.a = node_L1.a;
     });
 
-    var expand_L2 = function (node_extend) {
+    var expand_L2 = function (node_extend_L2) {
+        var node_extend = node_extend_L2.source;
         svg.selectAll(".L3-group").remove();
         svg.selectAll(".linkx").remove();
         svg.selectAll("#extend_line").remove();
@@ -255,10 +256,28 @@ function center_graph(node_center, configVar) {
                 .attr("id", function (d) {
                     return d.id;
                 })
-                .attr("d", extend_curve);
+                .attr("d", extend_curve)
+                .attr("opacity", 0)
+                .transition()
+                .duration(configVar.duration)
+                .attr("opacity", 1);
 
             var extend_line = linkx_group.append("line")
                 .attr("id", "extend_line")
+                .attr("x1", function (d) {
+                    return (combine_source.x + combine_transit.x) / 2;
+                })
+                .attr("y1", function (d) {
+                    return (combine_source.y + combine_transit.y) / 2;
+                })
+                .attr("x2", function (d) {
+                    return (combine_source.x + combine_transit.x) / 2;
+                })
+                .attr("y2", function (d) {
+                    return (combine_source.y + combine_transit.y) / 2;
+                })
+                .transition()
+                .duration(configVar.duration)
                 .attr("x1", function (d) {
                     return combine_source.x;
                 })
@@ -275,6 +294,7 @@ function center_graph(node_center, configVar) {
 
         //draw L3
         configVar.node_extend = node_extend;
+        configVar.node_extend_L2 = node_extend_L2;
         var node_L3_group = createGroup(configVar, "L3-group", [], nodes_L3);
         var node_L3 = draw_L3(node_L3_group, isEventCenter, configVar);
         var node_L3_text = node_L3_group.append("text")
@@ -284,21 +304,28 @@ function center_graph(node_center, configVar) {
             })
             .attr("text-anchor", direction > 0 ? "start" : "end")
             .attr("x", function (d) {
-                return d.x + (L3_circle_radius + text_node_margin) * direction;
+                return node_extend_L2.x;
             })
             .attr("y", function (d) {
-                return d.y;
+                return node_extend_L2.y;
             })
+            .attr("opacity", 0)
             .text(function (d) {
                 return shortenExtendText(d.data.name, configVar);
             });
 
         //adjust text position to work on IE and Edge
-        nodes_L3.forEach(function (node, index) {
-            item = node_L3_text[0][index];
-            item_h = item.getBoundingClientRect().height;
-            item.setAttribute("y", node.y + item_h / 4);
-        });
+        var item_h = node_L3_text[0][0].getBoundingClientRect().height;
+
+        node_L3_text.transition()
+            .duration(configVar.duration)
+            .attr("x", function (d) {
+                return d.x + (L3_circle_radius + text_node_margin) * direction;
+            })
+            .attr("y", function (d) {
+                return d.y + item_h / 4;
+            })
+            .attr("opacity", 1);
     }
 
     //clear
@@ -379,7 +406,7 @@ function center_graph(node_center, configVar) {
     var fn = function (d) {
         d3.select(configVar.container).select(".hidden").classed("hidden", false);
         d3.select(configVar.container).select("#g" + d.id).classed("hidden", true);
-        expand_L2(d.source);
+        expand_L2(d);
     }
     var node_L2_group = createGroup(configVar, "L2-group", L2_className, nodes_L2, null, null, fn);
     var node_L2 = draw_L2(node_L2_group, isEventCenter, configVar);
@@ -608,8 +635,8 @@ function draw_L3(node_L3_group, isEventCenter, configVar) {
             .attr('id', function (d) {
                 return d.id;
             })
-            .attr("x", configVar.node_extend.x)
-            .attr("y", configVar.node_extend.y)
+            .attr("x", configVar.node_extend_L2.x)
+            .attr("y", configVar.node_extend_L2.y)
             .attr("width", 0)
             .attr("height", 0)
             .transition()
@@ -634,8 +661,8 @@ function draw_L3(node_L3_group, isEventCenter, configVar) {
             .attr('id', function (d) {
                 return d.id;
             })
-            .attr("cx", configVar.node_extend.x)
-            .attr("cy", configVar.node_extend.y)
+            .attr("cx", configVar.node_extend_L2.x)
+            .attr("cy", configVar.node_extend_L2.y)
             .attr("r", 0)
             .transition()
             .duration(configVar.duration)
