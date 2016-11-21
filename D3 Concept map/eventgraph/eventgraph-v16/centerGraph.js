@@ -114,6 +114,7 @@ function center_graph(node_center, configVar) {
         svg.selectAll(".L3-group").remove();
         svg.selectAll(".linkx").remove();
         svg.selectAll("#extend_line").remove();
+        svg.selectAll(".linkx-group").remove();
 
         var nodes_L3 = [];
         var links_extend = [];
@@ -247,7 +248,7 @@ function center_graph(node_center, configVar) {
 
                 return m + c;
             }
-
+            
             var linkx_group = svg.append("g").attr("class", "linkx-group");
             var linkx = linkx_group.selectAll(".linkx")
                 .data(links_extend)

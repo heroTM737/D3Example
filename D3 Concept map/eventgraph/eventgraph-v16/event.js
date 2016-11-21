@@ -15,7 +15,7 @@ function getEvents(configVar) {
         if (d.type != "combine") {
             if (state) {
                 // bring related link to front
-                d3.select(container).selectAll('.link').sort(function (a, b) {
+                d3.select(container).select('.link-group').selectAll('.link').sort(function (a, b) {
                     return d.related_links.has(a.id);
                 });
             }
