@@ -405,9 +405,11 @@ function center_graph(node_center, configVar) {
     //    draw L2
     //    var fn = configVar.events.node_combine_click;
     var fn = function (d) {
-        d3.select(configVar.container).select(".hidden").classed("hidden", false);
-        d3.select(configVar.container).select("#g" + d.id).classed("hidden", true);
-        expand_L2(d);
+        if (d.count > 0) {
+            d3.select(configVar.container).select(".hidden").classed("hidden", false);
+            d3.select(configVar.container).select("#g" + d.id).classed("hidden", true);
+            expand_L2(d);
+        }
     }
     var node_L2_group = createGroup(configVar, "L2-group", L2_className, nodes_L2, null, null, fn);
     var node_L2 = draw_L2(node_L2_group, isEventCenter, configVar);
