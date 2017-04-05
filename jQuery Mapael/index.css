@@ -1,0 +1,36 @@
+body {
+    color: #5d5d5d;
+    font-family: Helvetica, Arial, sans-serif;
+}
+
+h1 {
+    font-size: 30px;
+    margin: auto;
+    margin-top: 50px;
+}
+
+.container {
+    max-width: 1000px;
+    margin: auto;
+}
+
+/* Specific mapael css class are below
+    * 'mapael' class is added by plugin
+*/
+
+.mapael .map {
+    position: relative;
+}
+
+.mapael .mapTooltip {
+    position: absolute;
+    background-color: #fff;
+    filter: alpha(opacity=70);
+    border-radius: 10px;
+    padding: 10px;
+    z-index: 1000;
+    max-width: 200px;
+    display: none;
+    color: #343434;
+    border: 1px solid #c6c6c6;
+}

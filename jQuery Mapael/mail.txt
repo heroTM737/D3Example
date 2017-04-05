@@ -1,0 +1,15 @@
+Contextmenu support for Mapael
+
+Hi Vincent Brouté
+
+My name is Tien from Viet Nam, a web engineer just like you .
+I’m looking for geomap drawer for my app and this example from your website matches exactly what I need, awesome!
+Only one thing missing that I need to add context menu to each plot but there is no option for that in your Mapael. 
+I found an example from jsfiddle here but it uses Raphael.
+I wonder if you can take a look into that example and guide me how to do the same thing with your Mapael, I really appreciate that!
+
+Thanks and Best Regards,
+Tien
+
+https://rawgit.com/neveldo/jQuery-Mapael/2.1.0/examples/advanced/links_between_plotted_cities.html
+https://jsfiddle.net/terryyounghk/AeU2r/
