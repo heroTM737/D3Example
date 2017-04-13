@@ -8,15 +8,20 @@
 
     <!-- style -->
     <link rel="stylesheet" type="text/css" href="index.css">
+    <link rel="stylesheet" type="text/css" href="lib/d3-context-menu/d3-context-menu.css">
 
     <!-- javascript libraries-->
+    <script src="lib/lodash/4.17.4/lodash.min.js" charset="utf-8"></script>
     <script src="lib/jquery/3.1.1/jquery.min.js" charset="utf-8"></script>
     <script src="lib/jquery-mousewheel/3.1.13/jquery.mousewheel.min.js" charset="utf-8"></script>
     <script src="lib/raphael/2.2.7/raphael.min.js" charset="utf-8"></script>
-    <script src="lib/jquery-mapael/2.1.0/jquery.mapael.min.js" charset="utf-8"></script>
+    <script src="lib/jquery-mapael/2.1.0/jquery.mapael.js" charset="utf-8"></script>
     <script src="lib/jquery-mapael/2.1.0/maps/france_departments.js" charset="utf-8"></script>
     <script src="lib/jquery-mapael/2.1.0/maps/world_countries.js" charset="utf-8"></script>
     <script src="lib/jquery-mapael/2.1.0/maps/usa_states.js" charset="utf-8"></script>
+    <script src="lib/d3/4.7.4/d3.min.js" charset="utf-8"></script>
+    <script src="lib/d3-context-menu/d3-context-menu.js" charset="utf-8"></script>
+    <script src="data/data.js" charset="utf-8"></script>
 </head>
 
 <body>
@@ -26,10 +31,13 @@
             <div class="map">
                 <span>Alternative content for the map</span>
             </div>
+            <div class="plotLegend">
+                <span>Alternative content for the legend</span>
+            </div>
         </div>
     </div>
     <!-- javascript -->
-    <script src="index.js"></script>
+    <script src="index2.js"></script>
 </body>
 
 </html>
