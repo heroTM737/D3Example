@@ -1,5 +1,5 @@
 var cities = [
-   {
+    {
         name: "Paris",
         latitude: 48.86,
         longitude: 2.3444
@@ -46,36 +46,34 @@ var legend = {
         title: "Geo Map Cities",
         slices: [
             {
-                size: 30,
                 attrs: {
                     fill: "red"
                 },
                 label: "Source",
-                sliceValue: "source"
-            }, 
+                sliceValue: "source",
+                legendSpecificAttrs: {
+                    r: 15
+                }
+            },
             {
-                size: 30,
                 attrs: {
                     fill: "blue"
                 },
                 label: "Target",
-                sliceValue: "target"
-            }, 
+                sliceValue: "target",
+                legendSpecificAttrs: {
+                    r: 15
+                }
+            },
             {
-                size: 30,
                 attrs: {
                     fill: "yellow"
                 },
                 label: "Source - Target",
-                sliceValue: "source_target"
-            }, 
-            {
-                size: 30,
-                attrs: {
-                    fill: "#000"
-                },
-                label: "Empty",
-                sliceValue: "empty"
+                sliceValue: "source_target",
+                legendSpecificAttrs: {
+                    r: 15
+                }
             }
         ]
     }
@@ -98,7 +96,7 @@ function genData() {
 
         var link_name = cities[si].name + "_" + cities[ti].name;
         links[link_name] = {
-            factor: Math.floor(Math.random() * 5) / 10,
+            factor: Math.floor(Math.random() * 5 + 1) / 10,
             between: [cities[si].name, cities[ti].name],
             attrs: {
                 "stroke-width": 2
@@ -124,29 +122,30 @@ function genData() {
         }
     }
 
-    var plot_size = 30;
     //create plots
     var plots = {};
     for (var i = 0; i < cities.length; i++) {
         var city = cities[i];
-        var color = "#000";
-        if (city.type == "source") {
-            color = "red";
-        } else if (city.type == "target") {
-            color = "blue";
-        } else if (city.type == "source_target") {
-            color = "yellow";
-        }
-        plots[city.name] = {
-            longitude: city.longitude,
-            latitude: city.latitude,
-            tooltip: { content: city.name + " - " + city.type },
-            text: { content: city.name },
-            attrs: {
-                fill: color
-            },
-            value: city.type,
-            size: 12
+        if (city.type != "empty") {
+            var color = "#000";
+            if (city.type == "source") {
+                color = "red";
+            } else if (city.type == "target") {
+                color = "blue";
+            } else if (city.type == "source_target") {
+                color = "yellow";
+            }
+            plots[city.name] = {
+                longitude: city.longitude,
+                latitude: city.latitude,
+                tooltip: { content: city.name + " - " + city.type },
+                text: { content: city.name },
+                attrs: {
+                    fill: color
+                },
+                value: city.type,
+                size: 14
+            }
         }
     }
 

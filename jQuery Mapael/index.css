@@ -17,7 +17,7 @@ h1 {
 /* Specific mapael css class are below
     * 'mapael' class is added by plugin
 */
-
+.mapael,
 .mapael .map {
     position: relative;
 }
@@ -36,9 +36,7 @@ h1 {
 }
 
 .mapael .plotLegend {
-    width: 400px;
-    border: 1px solid #bebeb4;
-    background-color: #f4f4e8;
-    width: 600px;
-    padding: 10px;
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
 }
