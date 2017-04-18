@@ -149,8 +149,8 @@ function genData() {
         }
     }
 
-    console.log(plots);
-    console.log(links);
+    // console.log(plots);
+    // console.log(links);
 
     return {
         plots: plots,

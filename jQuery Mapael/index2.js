@@ -65,4 +65,23 @@ $(function () {
         plots: data.plots,
         links: data.links
     });
+
+    setTimeout(() => {
+        $(".mapcontainer").trigger('update', [{
+            newPlots: {
+                hochiminh: {
+                    longitude: 106.660172,
+                    latitude: 10.762622,
+                    tooltip: { content: "Ho Chi Minh - empty" },
+                    text: { content: "Ho Chi Minh" },
+                    attrs: {
+                        fill: "black"
+                    },
+                    value: "empty",
+                    size: 14
+                }
+            },
+            animDuration: 300
+        }]);
+    }, 2000);
 });
