@@ -100,7 +100,7 @@ window.phoenix.drawTrendView = function drawTrendView(container, chartData, widt
 		.attr("x", m[3])
 		.attr("y", m[0] + headerHeight + bodyHeight / 2)
 		.attr("alignment-baseline", "middle")
-		.attr("style", "font-size:26px")
+		.attr("style", "font-size:45px")
 		.text("" + lastValue);
 
 	var rectSize = 40;
