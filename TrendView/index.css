@@ -1,0 +1,13 @@
+svg {
+    border: 1px solid pink;
+    font-family: cursive;
+}
+
+svg text {
+    fill: #ccc;
+    font-weight: bold;
+}
+
+svg rect {
+    fill: red;
+}

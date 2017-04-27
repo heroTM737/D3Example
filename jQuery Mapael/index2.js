@@ -67,20 +67,10 @@ $(function () {
     });
 
     setTimeout(() => {
+        var newData = genData();
         $(".mapcontainer").trigger('update', [{
-            newPlots: {
-                hochiminh: {
-                    longitude: 106.660172,
-                    latitude: 10.762622,
-                    tooltip: { content: "Ho Chi Minh - empty" },
-                    text: { content: "Ho Chi Minh" },
-                    attrs: {
-                        fill: "black"
-                    },
-                    value: "empty",
-                    size: 14
-                }
-            },
+            newPlots: newData.plots,
+            newLinks: newData.links,
             animDuration: 300
         }]);
     }, 2000);

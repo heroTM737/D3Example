@@ -38,6 +38,11 @@ var cities = [
         name: "Ha Noi",
         latitude: 21.028511,
         longitude: 105.804817
+    },
+    {
+        name: "Ho Chi Minh",
+        longitude: 106.660172,
+        latitude: 10.762622
     }
 ];
 
@@ -131,9 +136,9 @@ function genData() {
             if (city.type == "source") {
                 color = "red";
             } else if (city.type == "target") {
-                color = "blue";
+                color = "green";
             } else if (city.type == "source_target") {
-                color = "yellow";
+                color = "blue";
             }
             plots[city.name] = {
                 longitude: city.longitude,
