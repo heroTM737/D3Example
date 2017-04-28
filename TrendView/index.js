@@ -27,7 +27,10 @@ function checkThenDraw() {
             var container = document.getElementById("trendViewContainer" + (i + 2));
             var chartData = {
                 title: "Example " + (i + 2),
-                data: genData(i)
+                data: genData(i),
+                style: {
+                    textColor: "steelblue"
+                }
             }
             phoenix.drawTrendView(container, chartData, width, height);
         }

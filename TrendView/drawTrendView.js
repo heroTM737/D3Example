@@ -70,6 +70,7 @@ window.phoenix.createArrow = function (x, y, size, direction) {
 }
 
 window.phoenix.drawTrendView = function drawTrendView(container, chartData, width, height) {
+	var textColor = chartData.style.textColor;
 	var m = [5, 5, 5, 5]; //top-right-bottom-left
 	var headerHeight = height / 18 * 4;
 	var bodyHeight = height / 18 * 6;
@@ -87,20 +88,19 @@ window.phoenix.drawTrendView = function drawTrendView(container, chartData, widt
 		.attr("x", m[3])
 		.attr("y", m[0] + headerHeight / 2)
 		.attr("alignment-baseline", "middle")
-		.attr("style", "font-size:26px")
+		.attr("style", "font-size:26px;stroke-width:0;fill:" + textColor)
 		.text(title);
 
 	//draw body
 	var data = chartData.data;
 	var lastValue = data[data.length - 1];
 	var fluctuation = lastValue - data[data.length - 2];
-	// var fluctuation = 0;
 
 	graph.append("text")
 		.attr("x", m[3])
 		.attr("y", m[0] + headerHeight + bodyHeight / 2)
 		.attr("alignment-baseline", "middle")
-		.attr("style", "font-size:45px")
+		.attr("style", "font-size:45px;stroke-width:0;fill:" + textColor)
 		.text("" + lastValue);
 
 	var rectSize = 40;
@@ -114,7 +114,7 @@ window.phoenix.drawTrendView = function drawTrendView(container, chartData, widt
 		.attr("y", m[0] + headerHeight + rectSize + 10)
 		.attr("alignment-baseline", "middle")
 		.attr("text-anchor", "middle")
-		.attr("style", "font-size:14px")
+		.attr("style", "font-size:14px;stroke-width:0;fill:" + textColor)
 		.text("" + fluctuation);
 
 	//draw footer - line chart
