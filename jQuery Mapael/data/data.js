@@ -100,8 +100,10 @@ function genData() {
         targets.push(ti);
 
         var link_name = cities[si].name + "_" + cities[ti].name;
+        // var factor = Math.floor(Math.random() * 5 + 1) / 10;
+        var factor = 0;
         links[link_name] = {
-            factor: Math.floor(Math.random() * 5 + 1) / 10,
+            factor: factor,
             between: [cities[si].name, cities[ti].name],
             attrs: {
                 "stroke-width": 2

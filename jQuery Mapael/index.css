@@ -40,3 +40,20 @@ h1 {
     bottom: 0px;
     left: 0px;
 }
+
+.path-animation {
+    stroke-width: 5px;
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: dash 1s ease forwards;
+}
+
+@keyframes dash {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+svg circle {
+    filter: drop-shadow( -5px -5px 5px rgba(0, 0, 0, 0.5));
+}
