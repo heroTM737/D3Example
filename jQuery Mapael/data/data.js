@@ -46,13 +46,17 @@ var cities = [
     }
 ];
 
+var source_color = "#01a982";
+var target_color = "#241bf7";
+var source_target_color = "red";
+
 var legend = {
     plot: {
         title: "Geo Map Cities",
         slices: [
             {
                 attrs: {
-                    fill: "red"
+                    fill: source_color
                 },
                 label: "Source",
                 sliceValue: "source",
@@ -62,7 +66,7 @@ var legend = {
             },
             {
                 attrs: {
-                    fill: "blue"
+                    fill: target_color
                 },
                 label: "Target",
                 sliceValue: "target",
@@ -72,7 +76,7 @@ var legend = {
             },
             {
                 attrs: {
-                    fill: "yellow"
+                    fill: source_target_color
                 },
                 label: "Source - Target",
                 sliceValue: "source_target",
@@ -136,11 +140,11 @@ function genData() {
         if (city.type != "empty") {
             var color = "#000";
             if (city.type == "source") {
-                color = "red";
+                color = source_color;
             } else if (city.type == "target") {
-                color = "green";
+                color = target_color;
             } else if (city.type == "source_target") {
-                color = "blue";
+                color = source_target_color;
             }
             plots[city.name] = {
                 longitude: city.longitude,
