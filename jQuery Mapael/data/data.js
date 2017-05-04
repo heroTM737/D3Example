@@ -50,9 +50,32 @@ var source_color = "#01a982";
 var target_color = "#241bf7";
 var source_target_color = "red";
 
+var color_white = {
+    color: "#545454",
+    fill: "#f4f4e8",
+    stroke: "#ced8d0"
+}
+
+var color_dark = {
+    color: "fff",
+    fill: "#344955",
+    stroke: "#2b3d47"
+}
+
+var pathname = window.location.pathname;
+var splitted = pathname.split("/");
+var filename = splitted[splitted.length - 1];
+var color = filename == "index1.html" ? color_white : color_dark;
+
 var legend = {
     plot: {
         title: "Geo Map Cities",
+        titleAttrs: {
+             fill: color.color
+        },
+        labelAttrs: {
+            fill: color.color
+        },
         slices: [
             {
                 attrs: {
@@ -61,7 +84,8 @@ var legend = {
                 label: "Source",
                 sliceValue: "source",
                 legendSpecificAttrs: {
-                    r: 15
+                    r: 15,
+
                 }
             },
             {
@@ -71,7 +95,8 @@ var legend = {
                 label: "Target",
                 sliceValue: "target",
                 legendSpecificAttrs: {
-                    r: 15
+                    r: 15,
+                    fill: "red"
                 }
             },
             {
@@ -81,7 +106,8 @@ var legend = {
                 label: "Source - Target",
                 sliceValue: "source_target",
                 legendSpecificAttrs: {
-                    r: 15
+                    r: 15,
+                    fill: "red"
                 }
             }
         ]
