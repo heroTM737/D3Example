@@ -24,9 +24,9 @@ $(document).ready(function () {
     }
 
     //draw events map
-    var number_of_link = 10;
+    var number_of_event = 10;
     var links = [];
-    for (var i = 0; i < number_of_link; i++) {
+    for (var i = 0; i < number_of_event; i++) {
         var r1 = Math.floor(Math.random() * cities.length);
         var r2 = null;
         do {
@@ -36,7 +36,7 @@ $(document).ready(function () {
         links.push([r1, r2]);
     }
 
-    for (var i = 0; i < number_of_link; i++) {
+    for (var i = 0; i < number_of_event; i++) {
         var source = cities[links[i][0]];
         var target = cities[links[i][1]];
         shootEvent(svg, [source, target]);
