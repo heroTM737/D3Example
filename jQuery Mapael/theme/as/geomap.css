@@ -4,6 +4,11 @@ body {
     background: #f1f1f1;
 }
 
+.map-path {
+    stroke:#ced8d0;
+    fill:#f4f4e8;
+}
+
 .container {
     width: 1000px;
     margin: auto;

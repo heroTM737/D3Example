@@ -1,13 +1,18 @@
 body {
     color: #5d5d5d;
     font-family: Helvetica, Arial, sans-serif;
-    background: #f1f1f1;
+    background: #344955;
+}
+
+.map-path {
+    stroke:#2b3d47;
+    fill:#344955;
 }
 
 .container {
     width: 1000px;
     margin: auto;
-    background: #fff;
+    background: #2b3d47;
 }
 
 .header {
@@ -15,7 +20,7 @@ body {
     line-height: 30px;
     border-bottom: 1px solid #f1f1f1;
     padding: 0px 3px;
-    color: #5a5a5a;
+    color: #fff;
     font-weight: bold;
 }
 

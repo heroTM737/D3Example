@@ -1,0 +1,23 @@
+.mapael,
+.mapael .map {
+    position: relative;
+}
+
+.mapael .mapTooltip {
+    position: absolute;
+    background-color: #fff;
+    filter: alpha(opacity=70);
+    border-radius: 10px;
+    padding: 10px;
+    z-index: 1000;
+    max-width: 200px;
+    display: none;
+    color: #343434;
+    border: 1px solid #c6c6c6;
+}
+
+.mapael .plotLegend {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+}
