@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>Geo map by TM</title>
+    <link rel="shortcut icon" href="image/favicon.png" />
+
+    <!-- javascript libraries-->
+    <script src="lib/jquery/3.1.1/jquery.min.js" charset="utf-8"></script>
+    <style>
+        body {
+            margin: 0;
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: row;
+        }
+        
+        .container div {
+            height: 20px;
+            padding: 5px;
+            cursor: pointer;
+        }
+        
+        .container div:hover {
+            background: pink;
+        }
+        
+        iframe {
+            width: 100vw;
+            height: calc(100vh - 35px);
+            border: none;
+        }
+    </style>
+    <script>
+    $(document).ready(function(){
+        $(".container div").each(function(i, v){
+            $(v).on("click", function(){
+                $("iframe").attr("src", "index" + (i + 1) + ".html");
+            })
+        });
+    });
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <div>Animation</div>
+        <div>Animation Dark Theme</div>
+    </div>
+    <iframe src="index1.html" />
+
+</body>
+
+</html>

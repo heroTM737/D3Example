@@ -1,0 +1,48 @@
+body {
+    color: #5d5d5d;
+    font-family: Helvetica, Arial, sans-serif;
+    background: #f1f1f1;
+}
+
+.container {
+    width: 1000px;
+    margin: auto;
+    background: #fff;
+}
+
+.header {
+    height: 30px;
+    line-height: 30px;
+    border-bottom: 1px solid #f1f1f1;
+    padding: 0px 3px;
+    color: #5a5a5a;
+    font-weight: bold;
+}
+
+.mapcontainer {
+    padding: 3px;
+}
+
+.mapael,
+.mapael .map {
+    position: relative;
+}
+
+.mapael .mapTooltip {
+    position: absolute;
+    background-color: #fff;
+    filter: alpha(opacity=70);
+    border-radius: 10px;
+    padding: 10px;
+    z-index: 1000;
+    max-width: 200px;
+    display: none;
+    color: #343434;
+    border: 1px solid #c6c6c6;
+}
+
+.mapael .plotLegend {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+}
