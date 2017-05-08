@@ -84,8 +84,7 @@ var legend = {
                 label: "Source",
                 sliceValue: "source",
                 legendSpecificAttrs: {
-                    r: 15,
-
+                    r: 15
                 }
             },
             {
@@ -181,6 +180,7 @@ function genData() {
                     fill: color
                 },
                 value: city.type,
+                cssClass: "tiendeptrai",
                 size: 14
             }
         }
