@@ -71,42 +71,34 @@ var legend = {
     plot: {
         title: "Geo Map Cities",
         titleAttrs: {
-             fill: color.color
+            cssClass: "legend_title"
         },
         labelAttrs: {
-            fill: color.color
+            cssClass: "legend_label"
         },
         slices: [
             {
-                attrs: {
-                    fill: source_color
-                },
                 label: "Source",
                 sliceValue: "source",
+                cssClass: "source",
                 legendSpecificAttrs: {
                     r: 15
                 }
             },
             {
-                attrs: {
-                    fill: target_color
-                },
                 label: "Target",
                 sliceValue: "target",
+                cssClass: "target",
                 legendSpecificAttrs: {
-                    r: 15,
-                    fill: "red"
+                    r: 15
                 }
             },
             {
-                attrs: {
-                    fill: source_target_color
-                },
                 label: "Source - Target",
                 sliceValue: "source_target",
+                cssClass: "source_target",
                 legendSpecificAttrs: {
-                    r: 15,
-                    fill: "red"
+                    r: 15
                 }
             }
         ]
@@ -134,10 +126,11 @@ function genData() {
         links[link_name] = {
             factor: factor,
             between: [cities[si].name, cities[ti].name],
+            tooltip: { content: link_name },
+            cssClass: "node_link",
             attrs: {
                 "stroke-width": 2
-            },
-            tooltip: { content: link_name }
+            }
         }
     }
 
@@ -163,25 +156,12 @@ function genData() {
     for (var i = 0; i < cities.length; i++) {
         var city = cities[i];
         if (city.type != "empty") {
-            var color = "#000";
-            if (city.type == "source") {
-                color = source_color;
-            } else if (city.type == "target") {
-                color = target_color;
-            } else if (city.type == "source_target") {
-                color = source_target_color;
-            }
             plots[city.name] = {
                 longitude: city.longitude,
                 latitude: city.latitude,
                 tooltip: { content: city.name + " - " + city.type },
                 text: { content: city.name },
-                attrs: {
-                    fill: color
-                },
-                value: city.type,
-                cssClass: "tiendeptrai",
-                size: 14
+                value: city.type
             }
         }
     }

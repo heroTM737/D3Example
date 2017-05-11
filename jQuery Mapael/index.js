@@ -57,7 +57,7 @@ $(function () {
                 for (var key in plots) {
                     plots[key].mapElem["0"].id = "plot_" + key;
                     plots[key].mapElem["0"].mydata = { id: key };
-                    plots[key].mapElem["0"].oncontextmenu = onContextMenuShow;
+                    // plots[key].mapElem["0"].oncontextmenu = onContextMenuShow;
                 }
             }
         },
@@ -66,12 +66,12 @@ $(function () {
         links: data.links
     });
 
-    setTimeout(() => {
-        var newData = genData();
-        $(".mapcontainer").trigger('update', [{
-            newPlots: newData.plots,
-            newLinks: newData.links,
-            animDuration: 300
-        }]);
-    }, 2000);
+    // setTimeout(() => {
+    //     var newData = genData();
+    //     $(".mapcontainer").trigger('update', [{
+    //         newPlots: newData.plots,
+    //         newLinks: newData.links,
+    //         animDuration: 300
+    //     }]);
+    // }, 2000);
 });

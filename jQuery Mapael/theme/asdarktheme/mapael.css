@@ -47,3 +47,28 @@ body {
     bottom: 0px;
     left: 0px;
 }
+
+.arcsightMapael .source {
+    fill: red;
+}
+
+.arcsightMapael .target {
+    fill: blue;
+}
+
+.arcsightMapael .source_target {
+    fill: yellow;
+}
+
+.arcsightMapael path:not(.node_link) {
+    stroke:#2b3d47;
+    fill:#344955;
+}
+
+.arcsightMapael .legend_title {
+    fill: #fff;
+}
+
+.arcsightMapael .legend_label {
+    fill: #fff;
+}
