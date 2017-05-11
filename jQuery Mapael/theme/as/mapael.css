@@ -52,14 +52,26 @@ body {
 }
 
 .arcsightMapael .target {
-    fill: blue;
+    fill: green;
 }
 
 .arcsightMapael .source_target {
-    fill: yellow;
+    fill: orange;
 }
 
-.arcsightMapael path:not(.node_link) {
+.arcsightMapael .node_text {
+    fill: #000;
+}
+
+.arcsightMapael .link {
+    stroke: blue;
+}
+
+.arcsightMapael .link:hover {
+    stroke: #a4e100;
+}
+
+.arcsightMapael path:not(.link) {
     stroke:#ced8d0;
     fill:#f4f4e8;
 }

@@ -46,33 +46,8 @@ var cities = [
     }
 ];
 
-var source_color = "#01a982";
-var target_color = "#241bf7";
-var source_target_color = "red";
-
-var color_white = {
-    color: "#545454",
-    fill: "#f4f4e8",
-    stroke: "#ced8d0"
-}
-
-var color_dark = {
-    color: "fff",
-    fill: "#344955",
-    stroke: "#2b3d47"
-}
-
-var pathname = window.location.pathname;
-var splitted = pathname.split("/");
-var filename = splitted[splitted.length - 1];
-var color = filename == "index1.html" ? color_white : color_dark;
-
 var legend = {
     plot: {
-        title: "Geo Map Cities",
-        titleAttrs: {
-            cssClass: "legend_title"
-        },
         labelAttrs: {
             cssClass: "legend_label"
         },
@@ -80,26 +55,17 @@ var legend = {
             {
                 label: "Source",
                 sliceValue: "source",
-                cssClass: "source",
-                legendSpecificAttrs: {
-                    r: 15
-                }
+                cssClass: "source"
             },
             {
                 label: "Target",
                 sliceValue: "target",
-                cssClass: "target",
-                legendSpecificAttrs: {
-                    r: 15
-                }
+                cssClass: "target"
             },
             {
                 label: "Source - Target",
                 sliceValue: "source_target",
-                cssClass: "source_target",
-                legendSpecificAttrs: {
-                    r: 15
-                }
+                cssClass: "source_target"
             }
         ]
     }
@@ -127,7 +93,6 @@ function genData() {
             factor: factor,
             between: [cities[si].name, cities[ti].name],
             tooltip: { content: link_name },
-            cssClass: "node_link",
             attrs: {
                 "stroke-width": 2
             }
@@ -160,7 +125,10 @@ function genData() {
                 longitude: city.longitude,
                 latitude: city.latitude,
                 tooltip: { content: city.name + " - " + city.type },
-                text: { content: city.name },
+                text: { 
+                    content: city.name,
+                    cssClass: "node_text"
+                },
                 value: city.type
             }
         }

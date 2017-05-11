@@ -382,6 +382,7 @@
                 textPosition = self.getTextPosition(bbox, elemOptions.text.position, elemOptions.text.margin);
                 elemOptions.text.attrs["text-anchor"] = textPosition.textAnchor;
                 elem.textElem = self.paper.text(textPosition.x, textPosition.y, elemOptions.text.content).attr(elemOptions.text.attrs);
+                elem.textElem.attr("class", elemOptions.text.cssClass);
                 $(elem.textElem.node).attr("data-id", id);
             }
 
@@ -1417,6 +1418,7 @@
             } else { // Default = circle
                 plot = {"mapElem": self.paper.circle(coords.x, coords.y, elemOptions.size / 2).attr(elemOptions.attrs)};
             }
+            console.log(1420, elemOptions);
             self.initElem(plot, elemOptions, id);
             return plot;
         },

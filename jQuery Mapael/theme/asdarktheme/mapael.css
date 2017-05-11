@@ -38,7 +38,7 @@ body {
     z-index: 1000;
     max-width: 200px;
     display: none;
-    color: #fff;
+    color: #343434;
     border: 1px solid #c6c6c6;
 }
 
@@ -53,14 +53,26 @@ body {
 }
 
 .arcsightMapael .target {
-    fill: blue;
+    fill: green;
 }
 
 .arcsightMapael .source_target {
-    fill: yellow;
+    fill: orange;
 }
 
-.arcsightMapael path:not(.node_link) {
+.arcsightMapael .node_text {
+    fill: #fff;
+}
+
+.arcsightMapael .link {
+    stroke: #a4e100;
+}
+
+.arcsightMapael .link:hover {
+    stroke: blue;
+}
+
+.arcsightMapael path:not(.link) {
     stroke:#2b3d47;
     fill:#344955;
 }

@@ -30,27 +30,10 @@ $(function () {
     $(".mapcontainer").mapael({
         map: {
             name: "world_countries",
-            defaultArea: {
-                attrs: {
-                    fill: color.fill,
-                    stroke: color.stroke
-                }
-            },
             defaultLink: {
-                factor: 0.4,
-                attrsHover: {
-                    stroke: "#a4e100"
-                }
+                factor: 0.4
             },
             defaultPlot: {
-                text: {
-                    attrs: {
-                        fill: "#000"
-                    },
-                    attrsHover: {
-                        fill: "#000"
-                    }
-                },
                 size: 12,
             },
             afterInit: function (container, paper, areas, plots, options) {
