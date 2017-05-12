@@ -1418,7 +1418,7 @@
             } else { // Default = circle
                 plot = {"mapElem": self.paper.circle(coords.x, coords.y, elemOptions.size / 2).attr(elemOptions.attrs)};
             }
-            console.log(1420, elemOptions);
+            
             self.initElem(plot, elemOptions, id);
             return plot;
         },
