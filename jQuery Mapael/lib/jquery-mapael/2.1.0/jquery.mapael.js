@@ -1418,7 +1418,6 @@
             } else { // Default = circle
                 plot = {"mapElem": self.paper.circle(coords.x, coords.y, elemOptions.size / 2).attr(elemOptions.attrs)};
             }
-            
             self.initElem(plot, elemOptions, id);
             return plot;
         },
@@ -1570,7 +1569,7 @@
             // Set the title of the legend
             if (legendOptions.title && legendOptions.title !== "") {
                 title = legendPaper.text(legendOptions.marginLeftTitle, 0, legendOptions.title).attr(legendOptions.titleAttrs);
-                title.attr("class", legendOptions.titleAttrs.cssClass)
+                title.attr("class", legendOptions.titleAttrs.cssClass);
                 title.attr({y: 0.5 * title.getBBox().height});
 
                 width = legendOptions.marginLeftTitle + title.getBBox().width;
@@ -1689,7 +1688,7 @@
                     delete sliceOptions[i].attrs.height;
                     delete sliceOptions[i].attrs.r;
                     elem.attr(sliceOptions[i].attrs);
-                    elem.attr("class", sliceOptions[i].cssClass)
+                    elem.attr("class", sliceOptions[i].cssClass);
                     elemBBox = elem.getBBox();
 
                     // Draw the label associated with the element
