@@ -1,6 +1,6 @@
 
 $(document).ready(function () {
-    var world_countries = phoenix.maps.world_countries;
+    var world_countries = $.mapael.maps.world_countries;
     var svg = d3.select(".mapcontainer").append("svg").attr("viewBox", "0 0 " + world_countries.width + " " + world_countries.height);
 
     //define gradient
@@ -54,7 +54,7 @@ $(document).ready(function () {
 });
 
 function shootEvent(svg, event) {
-    var world_countries = phoenix.maps.world_countries;
+    var world_countries = $.mapael.maps.world_countries;
     var Source = world_countries.getCoords(event[0].latitude, event[0].longitude);
     var Target = world_countries.getCoords(event[1].latitude, event[1].longitude);
 
@@ -72,8 +72,8 @@ function shootEvent(svg, event) {
         .attr("stroke", isReverse ? "url(#linearGradient1)" : "url(#linearGradient2)")
         .attr("stroke-width", "1px")
         .attr("fill", "none")
-        .attr("class", "");
-
+        .attr("class", "link-gradient");
+          
     //loop running path
     var repeat_path_Source_Target = () => {
         path_Source_Target
@@ -94,7 +94,7 @@ function shootEvent(svg, event) {
             .ease(easefn)
             .attr("d", "M " + Target.x + " " + Target.y + " L " + Target.x + " " + Target.y)
 
-            .on("end", repeat_path_Source_Target);
+            .each("end", repeat_path_Source_Target);
     }
     repeat_path_Source_Target();
 
@@ -120,7 +120,7 @@ function shootEvent(svg, event) {
             .attr("cx", Target.x)
             .attr("cy", Target.y)
 
-            .on("end", repeat_circle_Source_Target);
+            .each("end", repeat_circle_Source_Target);
     }
     repeat_circle_Source_Target();
 }
