@@ -19,7 +19,7 @@ $(document).ready(function () {
     for (var i in elems) {
         var elem = elems[i];
         svg.append("path")
-            .attr("class", "map-path")
+            .attr("class", "map_path")
             .attr("d", elem);
     }
 
