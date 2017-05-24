@@ -31,10 +31,16 @@ $(function () {
         map: {
             name: "world_countries",
             defaultLink: {
-                factor: 0.4
+                factor: 0.4,
+                attrs: {
+                    "stroke-width": 1
+                },
+                attrsHover: {
+                    "stroke-width": 3
+                }
             },
             defaultPlot: {
-                size: 12,
+                size: 10,
             },
             afterInit: function (container, paper, areas, plots, options) {
                 for (var key in plots) {
@@ -49,6 +55,7 @@ $(function () {
         links: data.links
     });
 
+    d3.select(".mapcontainer svg").attr("shape-rendering", "geometricPrecision");
     // setTimeout(() => {
     //     var newData = genData();
     //     $(".mapcontainer").trigger('update', [{

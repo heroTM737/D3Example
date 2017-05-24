@@ -55,17 +55,17 @@ var legend = {
             {
                 label: "Source",
                 sliceValue: "source",
-                cssClass: "source"
+                cssClass: "plot source"
             },
             {
                 label: "Target",
                 sliceValue: "target",
-                cssClass: "target"
+                cssClass: "plot target"
             },
             {
                 label: "Source - Target",
                 sliceValue: "source_target",
-                cssClass: "source_target"
+                cssClass: "plot source_target"
             }
         ]
     }
@@ -92,10 +92,7 @@ function genData() {
         links[link_name] = {
             factor: factor,
             between: [cities[si].name, cities[ti].name],
-            tooltip: { content: link_name },
-            attrs: {
-                "stroke-width": 2
-            }
+            tooltip: { content: link_name }
         }
     }
 

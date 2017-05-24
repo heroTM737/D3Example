@@ -29,6 +29,10 @@ body {
     position: relative;
 }
 
+.mapael .area:hover {
+    fill: yellow;
+}
+
 .mapael .mapTooltip {
     position: absolute;
     background-color: #fff;
@@ -48,6 +52,10 @@ body {
     left: 0px;
 }
 
+.arcsightMapael .plot {
+    stroke-width: 0px;
+}
+
 .arcsightMapael .source {
     fill: red;
 }
@@ -65,11 +73,7 @@ body {
 }
 
 .arcsightMapael .link {
-    stroke: #a4e100;
-}
-
-.arcsightMapael .link:hover {
-    stroke: blue;
+    stroke: rgba(0, 255, 0, 0.5);
 }
 
 .arcsightMapael path:not(.link) {
