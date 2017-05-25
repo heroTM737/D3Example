@@ -52,15 +52,15 @@ body {
     left: 0px;
 }
 
-.arcsightMapael .plot {
+.mapael .plot {
     stroke-width: 0px;
 }
 
-.arcsightMapael .source {
+.mapael .source {
     fill: red;
 }
 
-.arcsightMapael .target {
+.mapael .target {
     fill: green;
 }
 
