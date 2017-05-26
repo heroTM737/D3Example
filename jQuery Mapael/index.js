@@ -55,7 +55,7 @@ $(function () {
         links: data.links
     });
 
-    d3.select(".mapcontainer svg").attr("shape-rendering", "geometricPrecision");
+    // d3.select(".mapcontainer svg").attr("shape-rendering", "geometricPrecision");
     // setTimeout(() => {
     //     var newData = genData();
     //     $(".mapcontainer").trigger('update', [{

@@ -83,7 +83,7 @@
         return locationList;
     }
 
-    var createThreatMap = function (container, width, height, events) {
+    var createThreatMap = function (container, events, width, height) {
         //clean container
         d3.select(container).select("*").remove();
 
@@ -132,6 +132,7 @@
         }
     }
 
+    //bind function to window
     if (window.createThreatMap != undefined && window.createThreatMap != null) {
         alert("function name conflict \"createThreatMap\"");
     } else {
