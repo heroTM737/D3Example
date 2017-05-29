@@ -152,8 +152,8 @@
 					.transition()
 					.duration(500)
 					.ease(d3.easeLinear)
+					.attr("style", "fill:" + strokeColor + ";stroke:" + strokeColor)
 					.attr("d", createArrow(arrow_x, arrow_y, rectSize, fluctuation));
-					// .attr("style", "fill:" + strokeColor + ";stroke:" + strokeColor)
 					// .attrTween("transform", tween)
 					// .each("end", function () { arrow.attr("transform", nextRotate); });
 			}
