@@ -89,7 +89,12 @@ var createThreatMap = function (container, events, width, height) {
     d3.select(container).selectAll("*").remove();
 
     //create svg
-    var svg = d3.select(container).append("svg").attr("viewBox", "0 0 " + world_countries.width + " " + world_countries.height);
+    width = width ? width : world_countries.width;
+    height = height ? height : world_countries.height;
+    var svg = d3.select(container).append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .attr("viewBox", "0 0 " + world_countries.width + " " + world_countries.height);
 
     //define gradient
     var defs = svg.append("defs");
