@@ -77,7 +77,6 @@
 		var bodyHeight = height / 18 * 6;
 		var chartHeight = height / 18 * 8;
 		var rectSize = 40;
-		var currentData = [];
 
 		var graph = d3.select(container).append("svg:svg")
 			.attr("width", width)
@@ -95,14 +94,18 @@
 			.attr("style", "font-size:26px;stroke-width:0;fill:" + textColor)
 			.text(title);
 
-		/////////////////////////////////////////////////////////
 		//draw body
-
 		var lastValueGroup = graph.append("g").attr("id", "lastValueGroup");
 		var arrowGroup = graph.append("g").attr("id", "arrowGroup");
 		var fluctuationGroup = graph.append("g").attr("id", "fluctuationGroup");
 		var lineGroup = graph.append("g").attr("id", "lineGroup");
 		var path = null;
+		var arrow = null;
+		var arrow_x = width - m[1] - rectSize * 3 / 2;
+		var arrow_y = m[0] + headerHeight;
+		var arrow_cx = arrow_x + rectSize / 2;
+		var arrow_cy = arrow_y + rectSize / 2;
+		var currentData = [];
 
 		var update = function (data) {
 			if (data.length >= currentData.length) {
@@ -116,8 +119,6 @@
 
 			var lastValue = currentData[data.length - 1];
 			var fluctuation = lastValue - currentData[data.length - 2];
-			var strokeColor = fluctuation == 0 ? "steelblue" : "red";
-
 			//update last value
 			lastValueGroup.selectAll("*").remove();
 			lastValueGroup.append("text")
@@ -128,10 +129,35 @@
 				.text("" + lastValue);
 
 			//update arrow
-			arrowGroup.selectAll("*").remove();
-			arrowGroup.append("path")
-				.attr("d", createArrow(width - m[1] - rectSize * 3 / 2, m[0] + headerHeight, rectSize, fluctuation))
-				.attr("style", "fill:" + strokeColor + ";stroke:" + strokeColor + ";stroke-width:0");
+			var strokeColor = fluctuation == 0 ? "steelblue" : "red";
+			if (arrow == null) {
+				arrow = arrowGroup.append("path")
+					.attr("d", createArrow(arrow_x, arrow_y, rectSize, fluctuation))
+					.attr("stroke-width", 0)
+					.attr("style", "fill:" + strokeColor + ";stroke:" + strokeColor)
+					.attr("transform", "rotate(0 " + arrow_cx + " " + arrow_cy + ")");
+			} else {
+				var rotateValue = 180; //default fluctuation < 0
+				if (fluctuation == 0) {
+					rotateValue = 90;
+				} else if (fluctuation > 0) {
+					rotateValue = 0;
+				}
+				currentRotate = arrow.attr("transform");
+				nextRotate = "rotate(" + rotateValue + " " + arrow_cx + " " + arrow_cy + ")";
+				var tween = function (d, i, a) {
+					return d3.interpolateString(currentRotate, nextRotate);
+				}
+				arrow
+					.transition()
+					.duration(500)
+					.ease(d3.easeLinear)
+					.attr("d", createArrow(arrow_x, arrow_y, rectSize, fluctuation));
+					// .attr("style", "fill:" + strokeColor + ";stroke:" + strokeColor)
+					// .attrTween("transform", tween)
+					// .each("end", function () { arrow.attr("transform", nextRotate); });
+			}
+
 
 			//update fluctuation
 			fluctuationGroup.selectAll("*").remove();
