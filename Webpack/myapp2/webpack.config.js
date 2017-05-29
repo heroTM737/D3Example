@@ -1,9 +1,9 @@
 var path = require('path');
 
 module.exports = {
-  entry: './src/index.js',
+  entry: './src/threatmap.js',
   output: {
-    filename: 'bundle.js',
+    filename: 'threatmap.js',
     path: path.resolve(__dirname, 'dist')
   }
 };
