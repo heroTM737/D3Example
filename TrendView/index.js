@@ -1,41 +1,37 @@
-function genData(fluctation) {
+function genData() {
     var data = [];
 
-    for (var i = 0; i < 29; i++) {
+    for (var i = 0; i < 30; i++) {
         var random = Math.floor(Math.random() * 100);
         data.push(random);
     }
 
-    var d = 0;
-    if (fluctation > 0) {
-        d = 1;
-    } else if (fluctation < 0) {
-        d = -1;
-    }
-
-    var random = Math.floor(Math.random() * 100);
-    data.push(data[28] + d * random);
-
     return data;
 }
 
-function checkThenDraw() {
-    if (phoenix.drawTrendView != null && phoenix.drawTrendView != undefined) {
-        var width = 280;
-        var height = 180;
-        for (var i = -1; i < 2; i++) {
-            var container = document.getElementById("trendViewContainer" + (i + 2));
-            var chartData = {
-                title: "Example " + (i + 2),
-                data: genData(i),
-                style: {
-                    textColor: "steelblue"
-                }
-            }
-            phoenix.drawTrendView(container, chartData, width, height);
+var width = 280;
+var height = 180;
+var refreshTime = 1000;
+function createChart(i, width, height) {
+    var container = document.getElementById("trendViewContainer" + i);
+    var chartData = {
+        title: "Example " + i,
+        data: genData(i),
+        style: {
+            textColor: "steelblue"
         }
-    } else {
-        setTimeout(checkThenDraw, 500);
+    }
+    var updater = drawTrendView(container, chartData, width, height);
+    setInterval(function () {
+        updater.update(genData());
+    }, refreshTime);
+}
+
+function checkThenDraw() {
+    for (var i = 1; i < 4; i++) {
+        createChart(i, width, height);
     }
 }
 checkThenDraw();
+
+
