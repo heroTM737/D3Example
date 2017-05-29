@@ -86,7 +86,7 @@ var checkThenAddLocation = function (locationGroup, locationList, location) {
 
 var createThreatMap = function (container, events, width, height) {
     //clean container
-    d3.select(container).select("*").remove();
+    d3.select(container).selectAll("*").remove();
 
     //create svg
     var svg = d3.select(container).append("svg").attr("viewBox", "0 0 " + world_countries.width + " " + world_countries.height);
@@ -126,7 +126,9 @@ var createThreatMap = function (container, events, width, height) {
             shootEvent(eventGroup, event);
         }
     }
-    update(events);
+    if (events != undefined && events != null) {
+        update(events);
+    }
 
     return {
         update: update

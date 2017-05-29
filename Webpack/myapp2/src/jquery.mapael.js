@@ -148,10 +148,10 @@
             self.paper = new Raphael(self.$map[0], self.mapConf.width, self.mapConf.height);
 
             // issue #135: Check for Raphael bug on text element boundaries
-            if (self.isRaphaelBBoxBugPresent() === true) {
-                self.destroy();
-                throw new Error("Can't get boundary box for text (is your container hidden? See #135)");
-            }
+            // if (self.isRaphaelBBoxBugPresent() === true) {
+            //     self.destroy();
+            //     throw new Error("Can't get boundary box for text (is your container hidden? See #135)");
+            // }
 
             // add plugin class name on element
             self.$container.addClass(pluginName);
