@@ -106,19 +106,19 @@
 		var arrow_cx = arrow_x + rectSize / 2;
 		var arrow_cy = arrow_y + rectSize / 2;
 		var currentData = [];
+		var number_of_entries = 12;
+		for (var i = 0; i < number_of_entries; i++) {
+			currentData.push(0);
+		}
 
 		var update = function (data) {
-			if (data.length >= currentData.length) {
-				currentData = data;
-			} else {
-				for (var i in data) {
-					currentData.push(data.shift());
-					currentData.shift();
-				}
+			for (var i in data) {
+				currentData.shift();
+				currentData.push(Number(data.shift()));
 			}
 
-			var lastValue = currentData[data.length - 1];
-			var fluctuation = lastValue - currentData[data.length - 2];
+			var lastValue = currentData[currentData.length - 1];
+			var fluctuation = lastValue - currentData[currentData.length - 2];
 			//update last value
 			lastValueGroup.selectAll("*").remove();
 			lastValueGroup.append("text")
@@ -154,8 +154,8 @@
 					.ease(d3.easeLinear)
 					.attr("style", "fill:" + strokeColor + ";stroke:" + strokeColor)
 					.attr("d", createArrow(arrow_x, arrow_y, rectSize, fluctuation));
-					// .attrTween("transform", tween)
-					// .each("end", function () { arrow.attr("transform", nextRotate); });
+				// .attrTween("transform", tween)
+				// .each("end", function () { arrow.attr("transform", nextRotate); });
 			}
 
 
@@ -172,9 +172,9 @@
 			//update line chart
 			var w = width - m[1] - m[3];
 			var h = chartHeight - m[0] - m[2];
-			var maxOfData = Math.max.apply(Math, data);
-			var minOfData = Math.min.apply(Math, data);
-			var x = d3.scale.linear().domain([0, data.length]).range([0, w]);
+			var maxOfData = Math.max.apply(Math, currentData);
+			var minOfData = Math.min.apply(Math, currentData);
+			var x = d3.scale.linear().domain([0, currentData.length]).range([0, w]);
 			var y = d3.scale.linear().domain([minOfData, maxOfData]).range([h, 0]);
 
 			var line = d3.svg.line()
@@ -184,10 +184,10 @@
 				.y(function (d) {
 					return height - chartHeight + m[0] + y(d);
 				});
-
+			
 			if (path == null) {
 				path = lineGroup.append("path")
-					.attr("d", line(data))
+					.attr("d", line(currentData))
 					.attr("stroke-width", 2)
 					.attr("stroke", "steelblue")
 					.attr("fill", "none");
@@ -195,7 +195,7 @@
 				path.transition()
 					.duration(500)
 					.ease(d3.easeLinear)
-					.attr("d", line(data));
+					.attr("d", line(currentData));
 			}
 
 		}

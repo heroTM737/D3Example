@@ -1,7 +1,7 @@
 function genData() {
     var data = [];
 
-    for (var i = 0; i < 30; i++) {
+    for (var i = 0; i < 1; i++) {
         var random = Math.floor(Math.random() * 100);
         data.push(random);
     }
@@ -16,19 +16,19 @@ function createChart(i, width, height) {
     var container = document.getElementById("trendViewContainer" + i);
     var chartData = {
         title: "Example " + i,
-        data: genData(i),
+        data: [],
         style: {
             textColor: "steelblue"
         }
     }
     var updater = drawTrendView(container, chartData, width, height);
     setInterval(function () {
-        updater.update(genData());
+        updater.update([genData()]);
     }, refreshTime);
 }
 
 function checkThenDraw() {
-    for (var i = 1; i < 4; i++) {
+    for (var i = 1; i < 2; i++) {
         createChart(i, width, height);
     }
 }
