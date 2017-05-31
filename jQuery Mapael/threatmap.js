@@ -1,5 +1,14 @@
 (function () {
     var world_countries = $.mapael.maps.world_countries;
+    var location_r = 2;
+    var location_r_shoot = 10;
+
+    var getLocationId = function (location) {
+        var id = "lat" + location.latitude + "long" + location.longitude;
+        id = id.split("-").join("m");
+        id = id.split(".").join("p");
+        return id;
+    }
 
     var shootEvent = function (svg, event) {
         var Source = world_countries.getCoords(event.source.latitude, event.source.longitude);
@@ -11,6 +20,19 @@
         var duration4 = duration / 10 * 4;
         var duration6 = duration / 10 * 6;
         var easefn = d3.easeLinear;
+
+        var sourceId = getLocationId(event.source);
+
+        d3.select("#" + sourceId)
+            .transition()
+            .duration(duration6)
+            .ease(easefn)
+            .attr("r", location_r_shoot)
+
+            .transition()
+            .duration(duration6)
+            .ease(easefn)
+            .attr("r", location_r);
 
         var middle = {
             x: (Target.x + Source.x) / 2,
@@ -64,9 +86,7 @@
     }
 
     var checkThenAddLocation = function (locationGroup, locationList, location) {
-        var id = "lat" + location.latitude + "long" + location.longitude;
-        id = id.split("-").join("m");
-        id = id.split(".").join("p");
+        var id = getLocationId(location);
         var isEmpty = locationGroup.select("#" + id).empty();
 
         if (isEmpty) {
@@ -76,8 +96,8 @@
                 .attr("id", id)
                 .attr("cx", city.x)
                 .attr("cy", city.y)
-                .attr("r", 5)
-                .attr("style", "fill:red");
+                .attr("r", location_r)
+                .attr("fill", "url(#radialGradient)");
         }
 
         return locationList;
@@ -101,6 +121,10 @@
         var linearGradient2 = defs.append("linearGradient").attr("id", "linearGradient2");
         linearGradient2.append("stop").attr("offset", "0%").attr("stop-color", color2).attr("stop-opacity", "0");
         linearGradient2.append("stop").attr("offset", "100%").attr("stop-color", color1);
+
+        var radialGradient = defs.append("radialGradient").attr("id", "radialGradient");
+        radialGradient.append("stop").attr("offset", "0%").attr("stop-color", "red");
+        radialGradient.append("stop").attr("offset", "100%").attr("stop-color", "blue").attr("stop-opacity", "0");
 
         //draw world_countries
         var worldCountryGroup = svg.append("g").attr("class", "worldCountryGroup");

@@ -72,7 +72,7 @@ $(document).ready(function () {
     }
 
 
-    var threatMap = window.createThreatMap(document.getElementsByClassName("mapcontainer")[0], genEvents(), 500, 500);
+    var threatMap = window.createThreatMap(document.getElementsByClassName("mapcontainer")[0], genEvents(), 1000, 400);
 
     var autoRefresh = function() {
         setTimeout(function(){
