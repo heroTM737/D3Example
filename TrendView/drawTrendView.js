@@ -73,16 +73,16 @@
 		//init variable
 		var textColor = chartData.style.textColor;
 		var m = [5, 5, 5, 5]; //top-right-bottom-left
-		var headerHeight = height / 18 * 4;
-		var bodyHeight = height / 18 * 6;
-		var chartHeight = height / 18 * 8;
-		var rectSize = 40;
+		var headerHeight = height / 12 * 4;
+		var bodyHeight = height / 12 * 6;
+		var chartHeight = height / 12 * 2;
+		var rectSize = 28;
 
-		var graph = d3.select(container).append("svg:svg")
+		var graph = d3.select(container).append("svg")
 			.attr("width", width)
 			.attr("height", height)
 			.attr("style", "")
-			.append("svg:g");
+			.append("g");
 
 		//draw header
 		var title = chartData.title;
@@ -188,9 +188,11 @@
 			if (path == null) {
 				path = lineGroup.append("path")
 					.attr("d", line(currentData))
-					.attr("stroke-width", 2)
-					.attr("stroke", "steelblue")
-					.attr("fill", "none");
+					.attr("stroke-width", 1)
+					.attr("stroke", "rgba(255,0,0,0.5)")
+					.attr("fill", "none")
+					.attr("shape-rendering", "geometricPrecision ")
+					.attr("stroke-linejoin", "round");
 			} else {
 				path.transition()
 					.duration(500)

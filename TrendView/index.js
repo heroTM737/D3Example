@@ -9,8 +9,8 @@ function genData() {
     return data;
 }
 
-var width = 280;
-var height = 180;
+var width = 400;
+var height = 120;
 var refreshTime = 1000;
 function createChart(i, width, height) {
     var container = document.getElementById("trendViewContainer" + i);
@@ -18,7 +18,7 @@ function createChart(i, width, height) {
         title: "Example " + i,
         data: [],
         style: {
-            textColor: "steelblue"
+            textColor: "#000"
         }
     }
     var updater = drawTrendView(container, chartData, width, height);
