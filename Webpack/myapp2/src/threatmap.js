@@ -20,7 +20,7 @@ var shootEvent = function (svg, event) {
     var duration3 = duration / 10 * 3;
     var duration4 = duration / 10 * 4;
     var duration6 = duration / 10 * 6;
-    var easefn = d3.easeLinear;
+    var easefn = "linear";
 
     var sourceId = getLocationId(event.source);
 
@@ -73,12 +73,6 @@ var shootEvent = function (svg, event) {
 
         .transition()
         .duration(duration6)
-        .ease(easefn)
-        .attr("cx", Target.x)
-        .attr("cy", Target.y)
-
-        .transition()
-        .duration(duration4)
         .ease(easefn)
         .attr("cx", Target.x)
         .attr("cy", Target.y)

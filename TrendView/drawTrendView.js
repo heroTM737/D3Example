@@ -151,7 +151,7 @@
 				arrow
 					.transition()
 					.duration(500)
-					.ease(d3.easeLinear)
+					.ease("linear")
 					.attr("style", "fill:" + strokeColor + ";stroke:" + strokeColor)
 					.attr("d", createArrow(arrow_x, arrow_y, rectSize, fluctuation));
 				// .attrTween("transform", tween)
@@ -174,9 +174,9 @@
 			var h = chartHeight - m[0] - m[2];
 			var maxOfData = Math.max.apply(Math, currentData);
 			var minOfData = Math.min.apply(Math, currentData);
-			var x = d3.scale.linear().domain([0, currentData.length]).range([0, w]);
+			var x = d3.scale.linear().domain([0, currentData.length - 1]).range([0, w]);
 			var y = d3.scale.linear().domain([minOfData, maxOfData]).range([h, 0]);
-
+			
 			var line = d3.svg.line()
 				.x(function (d, i) {
 					return m[3] + x(i);
@@ -196,7 +196,7 @@
 			} else {
 				path.transition()
 					.duration(500)
-					.ease(d3.easeLinear)
+					.ease("linear")
 					.attr("d", line(currentData));
 			}
 

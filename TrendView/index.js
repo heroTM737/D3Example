@@ -16,7 +16,7 @@ function createChart(i, width, height) {
     var container = document.getElementById("trendViewContainer" + i);
     var chartData = {
         title: "Example " + i,
-        data: [],
+        data: [genData()],
         style: {
             textColor: "#000"
         }

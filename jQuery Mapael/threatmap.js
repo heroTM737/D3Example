@@ -15,11 +15,11 @@
         var Target = world_countries.getCoords(event.target.latitude, event.target.longitude);
 
         //config animation
-        var duration = Math.floor(Math.random() * 1000) + 1000;
+        var duration = Math.round(Math.random() * 1000 + 1000);
         var duration3 = duration / 10 * 3;
         var duration4 = duration / 10 * 4;
         var duration6 = duration / 10 * 6;
-        var easefn = d3.easeLinear;
+        var easefn = "linear";
 
         var sourceId = getLocationId(event.source);
 
@@ -76,12 +76,6 @@
             .attr("cx", Target.x)
             .attr("cy", Target.y)
 
-            .transition()
-            .duration(duration4)
-            .ease(easefn)
-            .attr("cx", Target.x)
-            .attr("cy", Target.y)
-
             .each("end", function () { this.remove(); });
     }
 
@@ -103,7 +97,7 @@
         return locationList;
     }
 
-    var createThreatMap = function (container, events, width, height) {
+    var createThreatMap = function (container, width, height, events) {
         //clean container
         d3.select(container).select("*").remove();
 
