@@ -71,17 +71,18 @@
 		d3.select(container).selectAll("*").remove();
 
 		//init variable
-		var textColor = chartData.style.textColor;
+		var unit = chartData.unit;
 		var m = [5, 5, 5, 5]; //top-right-bottom-left
 		var headerHeight = height / 12 * 4;
 		var bodyHeight = height / 12 * 6;
 		var chartHeight = height / 12 * 2;
+		chartHeight = chartHeight >= 20 ? chartHeight : 20;
 		var rectSize = 28;
 
 		var graph = d3.select(container).append("svg")
 			.attr("width", width)
 			.attr("height", height)
-			.attr("style", "")
+			.attr("class", "trendview")
 			.append("g");
 
 		//draw header
@@ -91,7 +92,6 @@
 			.attr("x", m[3])
 			.attr("y", m[0] + headerHeight / 2)
 			.attr("alignment-baseline", "middle")
-			.attr("style", "font-size:26px;stroke-width:0;fill:" + textColor)
 			.text(title);
 
 		//draw body
@@ -101,8 +101,8 @@
 		var lineGroup = graph.append("g").attr("id", "lineGroup");
 		var path = null;
 		var arrow = null;
-		var arrow_x = width - m[1] - rectSize * 3 / 2;
-		var arrow_y = m[0] + headerHeight;
+		var arrow_x = width - m[1] - rectSize;
+		var arrow_y = m[0];
 		var arrow_cx = arrow_x + rectSize / 2;
 		var arrow_cy = arrow_y + rectSize / 2;
 		var currentData = [];
@@ -123,13 +123,19 @@
 			lastValueGroup.selectAll("*").remove();
 			lastValueGroup.append("text")
 				.attr("x", m[3])
-				.attr("y", m[0] + headerHeight + bodyHeight / 2)
+				.attr("y", headerHeight + bodyHeight / 2)
 				.attr("alignment-baseline", "middle")
-				.attr("style", "font-size:45px;stroke-width:0;fill:" + textColor)
-				.text("" + lastValue);
+				.text(lastValue + " " + unit);
 
 			//update arrow
-			var strokeColor = fluctuation == 0 ? "steelblue" : "red";
+			var strokeColor = null;
+			if (fluctuation < 0) {
+				strokeColor = "red";
+			} else if (fluctuation == 0) {
+				strokeColor = "steelblue";
+			} else if (fluctuation > 0) {
+				strokeColor = "green";
+			}
 			if (arrow == null) {
 				arrow = arrowGroup.append("path")
 					.attr("d", createArrow(arrow_x, arrow_y, rectSize, fluctuation))
@@ -162,21 +168,21 @@
 			//update fluctuation
 			fluctuationGroup.selectAll("*").remove();
 			fluctuationGroup.append("text")
-				.attr("x", width - m[1] - rectSize)
-				.attr("y", m[0] + headerHeight + rectSize + 10)
+				.attr("x", width - rectSize  + rectSize / 2 - m[1])
+				.attr("y", m[0] + rectSize + 15)
 				.attr("alignment-baseline", "middle")
 				.attr("text-anchor", "middle")
-				.attr("style", "font-size:14px;stroke-width:0;fill:" + textColor)
-				.text("" + fluctuation);
+				.text((fluctuation > 0 ? "+": "") + fluctuation);
 
 			//update line chart
 			var w = width - m[1] - m[3];
+			w = w - rectSize - 5;
 			var h = chartHeight - m[0] - m[2];
 			var maxOfData = Math.max.apply(Math, currentData);
 			var minOfData = Math.min.apply(Math, currentData);
 			var x = d3.scale.linear().domain([0, currentData.length - 1]).range([0, w]);
 			var y = d3.scale.linear().domain([minOfData, maxOfData]).range([h, 0]);
-			
+
 			var line = d3.svg.line()
 				.x(function (d, i) {
 					return m[3] + x(i);
@@ -184,8 +190,14 @@
 				.y(function (d) {
 					return height - chartHeight + m[0] + y(d);
 				});
-			
+
 			if (path == null) {
+				// lineGroup.append("rect")
+				// 	.attr("x", m[1])
+				// 	.attr("y", height - chartHeight + m[2])
+				// 	.attr("width", w)
+				// 	.attr("height", h)
+				// 	.attr("style", "fill:pink");
 				path = lineGroup.append("path")
 					.attr("d", line(currentData))
 					.attr("stroke-width", 1)

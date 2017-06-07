@@ -1,0 +1,9 @@
+.trendview {
+    background: #344955;
+}
+
+.trendview text{
+    fill: #fff;
+    stroke-width: 0;
+    font-size: 15px;
+}

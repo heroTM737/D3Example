@@ -11,6 +11,10 @@ var getLocationId = function (location) {
     return id;
 }
 
+var getTooltips = function (location) {
+    return location.countryName;
+}
+
 var shootEvent = function (svg, event) {
     var Source = world_countries.getCoords(event.source.latitude, event.source.longitude);
     var Target = world_countries.getCoords(event.target.latitude, event.target.longitude);
@@ -67,7 +71,7 @@ var shootEvent = function (svg, event) {
 
     var event_Source_Target = svg.append("circle")
         .attr("r", 2)
-        .attr("style", "fill:blue")
+        .attr("style", "fill:orange")
         .attr("cx", Source.x)
         .attr("cy", Source.y)
 
@@ -87,12 +91,14 @@ var checkThenAddLocation = function (locationGroup, locationList, location) {
     if (isEmpty) {
         locationList.push(location);
         var city = world_countries.getCoords(location.latitude, location.longitude);
-        locationGroup.append("circle")
+        var group = locationGroup.append("g");
+        group.append("circle")
             .attr("id", id)
             .attr("cx", city.x)
             .attr("cy", city.y)
             .attr("r", location_r)
             .attr("fill", "url(#radialGradient)");
+        group.append("title").text(getTooltips(location));
     }
 
     return locationList;
@@ -112,7 +118,7 @@ var createThreatMap = function (container, events, width, height) {
 
     //define gradient
     var defs = svg.append("defs");
-    var color1 = "blue";
+    var color1 = "orange";
     var color2 = "yellow";
     var linearGradient1 = defs.append("linearGradient").attr("id", "linearGradient1");
     linearGradient1.append("stop").attr("offset", "0%").attr("stop-color", color1);
