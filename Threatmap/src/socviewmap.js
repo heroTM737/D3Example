@@ -3,6 +3,8 @@ var Mapael = require('./world_countries');
 var world_countries = Mapael.maps.world_countries;
 var location_r = 2;
 var location_r_shoot = 10;
+var queue = [];
+var isShooting = false;
 
 var getLocationId = function (location) {
     var id = "lat" + location.latitude + "long" + location.longitude;
@@ -13,6 +15,21 @@ var getLocationId = function (location) {
 
 var getTooltips = function (location) {
     return location.countryName;
+}
+
+var shootAllEvent = function (svg, locationGroup, locationList) {
+    var interval = setInterval(function () {
+        if (queue.length > 0) {
+            isShooting = true;
+            var event = queue.shift();
+            locationList = checkThenAddLocation(locationGroup, locationList, event.source);
+            locationList = checkThenAddLocation(locationGroup, locationList, event.target);
+            shootEvent(svg, event);
+        } else {
+            isShooting = false;
+            clearInterval(interval);
+        }
+    }, 200);
 }
 
 var shootEvent = function (svg, event) {
@@ -158,16 +175,18 @@ var socviewmap = function (container, events, width, height) {
 
     var eventGroup = svg.append("g").attr("class", "eventGroup");
     var locationGroup = svg.append("g").attr("class", "locationGroup");
-    // var eventGroup = svg.append("g").attr("class", "eventGroup");
     var locationList = [];
+
     var update = function (events) {
-        for (var i in events) {
-            var event = events[i];
-            locationList = checkThenAddLocation(locationGroup, locationList, event.source);
-            locationList = checkThenAddLocation(locationGroup, locationList, event.target);
-            shootEvent(eventGroup, event);
+        for (var i = events.length - 1; i >= 0; i--) {
+            queue.push(events[i]);
+        }
+
+        if (!isShooting) {
+            shootAllEvent(svg, locationGroup, locationList);
         }
     }
+
     if (events != undefined && events != null) {
         update(events);
     }
