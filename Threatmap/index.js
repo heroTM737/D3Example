@@ -85,7 +85,7 @@ $(document).ready(function () {
 
     var autoRefresh = function() {
         setTimeout(function(){
-            threatMap.update(genEvents());
+            // socviewmap.update(genEvents());
             autoRefresh();
         }, refreshTime)
     }

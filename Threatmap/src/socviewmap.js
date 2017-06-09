@@ -27,6 +27,7 @@ var shootEvent = function (svg, event) {
     var easefn = "linear";
 
     var sourceId = getLocationId(event.source);
+    var targetId = getLocationId(event.target);
 
     d3.select("#" + sourceId)
         .transition()
@@ -81,7 +82,19 @@ var shootEvent = function (svg, event) {
         .attr("cx", Target.x)
         .attr("cy", Target.y)
 
-        .each("end", function () { this.remove(); });
+        .each("end", function () {
+            this.remove();
+            d3.select("#" + targetId)
+                .transition()
+                .duration(duration6)
+                .ease(easefn)
+                .attr("r", location_r_shoot)
+
+                .transition()
+                .duration(duration6)
+                .ease(easefn)
+                .attr("r", location_r);
+        });
 }
 
 var checkThenAddLocation = function (locationGroup, locationList, location) {
