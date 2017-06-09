@@ -13,36 +13,23 @@
 
 	var createArrow = function (x, y, size, direction) {
 		var size2 = size / 2;
-		var size4 = size / 4;
+		var size10 = size / 10;
+		var x1 = x + size10;
+		var x2 = x + size10 * 3;
+		var x3 = x + size2;
+		var x4 = x + size10 * 7;
+		var x5 = x + size10 * 9;
+		var y1 = y;
+		var y2 = y + size2;
+		var y3 = y + size;
 		var p = [];
-		p[0] = {
-			x: x + size2,
-			y: y
-		};
-		p[1] = {
-			x: x + size,
-			y: y + size2
-		};
-		p[2] = {
-			x: x + size4 * 3,
-			y: y + size2
-		};
-		p[3] = {
-			x: x + size4 * 3,
-			y: y + size
-		};
-		p[4] = {
-			x: x + size4,
-			y: y + size
-		};
-		p[5] = {
-			x: x + size4,
-			y: y + size2
-		};
-		p[6] = {
-			x: x,
-			y: y + size2
-		};
+		p[0] = {x: x3, y: y1};
+		p[1] = {x: x5, y: y2};
+		p[2] = {x: x4, y: y2};
+		p[3] = {x: x4, y: y3};
+		p[4] = {x: x2, y: y3};
+		p[5] = {x: x2, y: y2};
+		p[6] = {x: x1, y: y2};
 
 		var rotateValue = 0; //default direction > 0
 		if (direction < 0) {
@@ -72,12 +59,14 @@
 
 		//init variable
 		var unit = chartData.unit;
+		var newUnit = unit;
+		var formatterCommand = chartData.formatterCommand;
 		var m = [5, 5, 5, 5]; //top-right-bottom-left
 		var headerHeight = height / 12 * 4;
 		var bodyHeight = height / 12 * 6;
 		var chartHeight = height / 12 * 2;
 		chartHeight = chartHeight >= 20 ? chartHeight : 20;
-		var rectSize = 28;
+		var rectSize = 30;
 
 		var graph = d3.select(container).append("svg")
 			.attr("width", width)
@@ -101,7 +90,7 @@
 		var lineGroup = graph.append("g").attr("id", "lineGroup");
 		var path = null;
 		var arrow = null;
-		var arrow_x = width - m[1] - rectSize;
+		var arrow_x = width - m[1] - rectSize * 1.5;
 		var arrow_y = m[0];
 		var arrow_cx = arrow_x + rectSize / 2;
 		var arrow_cy = arrow_y + rectSize / 2;
@@ -111,7 +100,7 @@
 			currentData.push(0);
 		}
 
-		var update = function (data) {
+		var update = function (data, formatted) {
 			for (var i in data) {
 				currentData.shift();
 				currentData.push(Number(data.shift()));
@@ -121,11 +110,18 @@
 			var fluctuation = lastValue - currentData[currentData.length - 2];
 			//update last value
 			lastValueGroup.selectAll("*").remove();
+			if (formatterCommand != undefined && formatterCommand != null) {
+				var formatted = d3ChartActionCommand(formatterCommand, lastValue);
+				lastValue = formatted.value;
+				newUnit = formatted.unit;
+			} else {
+				newUnit = unit;
+			}
 			lastValueGroup.append("text")
 				.attr("x", m[3])
 				.attr("y", headerHeight + bodyHeight / 2)
 				.attr("alignment-baseline", "middle")
-				.text(lastValue + " " + unit);
+				.text(lastValue + " " + newUnit);
 
 			//update arrow
 			var strokeColor = null;
@@ -160,23 +156,30 @@
 					.ease("linear")
 					.attr("style", "fill:" + strokeColor + ";stroke:" + strokeColor)
 					.attr("d", createArrow(arrow_x, arrow_y, rectSize, fluctuation));
-				// .attrTween("transform", tween)
-				// .each("end", function () { arrow.attr("transform", nextRotate); });
 			}
 
 
 			//update fluctuation
 			fluctuationGroup.selectAll("*").remove();
+			if (fluctuation != 0) {
+				if (formatterCommand != undefined && formatterCommand != null) {
+					var formatted = d3ChartActionCommand(formatterCommand, fluctuation);
+					fluctuation = formatted.value;
+					newUnit = formatted.unit;
+				}
+			} else {
+				newUnit = unit;
+			}
 			fluctuationGroup.append("text")
-				.attr("x", width - rectSize  + rectSize / 2 - m[1])
+				.attr("x", width - rectSize - m[1])
 				.attr("y", m[0] + rectSize + 15)
 				.attr("alignment-baseline", "middle")
 				.attr("text-anchor", "middle")
-				.text((fluctuation > 0 ? "+": "") + fluctuation);
+				.text((fluctuation > 0 ? "+" : "") + fluctuation + (fluctuation != 0 ? " " + newUnit : ""));
 
 			//update line chart
 			var w = width - m[1] - m[3];
-			w = w - rectSize - 5;
+			w = w - rectSize * 2 - 5;
 			var h = chartHeight - m[0] - m[2];
 			var maxOfData = Math.max.apply(Math, currentData);
 			var minOfData = Math.min.apply(Math, currentData);
@@ -192,18 +195,10 @@
 				});
 
 			if (path == null) {
-				// lineGroup.append("rect")
-				// 	.attr("x", m[1])
-				// 	.attr("y", height - chartHeight + m[2])
-				// 	.attr("width", w)
-				// 	.attr("height", h)
-				// 	.attr("style", "fill:pink");
 				path = lineGroup.append("path")
 					.attr("d", line(currentData))
-					.attr("stroke-width", 1)
-					.attr("stroke", "rgba(255,0,0,0.5)")
-					.attr("fill", "none")
-					.attr("shape-rendering", "geometricPrecision ")
+					.attr("class", "trendLineChart")
+					.attr("shape-rendering", "geometricPrecision")
 					.attr("stroke-linejoin", "round");
 			} else {
 				path.transition()

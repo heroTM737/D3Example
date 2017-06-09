@@ -7,3 +7,9 @@
     stroke-width: 0;
     font-size: 15px;
 }
+
+.trendview .trendLineChart {
+    stroke-width: 1px;
+    stroke: rgb(255, 255, 0);
+    fill: none;
+}

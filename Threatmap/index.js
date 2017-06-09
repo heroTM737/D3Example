@@ -81,7 +81,7 @@ $(document).ready(function () {
     }
 
 
-    var threatMap = window.createThreatMap(document.getElementsByClassName("mapcontainer")[0], genEvents(), 1000, 400);
+    var socviewmap = window.socviewmap(document.getElementsByClassName("mapcontainer")[0], genEvents(), 1000, 400);
 
     var autoRefresh = function() {
         setTimeout(function(){

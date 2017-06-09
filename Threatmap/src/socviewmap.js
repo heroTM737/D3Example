@@ -104,7 +104,7 @@ var checkThenAddLocation = function (locationGroup, locationList, location) {
     return locationList;
 }
 
-var createThreatMap = function (container, events, width, height) {
+var socviewmap = function (container, events, width, height) {
     //clean container
     d3.select(container).selectAll("*").remove();
 
@@ -165,10 +165,10 @@ var createThreatMap = function (container, events, width, height) {
 }
 
 //bind function to window
-if (window.createThreatMap != undefined && window.createThreatMap != null) {
-    alert("function name conflict \"createThreatMap\"");
+if (window.socviewmap != undefined && window.socviewmap != null) {
+    alert("function name conflict \"socviewmap\"");
 } else {
-    window.createThreatMap = createThreatMap;
+    window.socviewmap = socviewmap;
 }
 
-module.exports = createThreatMap;
+module.exports = socviewmap;

@@ -1,9 +1,9 @@
 var path = require('path');
 
 module.exports = {
-  entry: './src/threatmap.js',
+  entry: './src/socviewmap.js',
   output: {
-    filename: 'threatmap.js',
+    filename: 'socviewmap.js',
     path: path.resolve(__dirname, 'dist')
   }
 };
