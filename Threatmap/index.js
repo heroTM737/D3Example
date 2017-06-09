@@ -58,7 +58,7 @@ var data = {
 }
 
 $(document).ready(function () {
-    var refreshTime = 300;
+    var refreshTime = 2000;
     var number_of_event = 3;
     var cities = data.cities;
 
@@ -85,7 +85,7 @@ $(document).ready(function () {
 
     var autoRefresh = function() {
         setTimeout(function(){
-            // socviewmap.update(genEvents());
+            socviewmap.update(genEvents());
             autoRefresh();
         }, refreshTime)
     }
