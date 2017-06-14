@@ -80,8 +80,7 @@ $(document).ready(function () {
         return events;
     }
 
-
-    var socviewmap = window.socviewmap(document.getElementsByClassName("mapcontainer")[0], genEvents(), 1000, 400);
+    var socviewmap = window.socviewmap(document.getElementsByClassName("mapcontainer")[0], genEvents());
 
     var autoRefresh = function() {
         setTimeout(function(){

@@ -134,16 +134,13 @@ var checkThenAddLocation = function (locationGroup, locationList, location) {
     return locationList;
 }
 
-var socviewmap = function (container, events, width, height) {
+var socviewmap = function (container, events) {
     //clean container
     d3.select(container).selectAll("*").remove();
 
     //create svg
-    width = width ? width : world_countries.width;
-    height = height ? height : world_countries.height;
     var svg = d3.select(container).append("svg")
-        .attr("width", width)
-        .attr("height", height)
+        .attr("height", "100%")
         .attr("viewBox", "0 0 " + world_countries.width + " " + world_countries.height);
 
     //define gradient
@@ -198,7 +195,7 @@ var socviewmap = function (container, events, width, height) {
 
 //bind function to window
 if (window.socviewmap != undefined && window.socviewmap != null) {
-    alert("function name conflict \"socviewmap\"");
+    console.log("function name conflict \"socviewmap\"");
 } else {
     window.socviewmap = socviewmap;
 }
