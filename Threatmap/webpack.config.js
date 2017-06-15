@@ -1,9 +1,20 @@
 var path = require('path');
+var webpack = require('webpack');
 
 module.exports = {
-  entry: './src/socviewmap.js',
+  entry: {
+    "socviewmap": './src/socviewmap.js',
+    "socviewmap.min": './src/socviewmap.js'
+  },
   output: {
-    filename: 'socviewmap.js',
-    path: path.resolve(__dirname, 'dist')
-  }
+    path: path.resolve(__dirname, 'dist'),
+    filename: '[name].js'
+  },
+  plugins: [
+    new webpack.optimize.UglifyJsPlugin({
+      include: /\.min\.js$/,
+      minimize: true,
+      comments: false
+    })
+  ]
 };
