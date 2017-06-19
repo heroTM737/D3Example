@@ -1,0 +1,9 @@
+{
+  "name": "CommonChartingGraph",
+  "version": "1.0.0",
+  "dependencies": {},
+  "devDependencies": {
+    "webpack": "^2.6.1",
+    "webpack-dev-server": "^2.4.5"
+  }
+}
