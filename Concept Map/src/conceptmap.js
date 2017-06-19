@@ -1,23 +1,3 @@
-var baseurl = "eventgraph/eventgraph-v16/";
-var scriptList = [
-    "util.js",
-    "variable.js",
-    "legend.js",
-    "processData.js",
-    "event.js",
-    "centerGraph.js",
-    "mainGraph.js",
-];
-
-//load all widgets in scriptList
-scriptList.forEach(function (entry) {
-    $.ajax({
-        url: baseurl + entry,
-        dataType: "script",
-        async: false
-    });
-});
-
 function main() {
     doFakedData();
     //    doTestData();
@@ -26,7 +6,7 @@ function main() {
 function doFakedData() {
     //    var data = getFakedEventData();
     var data = getFakedEventData2();
-    drawEventGraph(data);
+    conceptmap(data);
 }
 
 function doTestData() {
@@ -37,7 +17,7 @@ function doTestData() {
         cache: false,
         success: function (data) {
             var data = JSON.parse(data);
-            drawEventGraph(data);
+            conceptmap(data);
         },
         error: function (response) {
             console.log("error ");
@@ -69,7 +49,7 @@ function getTextConstants(nation) {
     }
 }
 
-function drawEventGraph(data) {
+function conceptmap(data) {
     var numberOfChart = 1;
     var percent = Math.floor(100 / numberOfChart);
 
