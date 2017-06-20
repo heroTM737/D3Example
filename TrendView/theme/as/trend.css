@@ -3,9 +3,8 @@
 }
 
 .trendview text{
-    fill: #000;
     stroke-width: 0;
-    font-size: 15px;
+    font-size: 20px;
 }
 
 .trendview .titleGroup text{

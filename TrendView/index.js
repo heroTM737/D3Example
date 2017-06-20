@@ -3,7 +3,8 @@ function genData() {
 
     for (var i = 0; i < 1; i++) {
         var random = Math.floor(Math.random() * 1000);
-        data.push(random);
+        var sign = Math.random() > 0.5 ? 1 : -1;
+        data.push(random * sign);
     }
 
     return data;
@@ -21,7 +22,7 @@ function createChart(i, width, height) {
     }
     var updater = drawTrendView(container, chartData, width, height);
     setInterval(function () {
-        updater.update([genData()]);
+        // updater.update([genData()]);
     }, refreshTime);
 }
 
