@@ -2,17 +2,6 @@
     background: #f1f1f1;
 }
 
-.trendview text{
-    stroke-width: 0;
-    font-size: 20px;
-}
-
-.trendview .titleGroup text{
-    font-weight: bold;
-}
-
 .trendview .trendLineChart {
-    stroke-width: 1px;
     stroke: rgba(255, 0, 0, 0.5);
-    fill: none;
 }
