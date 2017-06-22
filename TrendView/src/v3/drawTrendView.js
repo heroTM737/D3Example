@@ -65,11 +65,16 @@
 			formatted = formatFunction(lastValue, unit);
 			lastValue = formatted.value;
 			lastValueUnit = formatted.unit;
-			titleGroup.append("text")
+			var titleElement = titleGroup.append("text")
 				.attr("x", m[3])
 				.attr("y", m[0])
-				.attr("alignment-baseline", "hanging")
+				// .attr("alignment-baseline", "hanging")
+				// .attr("dominant-baseline", "hanging")
 				.text(title + "   " + lastValue + " " + lastValueUnit);
+			var titleElementBBox = titleElement[0][0].getBBox();
+			if (titleElementBBox.y < m[0]) {
+				titleElement.attr("y", m[0] - titleElementBBox.y);
+			}
 
 			//update fluctuation
 			fluctuationGroup.selectAll("*").remove();
@@ -83,13 +88,18 @@
 				fluctuationColor = "red";
 			}
 
-			fluctuationGroup.append("text")
+			var fluctuationElement = fluctuationGroup.append("text")
 				.attr("x", width - m[1])
 				.attr("y", m[0])
-				.attr("alignment-baseline", "hanging")
+				// .attr("alignment-baseline", "hanging")
+				// .attr("dominant-baseline", "hanging")
 				.attr("text-anchor", "end")
 				.attr("fill", fluctuationColor)
 				.text((fluctuationValue > 0 ? "+" : "") + fluctuationValue + " " + fluctuationUnit);
+			var fluctuationElementBBox = fluctuationElement[0][0].getBBox();
+			if (fluctuationElementBBox.y < m[0]) {
+				fluctuationElement.attr("y", m[0] - fluctuationElementBBox.y);
+			}
 
 			//update line chart
 			if (!hideLineChart) {
