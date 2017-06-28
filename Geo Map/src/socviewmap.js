@@ -14,7 +14,17 @@ var getLocationId = function (location) {
 }
 
 var getTooltips = function (location) {
-    return location.countryName;
+    var tooltips = "";
+    if (location.address) {
+        tooltips += "Address: " + location.address + " \n";
+    }
+    if (location.countryName) {
+        tooltips += "Country: " + location.countryName + " \n";
+    }
+    if (location.city) {
+        tooltips += "City: " + location.city;
+    }
+    return tooltips;
 }
 
 var shootAllEvent = function (svg, locationGroup, locationList) {
@@ -191,13 +201,6 @@ var socviewmap = function (container, events) {
     return {
         update: update
     }
-}
-
-//bind function to window
-if (window.socviewmap != undefined && window.socviewmap != null) {
-    console.log("function name conflict \"socviewmap\"");
-} else {
-    window.socviewmap = socviewmap;
 }
 
 module.exports = socviewmap;

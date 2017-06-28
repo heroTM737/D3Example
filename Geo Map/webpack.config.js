@@ -3,8 +3,8 @@ var webpack = require('webpack');
 
 module.exports = {
   entry: {
-    "socviewmap": './src/socviewmap.js',
-    "socviewmap.min": './src/socviewmap.js'
+    "drawGeoMap": './src/index.js',
+    "drawGeoMap.min": './src/index.js'
   },
   output: {
     path: path.resolve(__dirname, 'dist'),

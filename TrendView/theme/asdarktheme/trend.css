@@ -2,6 +2,10 @@
     background: #344955;
 }
 
+.trendview .titleGroup text{
+    fill: #ccc;
+}
+
 .trendview .trendLineChart {
     stroke: rgb(255, 255, 0);
 }

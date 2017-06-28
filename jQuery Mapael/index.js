@@ -40,7 +40,7 @@ $(function () {
                 }
             },
             defaultPlot: {
-                size: 10,
+                size: 11,
             },
             afterInit: function (container, paper, areas, plots, options) {
                 for (var key in plots) {

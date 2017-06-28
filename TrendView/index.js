@@ -23,7 +23,7 @@ function createChart(i, width, height) {
     }
     var updater = drawTrendView(container, chartData, width, height);
     setInterval(function () {
-        updater.update([genData()]);
+        // updater.update([genData()]);
     }, refreshTime);
 }
 
