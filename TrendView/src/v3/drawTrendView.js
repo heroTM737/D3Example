@@ -75,34 +75,33 @@
 			if (titleElementBBox.y < m[0]) {
 				titleElement.attr("y", m[0] - titleElementBBox.y);
 			}
-
-			//update fluctuation
-			fluctuationGroup.selectAll("*").remove();
-			formatted = formatFunction(fluctuationValue, fluctuationUnit);
-			fluctuationValue = formatted.value;
-			fluctuationUnit = formatted.unit;
-			var fluctuationColor = "green"; //default fluctuation > 0
-			if (fluctuationValue == 0) {
-				fluctuationColor = "blue";
-			} else if (fluctuationValue < 0) {
-				fluctuationColor = "red";
-			}
-
-			var fluctuationElement = fluctuationGroup.append("text")
-				.attr("x", width - m[1])
-				.attr("y", m[0])
-				// .attr("alignment-baseline", "hanging")
-				// .attr("dominant-baseline", "hanging")
-				.attr("text-anchor", "end")
-				.attr("fill", fluctuationColor)
-				.text((fluctuationValue > 0 ? "+" : "") + fluctuationValue + " " + fluctuationUnit);
-			var fluctuationElementBBox = fluctuationElement[0][0].getBBox();
-			if (fluctuationElementBBox.y < m[0]) {
-				fluctuationElement.attr("y", m[0] - fluctuationElementBBox.y);
-			}
-
-			//update line chart
 			if (!hideLineChart) {
+				//update fluctuation
+				fluctuationGroup.selectAll("*").remove();
+				formatted = formatFunction(fluctuationValue, fluctuationUnit);
+				fluctuationValue = formatted.value;
+				fluctuationUnit = formatted.unit;
+				var fluctuationColor = "green"; //default fluctuation > 0
+				if (fluctuationValue == 0) {
+					fluctuationColor = "blue";
+				} else if (fluctuationValue < 0) {
+					fluctuationColor = "red";
+				}
+
+				var fluctuationElement = fluctuationGroup.append("text")
+					.attr("x", width - m[1])
+					.attr("y", m[0])
+					// .attr("alignment-baseline", "hanging")
+					// .attr("dominant-baseline", "hanging")
+					.attr("text-anchor", "end")
+					.attr("fill", fluctuationColor)
+					.text((fluctuationValue > 0 ? "+" : "") + fluctuationValue + " " + fluctuationUnit);
+				var fluctuationElementBBox = fluctuationElement[0][0].getBBox();
+				if (fluctuationElementBBox.y < m[0]) {
+					fluctuationElement.attr("y", m[0] - fluctuationElementBBox.y);
+				}
+
+				//update line chart
 				var w = width - m[1] - m[3];
 				var h = chartHeight - m[0] - m[2];
 				var maxOfData = Math.max.apply(Math, currentData);
