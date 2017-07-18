@@ -1,0 +1,75 @@
+body {
+  margin: 0;
+}
+
+svg {
+  border-radius:3px;
+}
+
+.node {
+    cursor: pointer;
+}
+
+.node circle {
+  fill: #fff;
+  stroke: #99ccff;;
+  stroke-width: 2px;
+}
+
+.node text {
+  font: 12px sans-serif;
+}
+
+.link {
+  fill: none;
+  stroke: #99ccff;
+  stroke-width: 2px;
+}
+
+.selected {
+  font-weight:bold;
+}
+
+.not-selected {
+  font-weight: normtal;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  min-width: 1000px;
+}
+
+#tree {
+  width: 700px;
+}
+
+#detail {
+  border-left: 1px solid #c6c6c6;
+  width: calc(100% - 700px);
+}
+
+.node.persistor * {
+  fill: #fff;
+}
+
+.node.host * {
+  fill: #de4d4d;
+}
+
+.node.correlator * {
+  fill: blue;
+}
+
+.node.aggregator * {
+  fill: yellow;
+}
+
+.hightlight * {
+  fill: black !important;
+}
+
+.link.hightlight {
+  stroke: black !important;
+}
+
