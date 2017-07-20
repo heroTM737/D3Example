@@ -69,9 +69,9 @@ var computeControlPoint = function (x0, y0, x1, y1) {
 
     var a = y0 - y1;
     var b = x1 - x0;
-
-    var x = d * Math.sqrt(a * a / (a * a + b * b)) + cx;
-    var y = (x - cx) / a * b + cy;
+    var delta = Math.sqrt(1 / (a * a + b * b))
+    var x = d * a * delta + cx;
+    var y = d * b * delta + cy;
 
     return { x: x, y: y }
 }

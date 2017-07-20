@@ -1,5 +1,14 @@
 .link {
     stroke-width: 1px;
+    /*fill: none;*/
+}
+
+.source {
+    fill: red;
+}
+
+.target {
+    fill: yellow;
 }
 
 svg {
