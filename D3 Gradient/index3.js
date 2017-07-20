@@ -1,33 +1,19 @@
-var center = {
+var source = {
     x: 500,
-    y: 500,
-    r: 50
+    y: 350
 }
 
-var center2 = {
-    x: center.x - center.r,
-    y: center.y,
-    r: center.r
-}
+var target = {
+    x: Math.floor(Math.random() * 500),
+    y: Math.floor(Math.random() * 500)
+};
 
-var data = [];
+// var target = {
+//     x: 300,
+//     y: 500
+// };
 
-for (var i = 0; i < 1; i++) {
-    var source = {
-        x: Math.floor(Math.random() * 500),
-        y: Math.floor(Math.random() * 500)
-    };
-
-    // var source = {
-    //     x: 300,
-    //     y: 300
-    // };
-
-    data.push({
-        source: center,
-        target: source
-    });
-}
+var data = [{ source, target }];
 
 var svg = d3.select("body")
     .append("svg")
@@ -36,11 +22,44 @@ var svg = d3.select("body")
 
 var color1 = "blue";
 var defs = svg.append("defs");
-var linearGradient3 = defs.append("linearGradient").attr("id", "linearGradient3");
-linearGradient3.append("stop").attr("offset", "0%").attr("stop-color", color1).attr("stop-opacity", "0");
-linearGradient3.append("stop").attr("id", "stop1").attr("offset", "50%").attr("stop-color", color1).attr("stop-opacity", "0");
-linearGradient3.append("stop").attr("id", "stop2").attr("offset", "51%").attr("stop-color", color1).attr("stop-opacity", "1");
-linearGradient3.append("stop").attr("offset", "100%").attr("stop-color", color1).attr("stop-opacity", "1");
+
+var y1 = y1 = "";
+if (source.y > target.y) {
+    y1 = "0%";
+    y2 = "100%";
+} else {
+    y1 = "100%";
+    y2 = "0%";
+}
+
+var linearGradient = defs.append("linearGradient").attr("id", "linearGradient")
+    .attr("x1", "0%")
+    .attr("y1", y1)
+    .attr("x2", "100%")
+    .attr("y2", y2);
+linearGradient.append("stop").attr("id", "stop0").attr("offset", "0%").attr("stop-color", color1).attr("stop-opacity", "0");
+linearGradient.append("stop").attr("id", "stop1").attr("offset", "50%").attr("stop-color", color1).attr("stop-opacity", "0");
+linearGradient.append("stop").attr("id", "stop2").attr("offset", "50%").attr("stop-color", color1).attr("stop-opacity", "1");
+linearGradient.append("stop").attr("id", "stop3").attr("offset", "100%").attr("stop-color", color1).attr("stop-opacity", "1");
+
+// var fx = fy = "";
+// if (source.y > target.y) {
+//     fx = fy = "0%";
+// } else {
+//     fx = "0%";
+//     fy = "100%";
+// }
+
+// var radialGradient = defs.append("radialGradient").attr("id", "radialGradient")
+//     .attr("fx", fx)
+//     .attr("fy", fy)
+//     .attr("cx", fx)
+//     .attr("cy", fy)
+//     .attr("r", "200%");
+// radialGradient.append("stop").attr("id", "stop0").attr("offset", "000%").attr("stop-color", color1).attr("stop-opacity", "0");
+// radialGradient.append("stop").attr("id", "stop1").attr("offset", "050%").attr("stop-color", color1).attr("stop-opacity", "0");
+// radialGradient.append("stop").attr("id", "stop2").attr("offset", "050%").attr("stop-color", color1).attr("stop-opacity", "1");
+// radialGradient.append("stop").attr("id", "stop3").attr("offset", "100%").attr("stop-color", color1).attr("stop-opacity", "1");
 
 var computeControlPoint = function (x0, y0, x1, y1) {
     var d = 50;
@@ -71,20 +90,22 @@ var myline = function (d) {
 
     var data = "";
     data += "M " + x0 + " " + y0;
-    data += "C " + cx + " " + cy + " " + cx + " " + cy + " " + (tx + r) + " " + (ty + r);
-    data += "L " + (tx - r) + " " + (ty - r);
+    data += "C " + cx + " " + cy + " " + cx + " " + cy + " " + (tx - r) + " " + (ty - r);
+    data += "L " + (tx + r) + " " + (ty + r);
     data += "C " + cx + " " + cy + " " + cx + " " + cy + " " + x0 + " " + y0;
 
     return data;
 }
 
+// var radientID = "url(#radialGradient)";
+var radientID = "url(#linearGradient)";
 var mylineTween = function (d, i, a) {
     var color = "blue";
     return function (t) {
         var p = 100 - t * 100;
         d3.select("#stop1").attr("offset", p + "%");
         d3.select("#stop2").attr("offset", p + "%");
-        return "url(#linearGradient3)";
+        return radientID;
     };
 }
 
@@ -93,29 +114,17 @@ var link = svg.selectAll(".link")
     .append("path")
     .attr("class", "link")
     .attr("d", myline)
-    .attr("fill", "url(#linearGradient3)")
-    .attr("stroke", "url(#linearGradient3)")
+    .attr("fill", radientID)
+    .attr("stroke", radientID)
     .transition()
     .duration(2000)
     .ease("linear")
     .attrTween("fill", mylineTween);
 
-var point = svg.selectAll(".point")
-    .data(data).enter()
+var source_node = svg
     .append("circle")
-    .attr("class", "point")
-    .attr("cx", function (d) {
-        return d.source.x;
-    })
-    .attr("cy", function (d) {
-        return d.source.y;
-    })
-    .attr("r", 5);
-
-var point = svg.selectAll(".center")
-    .data([center]).enter()
-    .append("circle")
-    .attr("class", "center")
+    .datum(source)
+    .attr("class", "node")
     .attr("cx", function (d) {
         return d.x;
     })
@@ -124,9 +133,9 @@ var point = svg.selectAll(".center")
     })
     .attr("r", 5);
 
-var point = svg.selectAll(".center2")
-    .data([center2]).enter()
+var target_node = svg
     .append("circle")
+    .datum(target)
     .attr("class", "center")
     .attr("cx", function (d) {
         return d.x;
