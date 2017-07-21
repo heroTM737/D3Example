@@ -1,17 +1,13 @@
 var Mapael = require('./world_countries');
+var shootEventStatic = require('./shootEventStatic');
+var shootEventDynamic = require('./shootEventDynamic');
+var getLocationId = require('./getLocationId');
 
 var world_countries = Mapael.maps.world_countries;
 var location_r = 2;
-var location_r_shoot = 10;
+
 var queue = [];
 var isShooting = false;
-
-var getLocationId = function (location) {
-    var id = "lat" + location.latitude + "long" + location.longitude;
-    id = id.split("-").join("m");
-    id = id.split(".").join("p");
-    return id;
-}
 
 var getTooltips = function (location) {
     var tooltips = "";
@@ -25,103 +21,6 @@ var getTooltips = function (location) {
         tooltips += "City: " + location.city;
     }
     return tooltips;
-}
-
-var shootAllEvent = function (svg, locationGroup, locationList) {
-    var interval = setInterval(function () {
-        if (queue.length > 0) {
-            isShooting = true;
-            var event = queue.shift();
-            locationList = checkThenAddLocation(locationGroup, locationList, event.source);
-            locationList = checkThenAddLocation(locationGroup, locationList, event.target);
-            shootEvent(svg, event);
-        } else {
-            isShooting = false;
-            clearInterval(interval);
-        }
-    }, 200);
-}
-
-var shootEvent = function (svg, event) {
-    var Source = world_countries.getCoords(event.source.latitude, event.source.longitude);
-    var Target = world_countries.getCoords(event.target.latitude, event.target.longitude);
-
-    //config animation
-    var duration = Math.floor(Math.random() * 1000) + 1000;
-    var duration3 = duration / 10 * 3;
-    var duration4 = duration / 10 * 4;
-    var duration6 = duration / 10 * 6;
-    var easefn = "linear";
-
-    var sourceId = getLocationId(event.source);
-    var targetId = getLocationId(event.target);
-
-    d3.select("#" + sourceId)
-        .transition()
-        .duration(duration6)
-        .ease(easefn)
-        .attr("r", location_r_shoot)
-
-        .transition()
-        .duration(duration6)
-        .ease(easefn)
-        .attr("r", location_r);
-
-    var middle = {
-        x: (Target.x + Source.x) / 2,
-        y: (Target.y + Source.y) / 2,
-    }
-
-    var isReverse = Source.x - Target.x > 0;
-    var path_Source_Target = svg.append("path")
-        .attr("stroke", isReverse ? "url(#linearGradient1)" : "url(#linearGradient2)")
-        .attr("stroke-width", "1px")
-        .attr("fill", "none")
-        .attr("class", "link-gradient")
-        .attr("d", "M " + Source.x + " " + Source.y + " L " + Source.x + " " + Source.y)
-
-        .transition()
-        .duration(duration3)
-        .ease(easefn)
-        .attr("d", "M " + Source.x + " " + Source.y + " L " + middle.x + " " + middle.y)
-
-        .transition()
-        .duration(duration3)
-        .ease(easefn)
-        .attr("d", "M " + middle.x + " " + middle.y + " L " + Target.x + " " + Target.y)
-
-        .transition()
-        .duration(duration4)
-        .ease(easefn)
-        .attr("d", "M " + Target.x + " " + Target.y + " L " + Target.x + " " + Target.y)
-
-        .each("end", function () { this.remove(); });
-
-    var event_Source_Target = svg.append("circle")
-        .attr("r", 2)
-        .attr("style", "fill:orange")
-        .attr("cx", Source.x)
-        .attr("cy", Source.y)
-
-        .transition()
-        .duration(duration6)
-        .ease(easefn)
-        .attr("cx", Target.x)
-        .attr("cy", Target.y)
-
-        .each("end", function () {
-            this.remove();
-            d3.select("#" + targetId)
-                .transition()
-                .duration(duration6)
-                .ease(easefn)
-                .attr("r", location_r_shoot)
-
-                .transition()
-                .duration(duration6)
-                .ease(easefn)
-                .attr("r", location_r);
-        });
 }
 
 var checkThenAddLocation = function (locationGroup, locationList, location) {
@@ -142,6 +41,29 @@ var checkThenAddLocation = function (locationGroup, locationList, location) {
     }
 
     return locationList;
+}
+
+var shootEvent = function (locationGroup, eventGroup, staticGroup, event) {
+    if (event.type == "static") {
+        shootEventStatic(staticGroup, event);
+    } else {
+        shootEventDynamic(eventGroup, event);
+    }
+}
+
+var shootAllEvent = function (locationList, locationGroup, eventGroup, staticGroup) {
+    var interval = setInterval(function () {
+        if (queue.length > 0) {
+            isShooting = true;
+            var event = queue.shift();
+            locationList = checkThenAddLocation(locationGroup, locationList, event.source);
+            locationList = checkThenAddLocation(locationGroup, locationList, event.target);
+            shootEvent(locationGroup, eventGroup, staticGroup, event);
+        } else {
+            isShooting = false;
+            clearInterval(interval);
+        }
+    }, 200);
 }
 
 var socviewmap = function (container, events) {
@@ -165,6 +87,12 @@ var socviewmap = function (container, events) {
     linearGradient2.append("stop").attr("offset", "0%").attr("stop-color", color2).attr("stop-opacity", "0");
     linearGradient2.append("stop").attr("offset", "100%").attr("stop-color", color1);
 
+    var linearGradient3 = defs.append("linearGradient").attr("id", "linearGradient3");
+    linearGradient3.append("stop").attr("offset", "0%").attr("stop-color", color1).attr("stop-opacity", "1");
+    linearGradient3.append("stop").attr("offset", "50%").attr("stop-color", color1).attr("stop-opacity", "1");
+    linearGradient3.append("stop").attr("offset", "51%").attr("stop-color", color1).attr("stop-opacity", "0");
+    linearGradient3.append("stop").attr("offset", "100%").attr("stop-color", color1).attr("stop-opacity", "0");
+
     var radialGradient = defs.append("radialGradient").attr("id", "radialGradient");
     radialGradient.append("stop").attr("offset", "0%").attr("stop-color", "red");
     radialGradient.append("stop").attr("offset", "100%").attr("stop-color", "red").attr("stop-opacity", "0");
@@ -180,8 +108,9 @@ var socviewmap = function (container, events) {
             .attr("d", elem);
     }
 
-    var eventGroup = svg.append("g").attr("class", "eventGroup");
     var locationGroup = svg.append("g").attr("class", "locationGroup");
+    var eventGroup = svg.append("g").attr("class", "eventGroup");
+    var staticGroup = svg.append("g").attr("class", "staticGroup");
     var locationList = [];
 
     var update = function (events) {
@@ -190,7 +119,7 @@ var socviewmap = function (container, events) {
         }
 
         if (!isShooting) {
-            shootAllEvent(svg, locationGroup, locationList);
+            shootAllEvent(locationList, locationGroup, eventGroup, staticGroup);
         }
     }
 
