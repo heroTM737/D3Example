@@ -14,8 +14,8 @@
 // }
 
 // var target = {
-//     x: 400,
-//     y: 300
+//     x: 500,
+//     y: 100
 // };
 
 // var data = [{ source, target }];
@@ -118,17 +118,16 @@ var computeControlPoint = function (x0, y0, x1, y1) {
     return { x: x, y: y }
 }
 
+var cp2d = 5;
 var computeControlPoint2 = function (x0, y0, x1, y1) {
-    var d = 10;
-
     var cx = x1;
     var cy = y1;
 
     var a = y0 - y1;
     var b = x1 - x0;
     var delta = Math.sqrt(1 / (a * a + b * b))
-    var x = d * a * delta + cx;
-    var y = d * b * delta + cy;
+    var x = cp2d * a * delta + cx;
+    var y = cp2d * b * delta + cy;
 
     return { x: x, y: y }
 }
@@ -203,7 +202,14 @@ var svg = d3.select("body")
 
 var color1 = "rgba(255,0,0,1)";
 var color2 = "rgba(255,0,0,0)";
-var step = 10;
+
+// var color1 = "rgba(255,0,0,1)";
+// var color2 = "rgba(255,255,255,1)";
+
+// var color1 = "rgba(255,255,255,1)";
+// var color2 = "rgba(255,0,0,1)";
+
+var step = 5;
 
 data.forEach(function (e, i) {
     shootEvent(e);
@@ -217,42 +223,15 @@ function shootEvent(event) {
 
     var x1 = x2 = (source.x + target.x) / 2;
     var y1 = y2 = (source.y + target.y) / 2;
+    var s = 0;
     if (dx < dy) {
-        if (target.x < source.x) {
-            if (target.y < source.y) {
-                y1 = source.y;
-                y2 = target.y;
-            } else {
-                y1 = source.y;
-                y2 = target.y;
-            }
-        } else {
-            if (target.y < source.y) {
-                y1 = source.y;
-                y2 = target.y;
-            } else {
-                y1 = source.y;
-                y2 = target.y;
-            }
-        }
+        target.y < source.y ? s = 1 : s = -1;
+        y1 = source.y + s * cp2d;
+        y2 = target.y - s * cp2d;
     } else {
-        if (target.x < source.x) {
-            if (target.y < source.y) {
-                x1 = source.x;
-                x2 = target.x;
-            } else {
-                x1 = source.x;
-                x2 = target.x;
-            }
-        } else {
-            if (target.y < source.y) {
-                x1 = source.x;
-                x2 = target.x;
-            } else {
-                x1 = source.x;
-                x2 = target.x;
-            }
-        }
+        target.x < source.x ? s = 1 : s = -1;
+        x1 = source.x + s * cp2d;
+        x2 = target.x - s * cp2d;
     }
     var timeStamp = new Date().getTime();
     var randomID = Math.floor(Math.random() * 100000);
@@ -267,9 +246,9 @@ function shootEvent(event) {
         .attr("x2", x2)
         .attr("y2", y2);
     linearGradient.append("stop").attr("id", "stop0").attr("offset", "0%").attr("stop-color", color1).attr("stop-opacity", opacity);
-    linearGradient.append("stop").attr("id", "stop1").attr("offset", "50%").attr("stop-color", color1).attr("stop-opacity", opacity);
-    linearGradient.append("stop").attr("id", "stop2").attr("offset", "50%").attr("stop-color", color2).attr("stop-opacity", "1");
-    linearGradient.append("stop").attr("id", "stop3").attr("offset", "50%").attr("stop-color", color2).attr("stop-opacity", opacity);
+    linearGradient.append("stop").attr("id", "stop1").attr("offset", "0%").attr("stop-color", color1).attr("stop-opacity", opacity);
+    linearGradient.append("stop").attr("id", "stop2").attr("offset", "0%").attr("stop-color", color2).attr("stop-opacity", "1");
+    linearGradient.append("stop").attr("id", "stop3").attr("offset", "0%").attr("stop-color", color2).attr("stop-opacity", opacity);
     linearGradient.append("stop").attr("id", "stop4").attr("offset", "100%").attr("stop-color", color2).attr("stop-opacity", opacity);
 
     var gradientID_url = "url(#" + gradientID + ")";
