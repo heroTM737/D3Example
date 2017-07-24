@@ -1,6 +1,6 @@
 // training.js
 var treeData = genData();
-var margin = { top: 20, right: 120, bottom: 20, left: 100 },
+var margin = { top: 5, right: 5, bottom: 5, left: 60 },
     width = 700 - margin.right - margin.left,
     height = 800 - margin.top - margin.bottom;
 
@@ -24,9 +24,9 @@ root = treeData[0];
 root.x0 = height / 2;
 root.y0 = 0;
 
-update(root);
+var activeNode = null;
 
-d3.select(self.frameElement).style("height", "800px");
+update(root);
 
 function update(source) {
     // Compute the new tree layout.
@@ -48,13 +48,17 @@ function update(source) {
         .attr("class", function (d) { return "node " + d.type; })
         .attr("transform", function (d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
         .attr("id", function (d) { return "node" + d.id; })
-        .on("mouseover", function (d) { hightlight(d, true); })
-        .on("mouseout", function (d) { hightlight(d, false); })
-        .on("click", click);
+        .on("mouseover", function (d) { highlightNode(d, true); })
+        .on("mouseout", function (d) { highlightNode(d, false); })
+        .on("click", click)
+        .on("dblclick", dblclick);
 
     nodeEnter.append("circle")
-        .attr("r", 1e-6);
-    // .style("fill", function (d) { return d._children ? "#ccff99" : "#fff"; });
+        .attr("r", 1e-6)
+        .attr("class", function (d) { return d._children ? "close" : "open"; });
+
+    nodeEnter.append("title")
+        .text(function (d) { return d.name; })
 
     nodeEnter.append("text")
         .attr("x", function (d) { return d.children || d._children ? -13 : 13; })
@@ -73,8 +77,8 @@ function update(source) {
         .attr("transform", function (d) { return "translate(" + d.y + "," + d.x + ")"; });
 
     nodeUpdate.select("circle")
-        .attr("r", 10);
-    // .style("fill", function (d) { return d._children ? "#ccff99" : "#fff"; });
+        .attr("r", 10)
+        .attr("class", function (d) { return d._children ? "close" : "open"; });
 
     nodeUpdate.select("text")
         .style("fill-opacity", 1);
@@ -107,7 +111,10 @@ function update(source) {
         .attr("d", function (d) {
             var o = { x: source.x0, y: source.y0 };
             return diagonal({ source: o, target: o });
-        });
+        })
+        .on("mouseover", function (d) { highlightLink(d, true); })
+        .on("mouseout", function (d) { highlightLink(d, false); })
+        .on("click", click);
 
     // Transition links to their new position.
     link.transition()
@@ -131,8 +138,7 @@ function update(source) {
 }
 
 // Toggle children on click.
-function click(d) {
-    $("#detail").html("<div>" + d.name + "</div>");
+function dblclick(d) {
     if (d.children) {
         d._children = d.children;
         d.children = null;
@@ -141,28 +147,75 @@ function click(d) {
         d._children = null;
     }
     update(d);
+
+    if (activeNode != null) {
+        highlightNode(activeNode, false, false);
+    }
 }
 
-function hightlight(node, status) {
-    d3.select("#node" + node.id).classed("hightlight", status);
-    if (node.parent) {
-        d3.select("#node" + node.parent.id).classed("hightlight", status);
+function click(d) {
+    $("#detail").html("<div>" + d.name + "</div>");
+
+    if (activeNode != null) {
+        highlightNode(activeNode, false, false);
     }
+    activeNode = d;
+    highlightNode(activeNode, true, true);
+}
+
+function highlightLink(link, status, statusKeep) {
+    highlightMyLink(link.source, link.target, status, statusKeep);
+    travelUpHighlight(link.source, status, statusKeep);
+    travelDownHighlight(link.target, status, statusKeep);
+
+    // d3.select("#tree").selectAll('.link').sort(function (a, b) {
+    //     return a.id == "id";
+    // });
+}
+
+function highlightNode(node, status, statusKeep) {
+    travelUpHighlight(node, status, statusKeep);
+    travelDownHighlight(node, status, statusKeep);
+
+    // d3.select("#tree").selectAll('.link').sort(function (a, b) {
+    //     return a.id == "id";
+    // });
+}
+
+function travelUpHighlight(node, status, statusKeep) {
+    highlightMyNode(node, status, statusKeep);
+    if (node.parent) {
+        highlightMyLink(node.parent, node, status, statusKeep);
+        travelUpHighlight(node.parent, status, statusKeep);
+    }
+}
+
+function travelDownHighlight(node, status, statusKeep) {
+    highlightMyNode(node, status, statusKeep);
     if (node.children) {
         node.children.forEach(function (e, i) {
-            d3.select("#node" + e.id).classed("hightlight", status);
+            highlightMyLink(node, e, status, statusKeep);
+            travelDownHighlight(e, status, statusKeep);
         });
-    }
-    if (node.links) {
-        node.links.forEach(function (e, i) {
-            d3.select("#" + e.id).classed("hightlight", status);
-        });
-
-        // d3.select("#tree").selectAll('.link').sort(function (a, b) {
-        //     return a.id == "id";
-        // });
     }
 }
+
+function highlightMyLink(source, target, status, statusKeep) {
+    var link_id = "#from" + source.id + "to" + target.id;
+    d3.select(link_id).classed("highlight", status);
+    if (statusKeep != undefined && statusKeep != null) {
+        d3.select(link_id).classed("highlightKeep", statusKeep);
+    }
+}
+
+function highlightMyNode(node, status, statusKeep) {
+    var node_id = "#node" + node.id;
+    d3.select(node_id).classed("highlight", status);
+    if (statusKeep != undefined && statusKeep != null) {
+        d3.select(node_id).classed("highlightKeep", statusKeep);
+    }
+}
+
 
 
 
