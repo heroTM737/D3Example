@@ -1,0 +1,47 @@
+.node circle.open {
+  stroke: #fff;
+}
+
+.node circle.close {
+  stroke: #ffd100;
+}
+
+.node text {
+  fill: #ccc;
+}
+
+.link {
+  stroke: #a5a5a5;
+}
+
+.node.cluster circle {
+  fill: #344955;
+}
+
+.node.persistor circle {
+  fill: #3f70f9;
+}
+
+.node.host circle {
+  fill: #d86c6c;
+}
+
+.node.correlator circle {
+  fill: #678a96;
+}
+
+.node.aggregator circle {
+  fill: #36bce0;
+}
+
+.highlightKeep circle,
+.highlight circle {
+  fill: #eff248 !important;
+  stroke: #0e921f !important;
+}
+
+.link.highlightKeep,
+.link.highlight {
+  stroke: #0e921f !important;
+}
+
