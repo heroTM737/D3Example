@@ -17,3 +17,27 @@
   fill: none;
   stroke-width: 1.5px;
 }
+
+.btn-host {
+  cursor: pointer;
+  user-select: none;
+}
+
+.btn-host rect {
+  stroke-width: 1.5px;
+  stroke: #99ccff;
+  fill: none;
+}
+
+.btn-host text {
+  stroke-width: 0px;
+  fill:  #99ccff;
+}
+
+.btn-host:hover rect {
+  stroke: #0e921f;
+}
+
+.btn-host:hover text {
+  fill:  #0e921f;
+}

@@ -1,7 +1,7 @@
 // training.js
 var treeData = genData();
 var margin = { top: 5, right: 5, bottom: 5, left: 60 },
-    width = 700 - margin.right - margin.left,
+    width = 550 - margin.right - margin.left,
     height = 800 - margin.top - margin.bottom;
 
 var i = 0,
@@ -17,6 +17,12 @@ var diagonal = d3.svg.diagonal()
 var svg = d3.select("#tree").append("svg")
     .attr("width", width + margin.right + margin.left)
     .attr("height", height + margin.top + margin.bottom)
+    .on("click", function (d) {
+        if (activeNode != null) {
+            highlightNode(activeNode, false, false);
+        }
+        activeNode = null;
+    })
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -25,6 +31,60 @@ root.x0 = height / 2;
 root.y0 = 0;
 
 var activeNode = null;
+
+var btnOpenGroup = svg.append("g")
+    .attr("class", "btn-host")
+    .on("click", function (d) {
+        var nodes = tree.nodes(root).reverse();
+        nodes.forEach(function (d) {
+            if (d.type == "host") {
+                if (d.children == null) {
+                    d.children = d._children;
+                    d._children = null;
+                }
+            }
+        });
+        update(root);
+    });
+
+btnOpenGroup.append("rect")
+    .attr("x", 0)
+    .attr("y", 0)
+    .attr("width", 100)
+    .attr("height", 25);
+
+btnOpenGroup.append("text")
+    .attr("x", 50)
+    .attr("y", 17)
+    .attr("text-anchor", "middle")
+    .text("Open all host");
+
+var btnCloseGroup = svg.append("g")
+    .attr("class", "btn-host")
+    .on("click", function (d) {
+        var nodes = tree.nodes(root).reverse();
+        nodes.forEach(function (d) {
+            if (d.type == "host") {
+                if (d.children != null) {
+                    d._children = d.children;
+                    d.children = null;
+                }
+            }
+        });
+        update(root);
+    });
+
+btnCloseGroup.append("rect")
+    .attr("x", 110)
+    .attr("y", 0)
+    .attr("width", 100)
+    .attr("height", 25);
+
+btnCloseGroup.append("text")
+    .attr("x", 160)
+    .attr("y", 17)
+    .attr("text-anchor", "middle")
+    .text("Close all host");
 
 update(root);
 
@@ -154,6 +214,7 @@ function dblclick(d) {
 }
 
 function click(d) {
+    d3.event.stopPropagation();
     $("#detail").html("<div>" + d.name + "</div>");
 
     if (activeNode != null) {

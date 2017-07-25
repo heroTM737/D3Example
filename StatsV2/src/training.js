@@ -35,8 +35,9 @@ var activeNode = null;
 svg.append("rect")
     .attr("x", 0)
     .attr("y", 0)
-    .attr("width", 20)
-    .attr("height", 10)
+    .attr("width", 50)
+    .attr("height", 25)
+    .attr("class", "btn-open-host")
     .on("click", function (d) {
         var nodes = tree.nodes(root).reverse();
         nodes.forEach(function (d) {
