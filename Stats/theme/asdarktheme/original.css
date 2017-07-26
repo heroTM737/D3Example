@@ -1,0 +1,44 @@
+.link {
+  stroke: #a5a5a5;
+}
+
+.node circle.open {
+  stroke:#a5a5a5;
+}
+
+.node circle.close {
+  stroke: #fff;
+}
+
+.node text {
+  fill: #ccc;
+}
+
+.node.cluster circle {
+  fill: #344955;
+}
+
+.node.persistor circle {
+  fill: #3658b7;
+}
+
+.node.host circle {
+  fill: #1583a0;
+}
+
+.node.correlator circle {
+  fill: #738a57;
+}
+
+.node.aggregator circle {
+  fill: #1c5434;
+}
+
+/*fade out*/
+.node-fade-keep,
+.node-fade-keep *,
+.node-fade,
+.node-fade * {
+  opacity: 0.5;
+}
+

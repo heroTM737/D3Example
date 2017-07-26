@@ -1,46 +1,65 @@
-.node circle.open {
-  stroke: #99ccff;
-}
-
-.node circle.close {
-  stroke: #002d82;
-}
+.link {
+  stroke: #99ccff; }
 
 .node text {
-  fill: #616264;
-}
+  fill: #616264; }
 
-.link {
-  stroke: #99ccff;
-}
+.node circle.open {
+  stroke: #99ccff; }
+
+.node circle.close {
+  stroke: #002d82; }
 
 .node.cluster circle {
-  fill: #fff;
-}
+  fill: #fff; }
 
 .node.persistor circle {
-  fill: #3f70f9;
-}
+  fill: #0000FF; }
 
 .node.host circle {
-  fill: #6cb5d8;
-}
+  fill: #6cb5d8; }
 
 .node.correlator circle {
-  fill: #ffe8b5;
-}
+  fill: #ffe8b5; }
 
 .node.aggregator circle {
-  fill: #afe19e;
-}
+  fill: #afe19e; }
 
-.highlightKeep circle,
-.highlight circle {
-  fill: #eff248 !important;
-  stroke: #0e921f !important;
-}
+/*fade out*/
+.node-fade-keep.link,
+.node-fade.link {
+  stroke: #ebf5ff !important; }
 
-.link.highlightKeep,
-.link.highlight {
-  stroke: #0e921f !important;
-}
+.node-fade-keep text,
+.node-fade text {
+  fill: #dfe0e0; }
+
+.node-fade-keep circle.open,
+.node-fade circle.open {
+  stroke: #ebf5ff; }
+
+.node-fade-keep circle.close,
+.node-fade circle.close {
+  stroke: #ccd5e6; }
+
+.node-fade-keep.cluster circle,
+.node-fade.cluster circle {
+  fill: white !important; }
+
+.node-fade-keep.persistor circle,
+.node-fade.persistor circle {
+  fill: #ccccff !important; }
+
+.node-fade-keep.host circle,
+.node-fade.host circle {
+  fill: #e2f0f7 !important; }
+
+.node-fade-keep.correlator circle,
+.node-fade.correlator circle {
+  fill: floralwhite !important; }
+
+.node-fade-keep.aggregator circle,
+.node-fade.aggregator circle {
+  fill: #eff9ec !important; }
+
+/*# sourceMappingURL=training.css.map */

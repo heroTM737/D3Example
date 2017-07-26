@@ -1,0 +1,94 @@
+$opacity: 20%;
+$mixColor: #fff;
+
+$link: #99ccff;
+$text: #616264;
+$open: #99ccff;
+$close: #002d82;
+$cluster: #fff;
+$persistor: #0000FF;
+$host: #6cb5d8;
+$correlator: #ffe8b5;
+$aggregator: #afe19e;
+
+.link {
+  stroke: $link;
+}
+
+.node text {
+  fill: $text;
+}
+
+.node circle.open {
+  stroke: $open;
+}
+
+.node circle.close {
+  stroke: $close;
+}
+
+.node.cluster circle {
+  fill: $cluster;
+}
+
+.node.persistor circle {
+  fill: $persistor;
+}
+
+.node.host circle {
+  fill: $host;
+}
+
+.node.correlator circle {
+  fill: $correlator;
+}
+
+.node.aggregator circle {
+  fill: $aggregator;
+}
+
+/*fade out*/
+.node-fade-keep.link,
+.node-fade.link {
+  stroke: mix($link, $mixColor, $opacity) !important;
+}
+
+.node-fade-keep text,
+.node-fade text {
+  fill: mix($text, $mixColor, $opacity);
+}
+
+.node-fade-keep circle.open,
+.node-fade circle.open {
+  stroke: mix($open, $mixColor, $opacity);
+}
+
+.node-fade-keep circle.close,
+.node-fade circle.close {
+  stroke: mix($close, $mixColor, $opacity);
+}
+
+.node-fade-keep.cluster circle,
+.node-fade.cluster circle {
+  fill: mix($cluster, $mixColor, $opacity) !important;
+}
+
+.node-fade-keep.persistor circle,
+.node-fade.persistor circle {
+  fill: mix($persistor, $mixColor, $opacity) !important;
+}
+
+.node-fade-keep.host circle,
+.node-fade.host circle {
+  fill: mix($host, $mixColor, $opacity) !important;
+}
+
+.node-fade-keep.correlator circle,
+.node-fade.correlator circle {
+  fill: mix($correlator, $mixColor, $opacity) !important;
+}
+
+.node-fade-keep.aggregator circle,
+.node-fade.aggregator circle {
+  fill: mix($aggregator, $mixColor, $opacity) !important;
+}
