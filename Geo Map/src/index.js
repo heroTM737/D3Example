@@ -1,6 +1,7 @@
 var functionMap = {
     socviewmap: require('./socviewmap'),
-    drawGeoMapMapael: require('./staticgeomap')
+    drawGeoMapMapael: require('./staticgeomap'),
+    dcs: require('./dcs')
 }
 
 //bind function to window

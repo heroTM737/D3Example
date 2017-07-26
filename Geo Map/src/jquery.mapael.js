@@ -12,7 +12,7 @@
  *
  */
 (function (factory) {
-    module.exports = factory($, require('./raphael'), $);
+    module.exports = factory($, require('raphael'), $);
 }(function ($, Raphael, mousewheel) {
     // The plugin name (used on several places)
     var pluginName = "mapael";
