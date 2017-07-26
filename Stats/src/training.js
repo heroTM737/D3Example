@@ -19,9 +19,9 @@ var svg = d3.select("#tree").append("svg")
     .attr("height", height + margin.top + margin.bottom)
     .on("click", function (d) {
         if (activeNode != null) {
-            highlightNode(activeNode, false, false);
+            activeNode = null;
+            highlightNode({ node: root, status: false, statusKeep: false });
         }
-        activeNode = null;
     })
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -108,8 +108,8 @@ function update(source) {
         .attr("class", function (d) { return "node " + d.type; })
         .attr("transform", function (d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
         .attr("id", function (d) { return "node" + d.id; })
-        .on("mouseover", function (d) { highlightNode(d, true); })
-        .on("mouseout", function (d) { highlightNode(d, false); })
+        .on("mouseover", function (d) { highlightNode({ node: d, status: true }); })
+        .on("mouseout", function (d) { highlightNode({ node: d, status: false }); })
         .on("click", click)
         .on("dblclick", dblclick);
 
@@ -172,9 +172,8 @@ function update(source) {
             var o = { x: source.x0, y: source.y0 };
             return diagonal({ source: o, target: o });
         })
-        .on("mouseover", function (d) { highlightLink(d, true); })
-        .on("mouseout", function (d) { highlightLink(d, false); })
-        .on("click", click);
+        .on("mouseover", function (d) { highlightNode({ node: d.target, status: true }); })
+        .on("mouseout", function (d) { highlightNode({ node: d.target, status: false }); });
 
     // Transition links to their new position.
     link.transition()
@@ -197,7 +196,7 @@ function update(source) {
     });
 }
 
-// Toggle children on click.
+// Toggle children on double click.
 function dblclick(d) {
     if (d.children) {
         d._children = d.children;
@@ -207,77 +206,95 @@ function dblclick(d) {
         d._children = null;
     }
     update(d);
-
-    if (activeNode != null) {
-        highlightNode(activeNode, false, false);
-    }
 }
 
+// highlight node on click
 function click(d) {
     d3.event.stopPropagation();
-    $("#detail").html("<div>" + d.name + "</div>");
-
-    if (activeNode != null) {
-        highlightNode(activeNode, false, false);
-    }
     activeNode = d;
-    highlightNode(activeNode, true, true);
+    showDetail(d);
+    highlightNode({ node: activeNode, statusKeep: true });
 }
 
-function highlightLink(link, status, statusKeep) {
-    highlightMyLink(link.source, link.target, status, statusKeep);
-    travelUpHighlight(link.source, status, statusKeep);
-    travelDownHighlight(link.target, status, statusKeep);
-
-    // d3.select("#tree").selectAll('.link').sort(function (a, b) {
-    //     return a.id == "id";
-    // });
+function showDetail(d) {
+    $("#detail").html("<div>" + d.name + "</div>");
 }
 
-function highlightNode(node, status, statusKeep) {
-    travelUpHighlight(node, status, statusKeep);
-    travelDownHighlight(node, status, statusKeep);
+function highlightNode(config) {
+    config.className = "node-fade";
+    config.classNameKeep = "node-fade-keep";
 
-    // d3.select("#tree").selectAll('.link').sort(function (a, b) {
-    //     return a.id == "id";
-    // });
-}
+    var statusKeep = config.statusKeep;
+    if (statusKeep != undefined && statusKeep != null) {
+        //remove highlight fade out class
+        travelDownHighlight({ ...config, status: false, node: root });
 
-function travelUpHighlight(node, status, statusKeep) {
-    highlightMyNode(node, status, statusKeep);
-    if (node.parent) {
-        highlightMyLink(node.parent, node, status, statusKeep);
-        travelUpHighlight(node.parent, status, statusKeep);
+        //set fade out all node
+        travelDownHighlight({ ...config, status: null, node: root });
+
+        //remove fade out selected node
+        travelUpHighlight({ ...config, statusKeep: false });
+        travelDownHighlight({ ...config, statusKeep: false });
+    } else {
+        var status = config.status;
+        if (activeNode == null && status != undefined && status != null) {
+            //set fade out all node
+            travelDownHighlight({ ...config, node: root });
+
+            //remove fade out selected node
+            travelUpHighlight({ ...config, status: false });
+            travelDownHighlight({ ...config, status: false });
+        }
     }
 }
 
-function travelDownHighlight(node, status, statusKeep) {
-    highlightMyNode(node, status, statusKeep);
-    if (node.children) {
-        node.children.forEach(function (e, i) {
-            highlightMyLink(node, e, status, statusKeep);
-            travelDownHighlight(e, status, statusKeep);
+function travelUpHighlight(config) {
+    var node = config.node;
+    var parent = node.parent;
+
+    highlightMyNode(config);
+    if (parent) {
+        highlightMyLink({
+            ...config,
+            source: parent,
+            target: node
+        });
+        travelUpHighlight({ ...config, node: parent });
+    }
+}
+
+function travelDownHighlight(config) {
+    var node = config.node;
+    var children = node.children;
+
+    highlightMyNode(config);
+    if (children) {
+        children.forEach(function (e, i) {
+            highlightMyLink({
+                ...config,
+                source: node,
+                target: e
+            });
+            travelDownHighlight({ ...config, node: e });
         });
     }
 }
 
-function highlightMyLink(source, target, status, statusKeep) {
-    var link_id = "#from" + source.id + "to" + target.id;
-    d3.select(link_id).classed("highlight", status);
-    if (statusKeep != undefined && statusKeep != null) {
-        d3.select(link_id).classed("highlightKeep", statusKeep);
-    }
+function highlightMyLink(config) {
+    var link_id = "#from" + config.source.id + "to" + config.target.id;
+    highlightById({ ...config, id: link_id });
 }
 
-function highlightMyNode(node, status, statusKeep) {
-    var node_id = "#node" + node.id;
-    d3.select(node_id).classed("highlight", status);
-    if (statusKeep != undefined && statusKeep != null) {
-        d3.select(node_id).classed("highlightKeep", statusKeep);
-    }
+function highlightMyNode(config) {
+    var node_id = "#node" + config.node.id;
+    highlightById({ ...config, id: node_id });
 }
 
-
-
-
-
+function highlightById({id, status, className, statusKeep, classNameKeep}) {
+    if (status != undefined && status != null) {
+        d3.select(id).classed(className, status);
+    }
+    if (statusKeep != undefined && statusKeep != null) {
+        d3.select(id).classed(classNameKeep, statusKeep);
+    }
+}
