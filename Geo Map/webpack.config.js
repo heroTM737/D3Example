@@ -17,9 +17,23 @@ module.exports = {
       comments: false
     })
   ],
+  // module: {
+  //   rules: [{
+  //     test: /\.js$/, 
+  //     exclude: /node_modules/, 
+  //     loader: "babel-loader",
+  //     query: {
+  //       presets: ["es2015"]
+  //     }
+  //   }]
+  // },
   module: {
-    rules: [
-      { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" }
-    ]
-  }
+    loaders: [{
+      exclude: /node_modules/,
+      loader: 'babel-loader',
+      query: {
+        presets: ['es2015']
+      }
+    }]
+  },
 };
