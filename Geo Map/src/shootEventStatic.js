@@ -1,50 +1,50 @@
-var Mapael = require('./world_countries');
-var world_countries = Mapael.maps.world_countries;
+let Mapael = require('./world_countries');
+let world_countries = Mapael.maps.world_countries;
 
-var cp1d = 50;
-var cp2d = 5;
-var color1 = "rgba(255,0,0,1)";
-var color2 = "rgba(255,0,0,0)";
-var easefn = "linear";
-var duration = Math.floor(Math.random() * 1000) + 1000;
+let cp1d = 50;
+let cp2d = 5;
+let color1 = "rgba(255,0,0,1)";
+let color2 = "rgba(255,0,0,0)";
+let easefn = "linear";
+let duration = Math.floor(Math.random() * 1000) + 1000;
 
-var computeControlPoint1 = function (x0, y0, x1, y1) {
-    var cx = (x0 + x1) / 2;
-    var cy = (y0 + y1) / 2;
-    var a = y0 - y1;
-    var b = x1 - x0;
-    var delta = Math.sqrt(1 / (a * a + b * b))
-    var x = cp1d * a * delta + cx;
-    var y = cp1d * b * delta + cy;
+let computeControlPoint1 = function (x0, y0, x1, y1) {
+    let cx = (x0 + x1) / 2;
+    let cy = (y0 + y1) / 2;
+    let a = y0 - y1;
+    let b = x1 - x0;
+    let delta = Math.sqrt(1 / (a * a + b * b))
+    let x = cp1d * a * delta + cx;
+    let y = cp1d * b * delta + cy;
     return { x: x, y: y }
 }
 
-var computeControlPoint2 = function (x0, y0, x1, y1) {
-    var cx = x1;
-    var cy = y1;
-    var a = y0 - y1;
-    var b = x1 - x0;
-    var delta = Math.sqrt(1 / (a * a + b * b))
-    var x = cp2d * a * delta + cx;
-    var y = cp2d * b * delta + cy;
+let computeControlPoint2 = function (x0, y0, x1, y1) {
+    let cx = x1;
+    let cy = y1;
+    let a = y0 - y1;
+    let b = x1 - x0;
+    let delta = Math.sqrt(1 / (a * a + b * b))
+    let x = cp2d * a * delta + cx;
+    let y = cp2d * b * delta + cy;
     return { x: x, y: y }
 }
 
-var genCurve = function (d) {
-    var sx = d.source.x;
-    var sy = d.source.y;
-    var tx = d.target.x;
-    var ty = d.target.y;
+let genCurve = function (d) {
+    let sx = d.source.x;
+    let sy = d.source.y;
+    let tx = d.target.x;
+    let ty = d.target.y;
 
-    var c1 = computeControlPoint1(sx, sy, tx, ty);
-    var c1x = c1.x;
-    var c1y = c1.y;
+    let c1 = computeControlPoint1(sx, sy, tx, ty);
+    let c1x = c1.x;
+    let c1y = c1.y;
 
-    var c2 = computeControlPoint2(sx, sy, tx, ty);
-    var c2x = c2.x;
-    var c2y = c2.y;
+    let c2 = computeControlPoint2(sx, sy, tx, ty);
+    let c2x = c2.x;
+    let c2y = c2.y;
 
-    var data = "";
+    let data = "";
     data += "M " + sx + " " + sy;
     data += "C " + c1x + " " + c1y + " " + c2x + " " + c2y + " " + tx + " " + ty;
     data += "L " + c2x + " " + c2y;
@@ -54,20 +54,22 @@ var genCurve = function (d) {
 }
 
 function shootEventStatic(svg, event) {
-    var source = world_countries.getCoords(event.source.latitude, event.source.longitude);
-    var target = world_countries.getCoords(event.target.latitude, event.target.longitude);
+    let source = world_countries.getCoords(event.source.latitude, event.source.longitude);
+    let target = world_countries.getCoords(event.target.latitude, event.target.longitude);
     event.source.x = source.x;
     event.source.y = source.y;
     event.target.x = target.x;
     event.target.y = target.y;
 
-    var dx = Math.abs(target.x - source.x);
-    var dy = Math.abs(target.y - source.y);
+    let dx = Math.abs(target.x - source.x);
+    let dy = Math.abs(target.y - source.y);
+    
+    let x1 = (source.x + target.x) / 2;
+    let x2 = x1;
+    let y1 = (source.y + target.y) / 2;
+    let y2 = y1;
 
-    var x1 = x2 = (source.x + target.x) / 2;
-    var y1 = y2 = (source.y + target.y) / 2;
-
-    var s = 0;
+    let s = 0;
     if (dx < dy) {
         target.y < source.y ? s = 1 : s = -1;
         y1 = source.y + s * cp2d;
@@ -77,11 +79,11 @@ function shootEventStatic(svg, event) {
         x1 = source.x + s * cp2d;
         x2 = target.x - s * cp2d;
     }
-    var timeStamp = new Date().getTime();
-    var randomID = Math.floor(Math.random() * 100000);
-    var gradientID = "linearGradient_" + timeStamp + "_" + randomID;
-    var defs = svg.append("defs");
-    var linearGradient = defs.append("linearGradient")
+    let timeStamp = new Date().getTime();
+    let randomID = Math.floor(Math.random() * 100000);
+    let gradientID = "linearGradient_" + timeStamp + "_" + randomID;
+    let defs = svg.append("defs");
+    let linearGradient = defs.append("linearGradient")
         .attr("id", gradientID)
         .attr("gradientUnits", "userSpaceOnUse")
         .attr("x1", x1)
@@ -93,20 +95,21 @@ function shootEventStatic(svg, event) {
     linearGradient.append("stop").attr("id", "stop2").attr("offset", "0%").attr("stop-color", color2);
     linearGradient.append("stop").attr("id", "stop3").attr("offset", "100%").attr("stop-color", color2);
 
-    var gradientID_url = "url(#" + gradientID + ")";
-    var mylineTween = function (d, i, a) {
+    let gradientID_url = "url(#" + gradientID + ")";
+    let mylineTween = function (d, i, a) {
         return function (t) {
-            var p = t * 100;
+            let p = t * 100;
             d3.select("#" + gradientID).select("#stop1").attr("offset", p + "%");
             d3.select("#" + gradientID).select("#stop2").attr("offset", p + "%");
             return gradientID_url;
         };
     }
 
-    var link = svg
+    let link = svg
         .append("path")
         .datum(event)
         .attr("class", "link")
+        .attr("id", "")
         .attr("stroke-linejoin", "round")
         .attr("stroke-linecap", "round")
         .attr("d", genCurve)
