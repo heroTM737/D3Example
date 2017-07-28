@@ -131,8 +131,14 @@ var socviewmap = function (container, events) {
         for (var i in events) {
             var event = events[i];
             if (event.type == "static") {
-                var id = getLinkId(event);
-                d3.select(container).select("#" + id).remove();
+                var group =  d3.select(container).select("#" + getLinkId(event));
+                group.transition()
+                .duration(1000)
+                .ease("linear")
+                .attr("opacity", 0)
+                .each("end", (d) => {
+                    group.remove();
+                });
             }
         }
     }

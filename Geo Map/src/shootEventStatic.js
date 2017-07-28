@@ -10,11 +10,13 @@ let easefn = "linear";
 let duration = Math.floor(Math.random() * 1000) + 1000;
 
 let computeControlPoint1 = function (x0, y0, x1, y1) {
+    cp1d = Math.sqrt((x1 - x0) * (x1 - x0) + (y1 - y0) * (y1 - y0)) / 5;
+    cp1d = cp1d > 30 ? cp1d : 30;
     let cx = (x0 + x1) / 2;
     let cy = (y0 + y1) / 2;
     let a = y0 - y1;
     let b = x1 - x0;
-    let delta = Math.sqrt(1 / (a * a + b * b))
+    let delta = Math.sqrt(1 / (a * a + b * b));
     let x = cp1d * a * delta + cx;
     let y = cp1d * b * delta + cy;
     return { x: x, y: y }
@@ -25,7 +27,7 @@ let computeControlPoint2 = function (x0, y0, x1, y1) {
     let cy = y1;
     let a = y0 - y1;
     let b = x1 - x0;
-    let delta = Math.sqrt(1 / (a * a + b * b))
+    let delta = Math.sqrt(1 / (a * a + b * b));
     let x = cp2d * a * delta + cx;
     let y = cp2d * b * delta + cy;
     return { x: x, y: y }
@@ -83,7 +85,9 @@ function shootEventStatic(svg, event) {
     let timeStamp = new Date().getTime();
     let randomID = Math.floor(Math.random() * 100000);
     let gradientID = "linearGradient_" + timeStamp + "_" + randomID;
-    let staticGroup = svg.append("g").attr("id", getLinkId(event));
+    let staticGroup = svg.append("g")
+        .attr("id", getLinkId(event))
+        .attr("opacity", 1);
     let defs = staticGroup.append("defs");
     let linearGradient = defs.append("linearGradient")
         .attr("id", gradientID)

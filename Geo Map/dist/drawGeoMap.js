@@ -733,8 +733,10 @@ var socviewmap = function socviewmap(container, events) {
         for (var i in events) {
             var event = events[i];
             if (event.type == "static") {
-                var id = getLinkId(event);
-                d3.select(container).select("#" + id).remove();
+                var group = d3.select(container).select("#" + getLinkId(event));
+                group.transition().duration(1000).ease("linear").attr("opacity", 0).each("end", function (d) {
+                    group.remove();
+                });
             }
         }
     };
@@ -3180,6 +3182,8 @@ var easefn = "linear";
 var duration = Math.floor(Math.random() * 1000) + 1000;
 
 var computeControlPoint1 = function computeControlPoint1(x0, y0, x1, y1) {
+    cp1d = Math.sqrt((x1 - x0) * (x1 - x0) + (y1 - y0) * (y1 - y0)) / 5;
+    cp1d = cp1d > 30 ? cp1d : 30;
     var cx = (x0 + x1) / 2;
     var cy = (y0 + y1) / 2;
     var a = y0 - y1;
@@ -3253,7 +3257,7 @@ function shootEventStatic(svg, event) {
     var timeStamp = new Date().getTime();
     var randomID = Math.floor(Math.random() * 100000);
     var gradientID = "linearGradient_" + timeStamp + "_" + randomID;
-    var staticGroup = svg.append("g").attr("id", getLinkId(event));
+    var staticGroup = svg.append("g").attr("id", getLinkId(event)).attr("opacity", 1);
     var defs = staticGroup.append("defs");
     var linearGradient = defs.append("linearGradient").attr("id", gradientID).attr("gradientUnits", "userSpaceOnUse").attr("x1", x1).attr("y1", y1).attr("x2", x2).attr("y2", y2);
     linearGradient.append("stop").attr("id", "stop0").attr("offset", "0%").attr("stop-color", color1);
