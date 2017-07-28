@@ -1,5 +1,6 @@
 let Mapael = require('./world_countries');
 let world_countries = Mapael.maps.world_countries;
+var { getLinkId } = require('./getId');
 
 let cp1d = 50;
 let cp2d = 5;
@@ -63,7 +64,7 @@ function shootEventStatic(svg, event) {
 
     let dx = Math.abs(target.x - source.x);
     let dy = Math.abs(target.y - source.y);
-    
+
     let x1 = (source.x + target.x) / 2;
     let x2 = x1;
     let y1 = (source.y + target.y) / 2;
@@ -82,7 +83,8 @@ function shootEventStatic(svg, event) {
     let timeStamp = new Date().getTime();
     let randomID = Math.floor(Math.random() * 100000);
     let gradientID = "linearGradient_" + timeStamp + "_" + randomID;
-    let defs = svg.append("defs");
+    let staticGroup = svg.append("g").attr("id", getLinkId(event));
+    let defs = staticGroup.append("defs");
     let linearGradient = defs.append("linearGradient")
         .attr("id", gradientID)
         .attr("gradientUnits", "userSpaceOnUse")
@@ -105,11 +107,10 @@ function shootEventStatic(svg, event) {
         };
     }
 
-    let link = svg
+    let link = staticGroup
         .append("path")
         .datum(event)
         .attr("class", "link")
-        .attr("id", "")
         .attr("stroke-linejoin", "round")
         .attr("stroke-linecap", "round")
         .attr("d", genCurve)

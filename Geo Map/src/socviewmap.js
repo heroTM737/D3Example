@@ -1,7 +1,7 @@
 var Mapael = require('./world_countries');
 var shootEventStatic = require('./shootEventStatic');
 var shootEventDynamic = require('./shootEventDynamic');
-var getLocationId = require('./getLocationId');
+var { getLocationId, getLinkId } = require('./getId');
 
 var world_countries = Mapael.maps.world_countries;
 var location_r = 2;
@@ -127,9 +127,17 @@ var socviewmap = function (container, events) {
         update(events);
     }
 
-    return {
-        update: update
+    var remove = function (events) {
+        for (var i in events) {
+            var event = events[i];
+            if (event.type == "static") {
+                var id = getLinkId(event);
+                d3.select(container).select("#" + id).remove();
+            }
+        }
     }
+
+    return { update, remove }
 }
 
 module.exports = socviewmap;

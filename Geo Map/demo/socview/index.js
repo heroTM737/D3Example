@@ -86,15 +86,30 @@ $(document).ready(function () {
                 type: Math.random() > 0.5 ? "static" : "dynamic"
             });
         }
-        
+
         return events;
     }
 
-    var socviewmap = window.socviewmap(document.getElementsByClassName("mapcontainer")[0], genEvents());
+    var toBeRemove = [];
+    var events = genEvents();
+    for (var i in events) {
+        if (events[i].type == "static") {
+            toBeRemove.push(events[i]);
+        }
+    }
+    var socviewmap = window.socviewmap(document.getElementsByClassName("mapcontainer")[0], events);
 
     var autoRefresh = function () {
         setTimeout(function () {
-            socviewmap.update(genEvents());
+            events = genEvents();
+            socviewmap.remove(toBeRemove);
+            toBeRemove = [];
+            for (var i in events) {
+                if (events[i].type == "static") {
+                    toBeRemove.push(events[i]);
+                }
+            }
+            socviewmap.update(events);
             autoRefresh();
         }, refreshTime)
     }

@@ -1,5 +1,5 @@
 var Mapael = require('./world_countries');
-var getLocationId = require('./getLocationId');
+var { getLocationId } = require('./getId');
 
 var world_countries = Mapael.maps.world_countries;
 var location_r_shoot = 10;
