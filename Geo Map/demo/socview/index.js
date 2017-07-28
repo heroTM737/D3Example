@@ -82,17 +82,18 @@ $(document).ready(function () {
 
             events.push({
                 source: cities[r1],
-                target: cities[r2]
+                target: cities[r2],
+                type: Math.random() > 0.5 ? "static" : "dynamic"
             });
         }
-
+        
         return events;
     }
 
     var socviewmap = window.socviewmap(document.getElementsByClassName("mapcontainer")[0], genEvents());
 
-    var autoRefresh = function() {
-        setTimeout(function(){
+    var autoRefresh = function () {
+        setTimeout(function () {
             socviewmap.update(genEvents());
             autoRefresh();
         }, refreshTime)
