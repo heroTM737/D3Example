@@ -68,48 +68,76 @@ var data = {
 
 $(document).ready(function () {
     var refreshTime = 2000;
-    var number_of_event = 3;
     var cities = data.cities;
 
+    var checkEventExist = function (event, list) {
+        for (var i in list) {
+            var source = list[i].source;
+            var target = list[i].target;
+
+            if (
+                event.source.longitude == source.longitude ||
+                event.source.latitude == source.latitude ||
+                event.target.longitude == target.longitude ||
+                event.target.latitude == target.latitude
+            ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    var genEvent = function () {
+        var r1 = Math.floor(Math.random() * cities.length);
+        var r2 = null;
+        do {
+            r2 = Math.floor(Math.random() * cities.length);
+        } while (r2 == r1)
+        return {
+            source: cities[r1],
+            target: cities[r2],
+        }
+    }
+
+    var number_of_event = 5;
     var genEvents = function () {
         var events = [];
         for (var i = 0; i < number_of_event; i++) {
-            var r1 = Math.floor(Math.random() * cities.length);
-            var r2 = null;
-            do {
-                r2 = Math.floor(Math.random() * cities.length);
-            } while (r2 == r1)
-
-            events.push({
-                source: cities[r1],
-                target: cities[r2],
-                type: Math.random() > 0.5 ? "static" : "dynamic"
-            });
+            var event = genEvent();
+            event.type = "dynamic";
+            events.push(event);
         }
-
         return events;
     }
 
-    var toBeRemove = [];
-    var events = genEvents();
-    for (var i in events) {
-        if (events[i].type == "static") {
-            toBeRemove.push(events[i]);
+    var topRules = [];
+    var genStaticEvents = function () {
+        while (topRules.length < 6) {
+            var event = null;
+            do {
+                event = genEvent();
+            } while (checkEventExist(event, topRules))
+            event.type = "static";
+            topRules.push(event);
         }
     }
+    var events = genEvents();
     var socviewmap = window.socviewmap(document.getElementsByClassName("mapcontainer")[0], events);
+    genStaticEvents();
+    socviewmap.update(topRules);
 
     var autoRefresh = function () {
         setTimeout(function () {
+            //update dynamic event
             events = genEvents();
-            socviewmap.remove(toBeRemove);
-            toBeRemove = [];
-            for (var i in events) {
-                if (events[i].type == "static") {
-                    toBeRemove.push(events[i]);
-                }
-            }
             socviewmap.update(events);
+
+            //update static event
+            socviewmap.remove([topRules.shift()]);
+            genStaticEvents();
+            socviewmap.update(topRules);
+
             autoRefresh();
         }, refreshTime)
     }
