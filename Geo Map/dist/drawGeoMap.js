@@ -652,7 +652,9 @@ var checkThenAddLocation = function checkThenAddLocation(locationGroup, location
 
 var shootEvent = function shootEvent(locationGroup, eventGroup, staticGroup, event) {
     if (event.type == "static") {
-        shootEventStatic(staticGroup, event);
+        if (staticGroup.select("#" + getLinkId(event)).empty()) {
+            shootEventStatic(staticGroup, event);
+        }
     } else {
         shootEventDynamic(eventGroup, event);
     }
@@ -733,7 +735,7 @@ var socviewmap = function socviewmap(container, events) {
         for (var i in events) {
             var event = events[i];
             if (event.type == "static") {
-                var group = d3.select(container).select("#" + getLinkId(event));
+                var group = staticGroup.select("#" + getLinkId(event));
                 group.transition().duration(1000).ease("linear").attr("opacity", 0).each("end", function (d) {
                     group.remove();
                 });
