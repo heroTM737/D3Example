@@ -45,7 +45,9 @@ var checkThenAddLocation = function (locationGroup, locationList, location) {
 
 var shootEvent = function (locationGroup, eventGroup, staticGroup, event) {
     if (event.type == "static") {
-        shootEventStatic(staticGroup, event);
+        if (staticGroup.select("#" + getLinkId(event)).empty()) {
+            shootEventStatic(staticGroup, event);
+        }
     } else {
         shootEventDynamic(eventGroup, event);
     }
@@ -131,14 +133,14 @@ var socviewmap = function (container, events) {
         for (var i in events) {
             var event = events[i];
             if (event.type == "static") {
-                var group =  d3.select(container).select("#" + getLinkId(event));
+                var group = staticGroup.select("#" + getLinkId(event));
                 group.transition()
-                .duration(1000)
-                .ease("linear")
-                .attr("opacity", 0)
-                .each("end", (d) => {
-                    group.remove();
-                });
+                    .duration(1000)
+                    .ease("linear")
+                    .attr("opacity", 0)
+                    .each("end", (d) => {
+                        group.remove();
+                    });
             }
         }
     }
