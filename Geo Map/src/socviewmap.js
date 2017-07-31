@@ -103,11 +103,11 @@ var socviewmap = function (container, events) {
     var worldCountryGroup = svg.append("g").attr("class", "worldCountryGroup");
     var elems = world_countries.elems;
     for (var i in elems) {
-        var elem = elems[i];
         worldCountryGroup
             .append("path")
             .attr("class", "map_path")
-            .attr("d", elem);
+            .attr("id", "CountryCode" + i)
+            .attr("d", elems[i]);
     }
 
     var locationGroup = svg.append("g").attr("class", "locationGroup");
@@ -145,7 +145,32 @@ var socviewmap = function (container, events) {
         }
     }
 
-    return { update, remove }
+    var topCountryCodes = [];
+    var highlightCountry = function (codes) {
+        for (var i in codes) {
+            var j = 0;
+            while (j < topCountryCodes.length) {
+                if (codes[i] == topCountryCodes[j]) {
+                    topCountryCodes.splice(j, 1);
+                    break;
+                }
+                j++;
+            }
+        }
+
+        //unhighlight old countries
+        for (var i in topCountryCodes) {
+            worldCountryGroup.select("#CountryCode" + topCountryCodes[i]).classed("highlight", false);
+        }
+
+        //highlight all selected countries
+        topCountryCodes = codes;
+        for (var i in topCountryCodes) {
+            worldCountryGroup.select("#CountryCode" + topCountryCodes[i]).classed("highlight", true);
+        }
+    }
+
+    return { update, remove, highlightCountry }
 }
 
 module.exports = socviewmap;
