@@ -170,6 +170,34 @@ var socviewmap = function (container, events) {
         }
     }
 
+    var topLocations = [];
+    var highlightLocation= function (locations) {
+        for (var i in locations) {
+            var j = 0;
+            while (j < topLocations.length) {
+                if (
+                    locations[i].longitude == topCountryCodes[j].longitude &&
+                    locations[i].latitude == topCountryCodes[j].latitude
+                ) {
+                    topLocations.splice(j, 1);
+                    break;
+                }
+                j++;
+            }
+        }
+
+        //unhighlight old locations
+        for (var i in topLocations) {
+            locationGroup.select(getLocationId(topLocations[i])).classed("highlight", false);
+        }
+
+        //highlight all selected location
+        topCountryCodes = codes;
+        for (var i in topLocations) {
+             locationGroup.select(getLocationId(topLocations[i])).classed("highlight", true);
+        }
+    }
+
     return { update, remove, highlightCountry }
 }
 
