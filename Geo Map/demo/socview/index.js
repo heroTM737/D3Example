@@ -98,16 +98,16 @@ $(document).ready(function () {
     //auto refresh
     var update = function () {
         //update dynamic event
-        socviewmap.updateEvents(genEvents());
-
-        // update static event
-        socviewmap.updateTopEvents(genStaticEvents());
-
-        // update top countries
-        socviewmap.updateTopCountries(genCountryCodes());
-
-        //update top locations
-        socviewmap.updateTopLocations(genLocations());
+        socviewmap.update({
+            // update dynamic event
+            events: genEvents(),
+            // update static event
+            rules: genStaticEvents(),
+            // update top countries
+            countries: genCountryCodes(),
+            //update top locations
+            locations: genLocations()
+        });
     }
 
     update();

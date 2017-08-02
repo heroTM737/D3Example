@@ -708,7 +708,7 @@ var filterGroup = function filterGroup(oldList, newList, compareFn) {
     return oldList;
 };
 
-var socviewmap = function socviewmap(container, events) {
+var socviewmap = function socviewmap(container, data) {
     //clean container
     d3.select(container).selectAll("*").remove();
 
@@ -744,8 +744,8 @@ var socviewmap = function socviewmap(container, events) {
     var locationList = [];
 
     var updateEvents = function updateEvents(events) {
-        for (var i = events.length - 1; i >= 0; i--) {
-            queue.push(events[i]);
+        for (var _i = events.length - 1; _i >= 0; _i--) {
+            queue.push(events[_i]);
         }
 
         if (!isShooting) {
@@ -753,17 +753,13 @@ var socviewmap = function socviewmap(container, events) {
         }
     };
 
-    if (events != undefined && events != null) {
-        updateEvents(events);
-    }
-
-    var topEvents = [];
-    var updateTopEvents = function updateTopEvents(newEvents) {
-        topEvents = filterGroup(topEvents, newEvents, compareEvent);
+    var topRules = [];
+    var updateTopRules = function updateTopRules(rules) {
+        topRules = filterGroup(topRules, rules, compareEvent);
 
         //remove old static events
-        for (var i in topEvents) {
-            var event = topEvents[i];
+        for (var _i2 in topRules) {
+            var event = topRules[_i2];
             if (event.type == "static") {
                 var group = staticGroup.select("#" + getLinkId(event));
                 group.transition().duration(1000).ease("linear").attr("opacity", 0).remove();
@@ -771,8 +767,8 @@ var socviewmap = function socviewmap(container, events) {
         }
 
         //create new static events
-        topEvents = newEvents;
-        updateEvents(topEvents);
+        topRules = rules;
+        updateEvents(topRules);
     };
 
     var topCountryCodes = [];
@@ -780,14 +776,14 @@ var socviewmap = function socviewmap(container, events) {
         topCountryCodes = filterGroup(topCountryCodes, codes, compareCountry);
 
         //unhighlight old countries
-        for (var i in topCountryCodes) {
-            worldCountryGroup.select("#CountryCode" + topCountryCodes[i]).classed("highlight", false);
+        for (var _i3 in topCountryCodes) {
+            worldCountryGroup.select("#CountryCode" + topCountryCodes[_i3]).classed("highlight", false);
         }
 
         //highlight all selected countries
         topCountryCodes = codes;
-        for (var i in topCountryCodes) {
-            worldCountryGroup.select("#CountryCode" + topCountryCodes[i]).classed("highlight", true);
+        for (var _i4 in topCountryCodes) {
+            worldCountryGroup.select("#CountryCode" + topCountryCodes[_i4]).classed("highlight", true);
         }
     };
 
@@ -796,18 +792,37 @@ var socviewmap = function socviewmap(container, events) {
         topLocations = filterGroup(topLocations, locations, compareLocation);
 
         //unhighlight old locations
-        for (var i in topLocations) {
-            markLocation(locationGroup, locationList, topLocations[i], false);
+        for (var _i5 in topLocations) {
+            markLocation(locationGroup, locationList, topLocations[_i5], false);
         }
 
         //highlight all selected location
         topLocations = locations;
-        for (var i in topLocations) {
-            markLocation(locationGroup, locationList, topLocations[i], true);
+        for (var _i6 in topLocations) {
+            markLocation(locationGroup, locationList, topLocations[_i6], true);
         }
     };
 
-    return { updateEvents: updateEvents, updateTopEvents: updateTopEvents, updateTopCountries: updateTopCountries, updateTopLocations: updateTopLocations };
+    var update = function update(data) {
+        if (data != undefined && data != null) {
+            if (data.events != undefined && data.events != null) {
+                updateEvents(data.events);
+            }
+            if (data.rules != undefined && data.rules != null) {
+                updateTopRules(data.rules);
+            }
+            if (data.locations != undefined && data.locations != null) {
+                updateTopLocations(data.locations);
+            }
+            if (data.countries != undefined && data.countries != null) {
+                updateTopCountries(data.countries);
+            }
+        }
+    };
+
+    update(data);
+
+    return { update: update };
 };
 
 module.exports = socviewmap;
