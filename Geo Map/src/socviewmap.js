@@ -5,6 +5,7 @@ var { getLocationId, getLinkId } = require('./getId');
 
 var world_countries = Mapael.maps.world_countries;
 var location_r = 2;
+var location_r_hl = 5;
 
 var queue = [];
 var isShooting = false;
@@ -68,6 +69,50 @@ var shootAllEvent = function (locationList, locationGroup, eventGroup, staticGro
     }, 200);
 }
 
+var markLocation = function (locationGroup, locationList, location, status) {
+    checkThenAddLocation(locationGroup, locationList, location);
+    var id = getLocationId(location);
+    locationGroup.select("#" + id)
+        .classed("highlight", true)
+        .attr("fill", status ? "red" : "url(#radialGradient)")
+        .transition()
+        .duration(1000)
+        .ease("linear")
+        .attr("r", status ? location_r_hl : location_r);
+}
+
+var compareLocation = function (location1, location2) {
+    return (
+        location1.longitude == location2.longitude &&
+        location1.latitude == location2.latitude
+    );
+}
+
+var compareEvent = function (event1, event2) {
+    return (
+        compareLocation(event1.source, event2.source) &&
+        compareLocation(event1.target, event2.target)
+    );
+}
+
+var compareCountry = function (country1, country2) {
+    return country1 == country2;
+}
+
+var filterGroup = function (oldList, newList, compareFn) {
+    for (var i in newList) {
+        var j = 0;
+        while (j < oldList.length) {
+            if (compareFn(newList[i], oldList[j])) {
+                oldList.splice(j, 1);
+                break;
+            }
+            j++;
+        }
+    }
+    return oldList;
+}
+
 var socviewmap = function (container, events) {
     //clean container
     d3.select(container).selectAll("*").remove();
@@ -89,12 +134,6 @@ var socviewmap = function (container, events) {
     linearGradient2.append("stop").attr("offset", "0%").attr("stop-color", color2).attr("stop-opacity", "0");
     linearGradient2.append("stop").attr("offset", "100%").attr("stop-color", color1);
 
-    var linearGradient3 = defs.append("linearGradient").attr("id", "linearGradient3");
-    linearGradient3.append("stop").attr("offset", "0%").attr("stop-color", color1).attr("stop-opacity", "1");
-    linearGradient3.append("stop").attr("offset", "50%").attr("stop-color", color1).attr("stop-opacity", "1");
-    linearGradient3.append("stop").attr("offset", "51%").attr("stop-color", color1).attr("stop-opacity", "0");
-    linearGradient3.append("stop").attr("offset", "100%").attr("stop-color", color1).attr("stop-opacity", "0");
-
     var radialGradient = defs.append("radialGradient").attr("id", "radialGradient");
     radialGradient.append("stop").attr("offset", "0%").attr("stop-color", "red");
     radialGradient.append("stop").attr("offset", "100%").attr("stop-color", "red").attr("stop-opacity", "0");
@@ -115,7 +154,7 @@ var socviewmap = function (container, events) {
     var staticGroup = svg.append("g").attr("class", "staticGroup");
     var locationList = [];
 
-    var update = function (events) {
+    var updateEvents = function (events) {
         for (var i = events.length - 1; i >= 0; i--) {
             queue.push(events[i]);
         }
@@ -126,37 +165,34 @@ var socviewmap = function (container, events) {
     }
 
     if (events != undefined && events != null) {
-        update(events);
+        updateEvents(events);
     }
 
-    var remove = function (events) {
-        for (var i in events) {
-            var event = events[i];
+    var topEvents = [];
+    var updateTopEvents = function (newEvents) {
+        topEvents = filterGroup(topEvents, newEvents, compareEvent);
+
+        //remove old static events
+        for (var i in topEvents) {
+            var event = topEvents[i];
             if (event.type == "static") {
                 var group = staticGroup.select("#" + getLinkId(event));
                 group.transition()
                     .duration(1000)
                     .ease("linear")
                     .attr("opacity", 0)
-                    .each("end", (d) => {
-                        group.remove();
-                    });
+                    .remove();
             }
         }
+
+        //create new static events
+        topEvents = newEvents;
+        updateEvents(topEvents);
     }
 
     var topCountryCodes = [];
-    var highlightCountry = function (codes) {
-        for (var i in codes) {
-            var j = 0;
-            while (j < topCountryCodes.length) {
-                if (codes[i] == topCountryCodes[j]) {
-                    topCountryCodes.splice(j, 1);
-                    break;
-                }
-                j++;
-            }
-        }
+    var updateTopCountries = function (codes) {
+        topCountryCodes = filterGroup(topCountryCodes, codes, compareCountry);
 
         //unhighlight old countries
         for (var i in topCountryCodes) {
@@ -170,35 +206,24 @@ var socviewmap = function (container, events) {
         }
     }
 
+
     var topLocations = [];
-    var highlightLocation= function (locations) {
-        for (var i in locations) {
-            var j = 0;
-            while (j < topLocations.length) {
-                if (
-                    locations[i].longitude == topCountryCodes[j].longitude &&
-                    locations[i].latitude == topCountryCodes[j].latitude
-                ) {
-                    topLocations.splice(j, 1);
-                    break;
-                }
-                j++;
-            }
-        }
+    var updateTopLocations = function (locations) {
+        topLocations = filterGroup(topLocations, locations, compareLocation);
 
         //unhighlight old locations
         for (var i in topLocations) {
-            locationGroup.select(getLocationId(topLocations[i])).classed("highlight", false);
+            markLocation(locationGroup, locationList, topLocations[i], false);
         }
 
         //highlight all selected location
-        topCountryCodes = codes;
+        topLocations = locations;
         for (var i in topLocations) {
-             locationGroup.select(getLocationId(topLocations[i])).classed("highlight", true);
+            markLocation(locationGroup, locationList, topLocations[i], true);
         }
     }
 
-    return { update, remove, highlightCountry }
+    return { updateEvents, updateTopEvents, updateTopCountries, updateTopLocations }
 }
 
 module.exports = socviewmap;

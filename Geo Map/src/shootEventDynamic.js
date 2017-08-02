@@ -3,7 +3,25 @@ var { getLocationId } = require('./getId');
 
 var world_countries = Mapael.maps.world_countries;
 var location_r_shoot = 10;
+var location_r_hl = 3;
 var location_r = 2;
+
+var animateLocation = function (svg, id) {
+    var node = svg.select("#" + id);
+    if (!node.empty()) {
+        var node_r = node.classed("highlight") ? location_r_hl : location_r;
+
+        svg.select("#" + sourceId)
+        .transition()
+        .duration(duration6)
+        .ease(easefn)
+        .attr("r", location_r_shoot)
+        .transition()
+        .duration(duration6)
+        .ease(easefn)
+        .attr("r", node_r);
+    }
+}
 
 var shootEventDynamic = function (svg, event) {
     var Source = world_countries.getCoords(event.source.latitude, event.source.longitude);
@@ -19,16 +37,7 @@ var shootEventDynamic = function (svg, event) {
     var sourceId = getLocationId(event.source);
     var targetId = getLocationId(event.target);
 
-    d3.select("#" + sourceId)
-        .transition()
-        .duration(duration6)
-        .ease(easefn)
-        .attr("r", location_r_shoot)
-
-        .transition()
-        .duration(duration6)
-        .ease(easefn)
-        .attr("r", location_r);
+    animateLocation(svg, sourceId);
 
     var middle = {
         x: (Target.x + Source.x) / 2,
@@ -58,7 +67,7 @@ var shootEventDynamic = function (svg, event) {
         .ease(easefn)
         .attr("d", "M " + Target.x + " " + Target.y + " L " + Target.x + " " + Target.y)
 
-        .each("end", function () { this.remove(); });
+        .remove();
 
     var event_Source_Target = svg.append("circle")
         .attr("r", 2)
@@ -73,18 +82,9 @@ var shootEventDynamic = function (svg, event) {
         .attr("cy", Target.y)
 
         .each("end", function () {
-            this.remove();
-            d3.select("#" + targetId)
-                .transition()
-                .duration(duration6)
-                .ease(easefn)
-                .attr("r", location_r_shoot)
-
-                .transition()
-                .duration(duration6)
-                .ease(easefn)
-                .attr("r", location_r);
-        });
+            animateLocation(svg, targetId);
+        })
+        .remove();;
 }
 
 module.exports = shootEventDynamic;

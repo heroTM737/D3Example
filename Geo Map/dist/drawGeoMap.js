@@ -617,6 +617,7 @@ var _require = __webpack_require__(1),
 
 var world_countries = Mapael.maps.world_countries;
 var location_r = 2;
+var location_r_hl = 5;
 
 var queue = [];
 var isShooting = false;
@@ -675,6 +676,38 @@ var shootAllEvent = function shootAllEvent(locationList, locationGroup, eventGro
     }, 200);
 };
 
+var markLocation = function markLocation(locationGroup, locationList, location, status) {
+    checkThenAddLocation(locationGroup, locationList, location);
+    var id = getLocationId(location);
+    locationGroup.select("#" + id).classed("highlight", true).attr("fill", status ? "red" : "url(#radialGradient)").transition().duration(1000).ease("linear").attr("r", status ? location_r_hl : location_r);
+};
+
+var compareLocation = function compareLocation(location1, location2) {
+    return location1.longitude == location2.longitude && location1.latitude == location2.latitude;
+};
+
+var compareEvent = function compareEvent(event1, event2) {
+    return compareLocation(event1.source, event2.source) && compareLocation(event1.target, event2.target);
+};
+
+var compareCountry = function compareCountry(country1, country2) {
+    return country1 == country2;
+};
+
+var filterGroup = function filterGroup(oldList, newList, compareFn) {
+    for (var i in newList) {
+        var j = 0;
+        while (j < oldList.length) {
+            if (compareFn(newList[i], oldList[j])) {
+                oldList.splice(j, 1);
+                break;
+            }
+            j++;
+        }
+    }
+    return oldList;
+};
+
 var socviewmap = function socviewmap(container, events) {
     //clean container
     d3.select(container).selectAll("*").remove();
@@ -694,12 +727,6 @@ var socviewmap = function socviewmap(container, events) {
     linearGradient2.append("stop").attr("offset", "0%").attr("stop-color", color2).attr("stop-opacity", "0");
     linearGradient2.append("stop").attr("offset", "100%").attr("stop-color", color1);
 
-    var linearGradient3 = defs.append("linearGradient").attr("id", "linearGradient3");
-    linearGradient3.append("stop").attr("offset", "0%").attr("stop-color", color1).attr("stop-opacity", "1");
-    linearGradient3.append("stop").attr("offset", "50%").attr("stop-color", color1).attr("stop-opacity", "1");
-    linearGradient3.append("stop").attr("offset", "51%").attr("stop-color", color1).attr("stop-opacity", "0");
-    linearGradient3.append("stop").attr("offset", "100%").attr("stop-color", color1).attr("stop-opacity", "0");
-
     var radialGradient = defs.append("radialGradient").attr("id", "radialGradient");
     radialGradient.append("stop").attr("offset", "0%").attr("stop-color", "red");
     radialGradient.append("stop").attr("offset", "100%").attr("stop-color", "red").attr("stop-opacity", "0");
@@ -716,7 +743,7 @@ var socviewmap = function socviewmap(container, events) {
     var staticGroup = svg.append("g").attr("class", "staticGroup");
     var locationList = [];
 
-    var update = function update(events) {
+    var updateEvents = function updateEvents(events) {
         for (var i = events.length - 1; i >= 0; i--) {
             queue.push(events[i]);
         }
@@ -727,33 +754,30 @@ var socviewmap = function socviewmap(container, events) {
     };
 
     if (events != undefined && events != null) {
-        update(events);
+        updateEvents(events);
     }
 
-    var remove = function remove(events) {
-        for (var i in events) {
-            var event = events[i];
+    var topEvents = [];
+    var updateTopEvents = function updateTopEvents(newEvents) {
+        topEvents = filterGroup(topEvents, newEvents, compareEvent);
+
+        //remove old static events
+        for (var i in topEvents) {
+            var event = topEvents[i];
             if (event.type == "static") {
                 var group = staticGroup.select("#" + getLinkId(event));
-                group.transition().duration(1000).ease("linear").attr("opacity", 0).each("end", function (d) {
-                    group.remove();
-                });
+                group.transition().duration(1000).ease("linear").attr("opacity", 0).remove();
             }
         }
+
+        //create new static events
+        topEvents = newEvents;
+        updateEvents(topEvents);
     };
 
     var topCountryCodes = [];
-    var highlightCountry = function highlightCountry(codes) {
-        for (var i in codes) {
-            var j = 0;
-            while (j < topCountryCodes.length) {
-                if (codes[i] == topCountryCodes[j]) {
-                    topCountryCodes.splice(j, 1);
-                    break;
-                }
-                j++;
-            }
-        }
+    var updateTopCountries = function updateTopCountries(codes) {
+        topCountryCodes = filterGroup(topCountryCodes, codes, compareCountry);
 
         //unhighlight old countries
         for (var i in topCountryCodes) {
@@ -767,7 +791,23 @@ var socviewmap = function socviewmap(container, events) {
         }
     };
 
-    return { update: update, remove: remove, highlightCountry: highlightCountry };
+    var topLocations = [];
+    var updateTopLocations = function updateTopLocations(locations) {
+        topLocations = filterGroup(topLocations, locations, compareLocation);
+
+        //unhighlight old locations
+        for (var i in topLocations) {
+            markLocation(locationGroup, locationList, topLocations[i], false);
+        }
+
+        //highlight all selected location
+        topLocations = locations;
+        for (var i in topLocations) {
+            markLocation(locationGroup, locationList, topLocations[i], true);
+        }
+    };
+
+    return { updateEvents: updateEvents, updateTopEvents: updateTopEvents, updateTopCountries: updateTopCountries, updateTopLocations: updateTopLocations };
 };
 
 module.exports = socviewmap;
@@ -3151,7 +3191,17 @@ var _require = __webpack_require__(1),
 
 var world_countries = Mapael.maps.world_countries;
 var location_r_shoot = 10;
+var location_r_hl = 3;
 var location_r = 2;
+
+var animateLocation = function animateLocation(svg, id) {
+    var node = svg.select("#" + id);
+    if (!node.empty()) {
+        var node_r = node.classed("highlight") ? location_r_hl : location_r;
+
+        svg.select("#" + sourceId).transition().duration(duration6).ease(easefn).attr("r", location_r_shoot).transition().duration(duration6).ease(easefn).attr("r", node_r);
+    }
+};
 
 var shootEventDynamic = function shootEventDynamic(svg, event) {
     var Source = world_countries.getCoords(event.source.latitude, event.source.longitude);
@@ -3167,7 +3217,7 @@ var shootEventDynamic = function shootEventDynamic(svg, event) {
     var sourceId = getLocationId(event.source);
     var targetId = getLocationId(event.target);
 
-    d3.select("#" + sourceId).transition().duration(duration6).ease(easefn).attr("r", location_r_shoot).transition().duration(duration6).ease(easefn).attr("r", location_r);
+    animateLocation(svg, sourceId);
 
     var middle = {
         x: (Target.x + Source.x) / 2,
@@ -3175,14 +3225,11 @@ var shootEventDynamic = function shootEventDynamic(svg, event) {
     };
 
     var isReverse = Source.x - Target.x > 0;
-    var path_Source_Target = svg.append("path").attr("stroke", isReverse ? "url(#linearGradient1)" : "url(#linearGradient2)").attr("stroke-width", "1px").attr("fill", "none").attr("class", "link-gradient").attr("d", "M " + Source.x + " " + Source.y + " L " + Source.x + " " + Source.y).transition().duration(duration3).ease(easefn).attr("d", "M " + Source.x + " " + Source.y + " L " + middle.x + " " + middle.y).transition().duration(duration3).ease(easefn).attr("d", "M " + middle.x + " " + middle.y + " L " + Target.x + " " + Target.y).transition().duration(duration4).ease(easefn).attr("d", "M " + Target.x + " " + Target.y + " L " + Target.x + " " + Target.y).each("end", function () {
-        this.remove();
-    });
+    var path_Source_Target = svg.append("path").attr("stroke", isReverse ? "url(#linearGradient1)" : "url(#linearGradient2)").attr("stroke-width", "1px").attr("fill", "none").attr("class", "link-gradient").attr("d", "M " + Source.x + " " + Source.y + " L " + Source.x + " " + Source.y).transition().duration(duration3).ease(easefn).attr("d", "M " + Source.x + " " + Source.y + " L " + middle.x + " " + middle.y).transition().duration(duration3).ease(easefn).attr("d", "M " + middle.x + " " + middle.y + " L " + Target.x + " " + Target.y).transition().duration(duration4).ease(easefn).attr("d", "M " + Target.x + " " + Target.y + " L " + Target.x + " " + Target.y).remove();
 
     var event_Source_Target = svg.append("circle").attr("r", 2).attr("style", "fill:orange").attr("cx", Source.x).attr("cy", Source.y).transition().duration(duration6).ease(easefn).attr("cx", Target.x).attr("cy", Target.y).each("end", function () {
-        this.remove();
-        d3.select("#" + targetId).transition().duration(duration6).ease(easefn).attr("r", location_r_shoot).transition().duration(duration6).ease(easefn).attr("r", location_r);
-    });
+        animateLocation(svg, targetId);
+    }).remove();;
 };
 
 module.exports = shootEventDynamic;

@@ -1,23 +1,31 @@
 $(document).ready(function () {
-    var refreshTime = 2000;
     var cities = data.cities;
     var countries = data.countries;
 
-    var checkEventExist = function (event, list) {
-        for (var i in list) {
-            var source = list[i].source;
-            var target = list[i].target;
+    var compareCountry = function (country1, country2) {
+        return country1 == country2;
+    }
 
-            if (
-                event.source.longitude == source.longitude ||
-                event.source.latitude == source.latitude ||
-                event.target.longitude == target.longitude ||
-                event.target.latitude == target.latitude
-            ) {
+    var compareLocation = function (location1, location2) {
+        return (
+            location1.longitude == location2.longitude &&
+            location1.latitude == location2.latitude
+        );
+    }
+
+    var compareEvent = function (event1, event2) {
+        return (
+            compareLocation(event1.source, event2.source) &&
+            compareLocation(event1.target, event2.target)
+        );
+    }
+
+    var checkExist = function (event, list, compareFn) {
+        for (var i in list) {
+            if (compareFn(event, list[i])) {
                 return true;
             }
         }
-
         return false;
     }
 
@@ -44,49 +52,65 @@ $(document).ready(function () {
         return events;
     }
 
-    var topRules = [];
+    var number_of_static_event = 5;
     var genStaticEvents = function () {
-        while (topRules.length < 6) {
-            var event = null;
+        var topRules = [];
+        for (var i = 0; i < number_of_static_event; i++) {
+            var event;
             do {
                 event = genEvent();
-            } while (checkEventExist(event, topRules))
+            } while (checkExist(event, topRules, compareEvent))
             event.type = "static";
             topRules.push(event);
         }
+        return topRules;
     }
 
     var number_of_country = 5;
-    var genCountriesCode = function () {
+    var genCountryCodes = function () {
         var countryCodes = [];
         for (var i = 0; i < number_of_country; i++) {
-            var index = Math.floor(Math.random() * countries.length);
-            countryCodes.push(countries[index]);
+            var code = null;
+            do {
+                code = countries[Math.floor(Math.random() * countries.length)];
+            } while (checkExist(code, countryCodes, compareCountry))
+            countryCodes.push(code);
         }
         return countryCodes;
     }
 
-    var events = genEvents();
-    var socviewmap = window.socviewmap(document.getElementsByClassName("mapcontainer")[0], events);
-    genStaticEvents();
-    socviewmap.update(topRules);
-
-    var autoRefresh = function () {
-        setTimeout(function () {
-            //update dynamic event
-            events = genEvents();
-            socviewmap.update(events);
-
-            //update static event
-            socviewmap.remove([topRules.shift()]);
-            genStaticEvents();
-            socviewmap.update(topRules);
-
-            socviewmap.highlightCountry(genCountriesCode());
-
-            autoRefresh();
-        }, refreshTime)
+    var number_of_location = 5;
+    var genLocations = function () {
+        var locations = [];
+        for (var i = 0; i < number_of_location; i++) {
+            var location = null;
+            do {
+                location = cities[Math.floor(Math.random() * cities.length)];
+            } while (checkExist(location, locations, compareLocation))
+            locations.push(location);
+        }
+        return locations;
     }
-    autoRefresh();
+
+    //initiate map
+    var socviewmap = window.socviewmap(document.getElementsByClassName("mapcontainer")[0], null);
+
+    //auto refresh
+    var update = function () {
+        //update dynamic event
+        socviewmap.updateEvents(genEvents());
+
+        // update static event
+        socviewmap.updateTopEvents(genStaticEvents());
+
+        // update top countries
+        socviewmap.updateTopCountries(genCountryCodes());
+
+        //update top locations
+        socviewmap.updateTopLocations(genLocations());
+    }
+
+    update();
+    setInterval(update, 2000);
 
 });
