@@ -73,6 +73,42 @@
 "use strict";
 
 
+var compareLocation = function compareLocation(location1, location2) {
+    return location1.longitude == location2.longitude && location1.latitude == location2.latitude;
+};
+
+var compareEvent = function compareEvent(event1, event2) {
+    return compareLocation(event1.source, event2.source) && compareLocation(event1.target, event2.target);
+};
+
+var compareCountry = function compareCountry(country1, country2) {
+    return country1 == country2;
+};
+
+var getLocationId = function getLocationId(location) {
+    var id = "lat" + location.latitude + "long" + location.longitude;
+    id = id.split("-").join("m");
+    id = id.split(".").join("p");
+    return id;
+};
+
+var getLinkId = function getLinkId(event) {
+    var source = "lon" + event.source.longitude + "lat" + event.source.latitude;
+    var target = "lon" + event.target.longitude + "lat" + event.target.latitude;
+    var id = (source + target).split(".").join("p");
+    id = id.split("-").join("m");
+    return id;
+};
+
+module.exports = { compareLocation: compareLocation, compareEvent: compareEvent, compareCountry: compareCountry, getLocationId: getLocationId, getLinkId: getLinkId };
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 /*!
  *
  * Jquery Mapael - Dynamic maps jQuery plugin (based on raphael.js)
@@ -287,30 +323,6 @@
 
     return Mapael;
 });
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var getLocationId = function getLocationId(location) {
-    var id = "lat" + location.latitude + "long" + location.longitude;
-    id = id.split("-").join("m");
-    id = id.split(".").join("p");
-    return id;
-};
-
-var getLinkId = function getLinkId(event) {
-    var source = "lon" + event.source.longitude + "lat" + event.source.latitude;
-    var target = "lon" + event.target.longitude + "lat" + event.target.latitude;
-    var id = (source + target).split(".").join("p");
-    id = id.split("-").join("m");
-    return id;
-};
-
-module.exports = { getLocationId: getLocationId, getLinkId: getLinkId };
 
 /***/ }),
 /* 2 */
@@ -607,13 +619,18 @@ module.exports = dcs;
 "use strict";
 
 
-var Mapael = __webpack_require__(0);
+var Mapael = __webpack_require__(1);
 var shootEventStatic = __webpack_require__(8);
 var shootEventDynamic = __webpack_require__(7);
 
-var _require = __webpack_require__(1),
+var _require = __webpack_require__(0),
     getLocationId = _require.getLocationId,
     getLinkId = _require.getLinkId;
+
+var _require2 = __webpack_require__(0),
+    compareLocation = _require2.compareLocation,
+    compareEvent = _require2.compareEvent,
+    compareCountry = _require2.compareCountry;
 
 var world_countries = Mapael.maps.world_countries;
 var location_r = 2;
@@ -653,7 +670,9 @@ var checkThenAddLocation = function checkThenAddLocation(locationGroup, location
 
 var shootEvent = function shootEvent(locationGroup, eventGroup, staticGroup, event) {
     if (event.type == "static") {
-        if (staticGroup.select("#" + getLinkId(event)).empty()) {
+        var eventExist = !staticGroup.select("#" + getLinkId(event)).empty();
+        var isDumb = compareLocation(event.source, event.target);
+        if (!eventExist && !isDumb) {
             shootEventStatic(staticGroup, event);
         }
     } else {
@@ -680,18 +699,6 @@ var markLocation = function markLocation(locationGroup, locationList, location, 
     checkThenAddLocation(locationGroup, locationList, location);
     var id = getLocationId(location);
     locationGroup.select("#" + id).classed("highlight", true).attr("fill", status ? "red" : "url(#radialGradient)").transition().duration(1000).ease("linear").attr("r", status ? location_r_hl : location_r);
-};
-
-var compareLocation = function compareLocation(location1, location2) {
-    return location1.longitude == location2.longitude && location1.latitude == location2.latitude;
-};
-
-var compareEvent = function compareEvent(event1, event2) {
-    return compareLocation(event1.source, event2.source) && compareLocation(event1.target, event2.target);
-};
-
-var compareCountry = function compareCountry(country1, country2) {
-    return country1 == country2;
 };
 
 var filterGroup = function filterGroup(oldList, newList, compareFn) {
@@ -735,7 +742,7 @@ var socviewmap = function socviewmap(container, data) {
     var worldCountryGroup = svg.append("g").attr("class", "worldCountryGroup");
     var elems = world_countries.elems;
     for (var i in elems) {
-        worldCountryGroup.append("path").attr("class", "map_path").attr("id", "CountryCode" + i).attr("d", elems[i]);
+        worldCountryGroup.append("path").attr("class", "area").attr("id", "CountryCode" + i).attr("d", elems[i]);
     }
 
     var locationGroup = svg.append("g").attr("class", "locationGroup");
@@ -805,6 +812,9 @@ var socviewmap = function socviewmap(container, data) {
 
     var update = function update(data) {
         if (data != undefined && data != null) {
+            if (data.logConsole != undefined && data.logConsole != null && data.logConsole) {
+                console.log(data);
+            }
             if (data.events != undefined && data.events != null) {
                 updateEvents(data.events);
             }
@@ -834,7 +844,7 @@ module.exports = socviewmap;
 "use strict";
 
 
-var Mapael = __webpack_require__(0);
+var Mapael = __webpack_require__(1);
 
 var legend = {
     plot: {
@@ -1164,7 +1174,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             // Draw map areas
             $.each(self.mapConf.elems, function (id) {
                 var elemOptions = self.getElemOptions(self.options.map.defaultArea, self.options.areas[id] ? self.options.areas[id] : {}, self.options.legend.area);
-                self.areas[id] = { "mapElem": self.paper.path(self.mapConf.elems[id]).attr(elemOptions.attrs) };
+                self.areas[id] = { "mapElem": self.paper.path(self.mapConf.elems[id]).attr(elemOptions.attrs).attr("class", "map_path") };
             });
 
             // Hook that allows to add custom processing on the map
@@ -3199,9 +3209,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 "use strict";
 
 
-var Mapael = __webpack_require__(0);
+var Mapael = __webpack_require__(1);
 
-var _require = __webpack_require__(1),
+var _require = __webpack_require__(0),
     getLocationId = _require.getLocationId;
 
 var world_countries = Mapael.maps.world_countries;
@@ -3256,10 +3266,10 @@ module.exports = shootEventDynamic;
 "use strict";
 
 
-var Mapael = __webpack_require__(0);
+var Mapael = __webpack_require__(1);
 var world_countries = Mapael.maps.world_countries;
 
-var _require = __webpack_require__(1),
+var _require = __webpack_require__(0),
     getLinkId = _require.getLinkId;
 
 var cp1d = 50;
@@ -3363,7 +3373,7 @@ function shootEventStatic(svg, event) {
         };
     };
 
-    var link = staticGroup.append("path").datum(event).attr("class", "link").attr("stroke-linejoin", "round").attr("stroke-linecap", "round").attr("d", genCurve).attr("stroke", gradientID_url).attr("fill", gradientID_url).transition().duration(duration).ease(easefn).attrTween("stroke", mylineTween);
+    var link = staticGroup.append("path").datum(event).attr("class", "link-grow").attr("stroke-linejoin", "round").attr("stroke-linecap", "round").attr("d", genCurve).attr("stroke", gradientID_url).attr("fill", gradientID_url).transition().duration(duration).ease(easefn).attrTween("stroke", mylineTween);
 }
 
 module.exports = shootEventStatic;

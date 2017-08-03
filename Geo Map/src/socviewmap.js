@@ -1,7 +1,8 @@
 let Mapael = require('./world_countries');
 let shootEventStatic = require('./shootEventStatic');
 let shootEventDynamic = require('./shootEventDynamic');
-let { getLocationId, getLinkId } = require('./getId');
+let { getLocationId, getLinkId } = require('./tools');
+let { compareLocation, compareEvent, compareCountry } = require('./tools');
 
 let world_countries = Mapael.maps.world_countries;
 let location_r = 2;
@@ -46,7 +47,9 @@ let checkThenAddLocation = function (locationGroup, locationList, location) {
 
 let shootEvent = function (locationGroup, eventGroup, staticGroup, event) {
     if (event.type == "static") {
-        if (staticGroup.select("#" + getLinkId(event)).empty()) {
+        let eventExist = !staticGroup.select("#" + getLinkId(event)).empty();
+        let isDumb = compareLocation(event.source, event.target);
+        if (!eventExist && !isDumb) {
             shootEventStatic(staticGroup, event);
         }
     } else {
@@ -79,24 +82,6 @@ let markLocation = function (locationGroup, locationList, location, status) {
         .duration(1000)
         .ease("linear")
         .attr("r", status ? location_r_hl : location_r);
-}
-
-let compareLocation = function (location1, location2) {
-    return (
-        location1.longitude == location2.longitude &&
-        location1.latitude == location2.latitude
-    );
-}
-
-let compareEvent = function (event1, event2) {
-    return (
-        compareLocation(event1.source, event2.source) &&
-        compareLocation(event1.target, event2.target)
-    );
-}
-
-let compareCountry = function (country1, country2) {
-    return country1 == country2;
 }
 
 let filterGroup = function (oldList, newList, compareFn) {
@@ -144,7 +129,7 @@ let socviewmap = function (container, data) {
     for (let i in elems) {
         worldCountryGroup
             .append("path")
-            .attr("class", "map_path")
+            .attr("class", "area")
             .attr("id", "CountryCode" + i)
             .attr("d", elems[i]);
     }
@@ -221,6 +206,7 @@ let socviewmap = function (container, data) {
 
     let update = function (data) {
         if (data != undefined && data != null) {
+            if (data.logConsole != undefined && data.logConsole != null && data.logConsole) { console.log(data); }
             if (data.events != undefined && data.events != null) { updateEvents(data.events); }
             if (data.rules != undefined && data.rules != null) { updateTopRules(data.rules); }
             if (data.locations != undefined && data.locations != null) { updateTopLocations(data.locations); }

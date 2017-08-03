@@ -4,13 +4,13 @@ body {
     background: #344955;
 }
 
-.map_path {
+.area {
     stroke:#2b3d47;
     fill:#344955;
     transition: 1s linear;
 }
 
-.map_path.highlight {
+.area.highlight {
     fill: red;
 }
 

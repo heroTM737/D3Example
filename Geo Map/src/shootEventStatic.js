@@ -1,6 +1,6 @@
 let Mapael = require('./world_countries');
 let world_countries = Mapael.maps.world_countries;
-var { getLinkId } = require('./getId');
+var { getLinkId } = require('./tools');
 
 let cp1d = 50;
 let cp2d = 5;
@@ -114,7 +114,7 @@ function shootEventStatic(svg, event) {
     let link = staticGroup
         .append("path")
         .datum(event)
-        .attr("class", "link")
+        .attr("class", "link-grow")
         .attr("stroke-linejoin", "round")
         .attr("stroke-linecap", "round")
         .attr("d", genCurve)

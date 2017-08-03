@@ -37,7 +37,7 @@ $(document).ready(function () {
         } while (r2 == r1)
         return {
             source: cities[r1],
-            target: cities[r2],
+            target: cities[r2]
         }
     }
 
