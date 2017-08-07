@@ -93,7 +93,7 @@ $(document).ready(function () {
     }
 
     //initiate map
-    var socviewmap = window.socviewmap(document.getElementsByClassName("mapcontainer")[0], null);
+    var socviewmap = window.socviewmap(document.getElementsByClassName("geomap")[0], null);
 
     //auto refresh
     var update = function () {

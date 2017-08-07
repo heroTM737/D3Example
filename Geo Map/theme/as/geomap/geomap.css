@@ -1,0 +1,24 @@
+.geomap .node_text {
+    fill: #000;
+}
+
+.geomap .link {
+    stroke: rgba(0, 0, 255, 0.5);
+}
+
+.geomap .area {
+    stroke:#ced8d0;
+    fill:#f4f4e8;
+}
+
+.geomap .area.highlight {
+    fill: #00c9ff;
+}
+
+.geomap .legend_title {
+    fill: #000;
+}
+
+.geomap .legend_label {
+    fill: #000;
+}

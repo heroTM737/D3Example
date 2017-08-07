@@ -28,38 +28,38 @@
 /*fade out*/
 .node-fade-keep.link,
 .node-fade.link {
-  stroke: #4b5b65 !important; }
+  stroke: #43525a !important; }
 
 .node-fade-keep text,
 .node-fade text {
-  fill: #52636d; }
+  fill: #4b5a62; }
 
 .node-fade-keep circle.open,
 .node-fade circle.open {
-  stroke: #4b5b65; }
+  stroke: #43525a; }
 
 .node-fade-keep circle.close,
 .node-fade circle.close {
-  stroke: #5d6d77; }
+  stroke: #55646c; }
 
 .node-fade-keep.cluster circle,
 .node-fade.cluster circle {
-  fill: #344955 !important; }
+  fill: #2d3f4a !important; }
 
 .node-fade-keep.persistor circle,
 .node-fade.persistor circle {
-  fill: #344c69 !important; }
+  fill: #2d425d !important; }
 
 .node-fade-keep.host circle,
 .node-fade.host circle {
-  fill: #2e5564 !important; }
+  fill: #274b59 !important; }
 
 .node-fade-keep.correlator circle,
 .node-fade.correlator circle {
-  fill: #415655 !important; }
+  fill: #394c4a !important; }
 
 .node-fade-keep.aggregator circle,
 .node-fade.aggregator circle {
-  fill: #2f4b4e !important; }
+  fill: #284243 !important; }
 
-/*# sourceMappingURL=training.css.map */
+/*# sourceMappingURL=dcs.css.map */
