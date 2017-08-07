@@ -63,6 +63,19 @@ $(document).ready(function () {
             event.type = "static";
             topRules.push(event);
         }
+
+        topRules.push({
+            source: {
+                longitude: -118.2019,
+                latitude: 33.75421
+            },
+            target: {
+                longitude: -122.04421,
+                latitude: 37.6393
+            },
+            type: "static"
+        });
+
         return topRules;
     }
 

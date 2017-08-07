@@ -2,7 +2,7 @@ let Mapael = require('./world_countries');
 let world_countries = Mapael.maps.world_countries;
 var { getLinkId } = require('./tools');
 
-let cp1d = 50;
+let cp1dMax = 100;
 let cp2d = 5;
 let color1 = "rgba(255,0,0,1)";
 let color2 = "rgba(255,0,0,0)";
@@ -10,8 +10,8 @@ let easefn = "linear";
 let duration = Math.floor(Math.random() * 1000) + 1000;
 
 let computeControlPoint1 = function (x0, y0, x1, y1) {
-    cp1d = Math.sqrt((x1 - x0) * (x1 - x0) + (y1 - y0) * (y1 - y0)) / 5;
-    cp1d = cp1d > 30 ? cp1d : 30;
+    let cp1d = Math.sqrt((x1 - x0) * (x1 - x0) + (y1 - y0) * (y1 - y0)) / 2;
+    cp1d = cp1d > cp1dMax ? cp1dMax : cp1d;
     let cx = (x0 + x1) / 2;
     let cy = (y0 + y1) / 2;
     let a = y0 - y1;

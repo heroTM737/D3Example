@@ -1174,7 +1174,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             // Draw map areas
             $.each(self.mapConf.elems, function (id) {
                 var elemOptions = self.getElemOptions(self.options.map.defaultArea, self.options.areas[id] ? self.options.areas[id] : {}, self.options.legend.area);
-                self.areas[id] = { "mapElem": self.paper.path(self.mapConf.elems[id]).attr(elemOptions.attrs).attr("class", "map_path") };
+                self.areas[id] = { "mapElem": self.paper.path(self.mapConf.elems[id]).attr(elemOptions.attrs) };
             });
 
             // Hook that allows to add custom processing on the map
@@ -3272,7 +3272,7 @@ var world_countries = Mapael.maps.world_countries;
 var _require = __webpack_require__(0),
     getLinkId = _require.getLinkId;
 
-var cp1d = 50;
+var cp1dMax = 100;
 var cp2d = 5;
 var color1 = "rgba(255,0,0,1)";
 var color2 = "rgba(255,0,0,0)";
@@ -3280,8 +3280,8 @@ var easefn = "linear";
 var duration = Math.floor(Math.random() * 1000) + 1000;
 
 var computeControlPoint1 = function computeControlPoint1(x0, y0, x1, y1) {
-    cp1d = Math.sqrt((x1 - x0) * (x1 - x0) + (y1 - y0) * (y1 - y0)) / 5;
-    cp1d = cp1d > 30 ? cp1d : 30;
+    var cp1d = Math.sqrt((x1 - x0) * (x1 - x0) + (y1 - y0) * (y1 - y0)) / 2;
+    cp1d = cp1d > cp1dMax ? cp1dMax : cp1d;
     var cx = (x0 + x1) / 2;
     var cy = (y0 + y1) / 2;
     var a = y0 - y1;
