@@ -676,7 +676,7 @@ var shootEvent = function shootEvent(locationGroup, eventGroup, staticGroup, eve
             shootEventStatic(staticGroup, event);
         }
     } else {
-        shootEventDynamic(eventGroup, event);
+        shootEventDynamic(eventGroup, locationGroup, event);
     }
 };
 
@@ -814,6 +814,9 @@ var socviewmap = function socviewmap(container, data) {
         if (data != undefined && data != null) {
             if (data.logConsole != undefined && data.logConsole != null && data.logConsole) {
                 console.log(data);
+            }
+            if (data.logConsoleText != undefined && data.logConsoleText != null && data.logConsoleText) {
+                console.log(JSON.stringify(data));
             }
             if (data.events != undefined && data.events != null) {
                 updateEvents(data.events);
@@ -3218,17 +3221,18 @@ var world_countries = Mapael.maps.world_countries;
 var location_r_shoot = 10;
 var location_r_hl = 3;
 var location_r = 2;
+var easefn = "linear";
 
-var animateLocation = function animateLocation(svg, id) {
-    var node = svg.select("#" + id);
+var animateLocation = function animateLocation(locationGroup, id, duration) {
+    var node = locationGroup.select("#" + id);
     if (!node.empty()) {
         var node_r = node.classed("highlight") ? location_r_hl : location_r;
 
-        svg.select("#" + sourceId).transition().duration(duration6).ease(easefn).attr("r", location_r_shoot).transition().duration(duration6).ease(easefn).attr("r", node_r);
+        locationGroup.select("#" + id).transition().duration(duration).ease(easefn).attr("r", location_r_shoot).transition().duration(duration).ease(easefn).attr("r", node_r);
     }
 };
 
-var shootEventDynamic = function shootEventDynamic(svg, event) {
+var shootEventDynamic = function shootEventDynamic(eventGroup, locationGroup, event) {
     var Source = world_countries.getCoords(event.source.latitude, event.source.longitude);
     var Target = world_countries.getCoords(event.target.latitude, event.target.longitude);
 
@@ -3237,12 +3241,11 @@ var shootEventDynamic = function shootEventDynamic(svg, event) {
     var duration3 = duration / 10 * 3;
     var duration4 = duration / 10 * 4;
     var duration6 = duration / 10 * 6;
-    var easefn = "linear";
 
     var sourceId = getLocationId(event.source);
     var targetId = getLocationId(event.target);
 
-    animateLocation(svg, sourceId);
+    animateLocation(locationGroup, sourceId, duration6);
 
     var middle = {
         x: (Target.x + Source.x) / 2,
@@ -3250,10 +3253,10 @@ var shootEventDynamic = function shootEventDynamic(svg, event) {
     };
 
     var isReverse = Source.x - Target.x > 0;
-    var path_Source_Target = svg.append("path").attr("stroke", isReverse ? "url(#linearGradient1)" : "url(#linearGradient2)").attr("stroke-width", "1px").attr("fill", "none").attr("class", "link-gradient").attr("d", "M " + Source.x + " " + Source.y + " L " + Source.x + " " + Source.y).transition().duration(duration3).ease(easefn).attr("d", "M " + Source.x + " " + Source.y + " L " + middle.x + " " + middle.y).transition().duration(duration3).ease(easefn).attr("d", "M " + middle.x + " " + middle.y + " L " + Target.x + " " + Target.y).transition().duration(duration4).ease(easefn).attr("d", "M " + Target.x + " " + Target.y + " L " + Target.x + " " + Target.y).remove();
+    var path_Source_Target = eventGroup.append("path").attr("stroke", isReverse ? "url(#linearGradient1)" : "url(#linearGradient2)").attr("stroke-width", "1px").attr("fill", "none").attr("class", "link-gradient").attr("d", "M " + Source.x + " " + Source.y + " L " + Source.x + " " + Source.y).transition().duration(duration3).ease(easefn).attr("d", "M " + Source.x + " " + Source.y + " L " + middle.x + " " + middle.y).transition().duration(duration3).ease(easefn).attr("d", "M " + middle.x + " " + middle.y + " L " + Target.x + " " + Target.y).transition().duration(duration4).ease(easefn).attr("d", "M " + Target.x + " " + Target.y + " L " + Target.x + " " + Target.y).remove();
 
-    var event_Source_Target = svg.append("circle").attr("r", 2).attr("style", "fill:orange").attr("cx", Source.x).attr("cy", Source.y).transition().duration(duration6).ease(easefn).attr("cx", Target.x).attr("cy", Target.y).each("end", function () {
-        animateLocation(svg, targetId);
+    var event_Source_Target = eventGroup.append("circle").attr("r", 2).attr("style", "fill:orange").attr("cx", Source.x).attr("cy", Source.y).transition().duration(duration6).ease(easefn).attr("cx", Target.x).attr("cy", Target.y).each("end", function () {
+        animateLocation(locationGroup, targetId, duration6);
     }).remove();;
 };
 

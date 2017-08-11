@@ -53,7 +53,7 @@ let shootEvent = function (locationGroup, eventGroup, staticGroup, event) {
             shootEventStatic(staticGroup, event);
         }
     } else {
-        shootEventDynamic(eventGroup, event);
+        shootEventDynamic(eventGroup, locationGroup, event);
     }
 }
 
@@ -207,6 +207,7 @@ let socviewmap = function (container, data) {
     let update = function (data) {
         if (data != undefined && data != null) {
             if (data.logConsole != undefined && data.logConsole != null && data.logConsole) { console.log(data); }
+            if (data.logConsoleText != undefined && data.logConsoleText != null && data.logConsoleText) { console.log(JSON.stringify(data)); }
             if (data.events != undefined && data.events != null) { updateEvents(data.events); }
             if (data.rules != undefined && data.rules != null) { updateTopRules(data.rules); }
             if (data.locations != undefined && data.locations != null) { updateTopLocations(data.locations); }
