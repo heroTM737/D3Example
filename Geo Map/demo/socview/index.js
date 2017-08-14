@@ -93,14 +93,14 @@ $(document).ready(function () {
     }
 
     var number_of_location = 5;
-    var genLocations = function () {
+    var genLocations = function (type) {
         var locations = [];
         for (var i = 0; i < number_of_location; i++) {
             var location = null;
             do {
                 location = cities[Math.floor(Math.random() * cities.length)];
             } while (checkExist(location, locations, compareLocation))
-            locations.push(location);
+            locations.push({...location, type: type});
         }
         return locations;
     }
@@ -117,9 +117,15 @@ $(document).ready(function () {
             // update static event
             rules: genStaticEvents(),
             // update top countries
-            countries: genCountryCodes(),
+            countries: {
+                source: genCountryCodes(),
+                target: genCountryCodes()
+            },
             //update top locations
-            locations: genLocations()
+            locations: {
+                source: genLocations("source"),
+                target: genLocations("target")
+            }
         });
     }
 

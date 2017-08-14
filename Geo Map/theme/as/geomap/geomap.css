@@ -22,3 +22,15 @@
 .geomap .legend_label {
     fill: #000;
 }
+
+.geomap .location.source {
+    fill: red;
+}
+
+.geomap .location.target {
+    fill: green;
+}
+
+.geomap .location.source_target {
+    fill: orange;
+}

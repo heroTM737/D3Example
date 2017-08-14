@@ -35,12 +35,22 @@ let checkThenAddLocation = function (locationGroup, locationList, location) {
         let group = locationGroup.append("g");
         group.append("circle")
             .attr("id", id)
+            .attr("class", "location")
             .attr("cx", city.x)
             .attr("cy", city.y)
             .attr("r", location_r)
             .attr("fill", "url(#radialGradient)");
         group.append("title").text(getTooltips(location));
     }
+
+    let node = locationGroup.select("#" + id);
+    if (location.type != undefined && location.type != null) {
+        node.classed(location.type, true);
+    }
+
+    let isSource = node.classed("source");
+    let isTarget = node.classed("target");
+    node.classed("source_target", (isSource && isTarget));
 
     return locationList;
 }
@@ -134,9 +144,9 @@ let socviewmap = function (container, data) {
             .attr("d", elems[i]);
     }
 
-    let locationGroup = svg.append("g").attr("class", "locationGroup");
     let eventGroup = svg.append("g").attr("class", "eventGroup");
     let staticGroup = svg.append("g").attr("class", "staticGroup");
+    let locationGroup = svg.append("g").attr("class", "locationGroup");
     let locationList = [];
 
     let updateEvents = function (events) {
@@ -171,36 +181,54 @@ let socviewmap = function (container, data) {
         updateEvents(topRules);
     }
 
-    let topCountryCodes = [];
+    let topCountryCodes = {};
     let updateTopCountries = function (codes) {
-        topCountryCodes = filterGroup(topCountryCodes, codes, compareCountry);
+        for (let key in codes) {
+            let list = topCountryCodes[key];
+            if (list == undefined || list == null) {
+                list = [];
+            }
+            list = filterGroup(list, codes[key], compareCountry);
 
-        //unhighlight old countries
-        for (let i in topCountryCodes) {
-            worldCountryGroup.select("#CountryCode" + topCountryCodes[i]).classed("highlight", false);
-        }
+            //unhighlight old countries
+            for (let i in list) {
+                worldCountryGroup.select("#CountryCode" + list[i]).classed("highlight", false);
+            }
 
-        //highlight all selected countries
-        topCountryCodes = codes;
-        for (let i in topCountryCodes) {
-            worldCountryGroup.select("#CountryCode" + topCountryCodes[i]).classed("highlight", true);
+            //highlight all selected countries
+            list = codes[key];
+            for (let i in list) {
+                worldCountryGroup.select("#CountryCode" + list[i]).classed("highlight", true);
+            }
+
+            //assign back
+            topCountryCodes[key] = list;
         }
     }
 
 
-    let topLocations = [];
+    let topLocations = {};
     let updateTopLocations = function (locations) {
-        topLocations = filterGroup(topLocations, locations, compareLocation);
+        for (let key in locations) {
+            let list = topLocations[key];
+            if (list == undefined || list == null) {
+                list = [];
+            }
+            list = filterGroup(list, locations[key], compareLocation);
 
-        //unhighlight old locations
-        for (let i in topLocations) {
-            markLocation(locationGroup, locationList, topLocations[i], false);
-        }
+            //unhighlight old locations
+            for (let i in list) {
+                markLocation(locationGroup, locationList, list[i], false);
+            }
 
-        //highlight all selected location
-        topLocations = locations;
-        for (let i in topLocations) {
-            markLocation(locationGroup, locationList, topLocations[i], true);
+            //highlight all selected location
+            list = locations[key];
+            for (let i in list) {
+                markLocation(locationGroup, locationList, list[i], true);
+            }
+
+            //assign back
+            topLocations[key] = list;
         }
     }
 

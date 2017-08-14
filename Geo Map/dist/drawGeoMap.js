@@ -661,9 +661,18 @@ var checkThenAddLocation = function checkThenAddLocation(locationGroup, location
         locationList.push(location);
         var city = world_countries.getCoords(location.latitude, location.longitude);
         var group = locationGroup.append("g");
-        group.append("circle").attr("id", id).attr("cx", city.x).attr("cy", city.y).attr("r", location_r).attr("fill", "url(#radialGradient)");
+        group.append("circle").attr("id", id).attr("class", "location").attr("cx", city.x).attr("cy", city.y).attr("r", location_r).attr("fill", "url(#radialGradient)");
         group.append("title").text(getTooltips(location));
     }
+
+    var node = locationGroup.select("#" + id);
+    if (location.type != undefined && location.type != null) {
+        node.classed(location.type, true);
+    }
+
+    var isSource = node.classed("source");
+    var isTarget = node.classed("target");
+    node.classed("source_target", isSource && isTarget);
 
     return locationList;
 };
@@ -745,9 +754,9 @@ var socviewmap = function socviewmap(container, data) {
         worldCountryGroup.append("path").attr("class", "area").attr("id", "CountryCode" + i).attr("d", elems[i]);
     }
 
-    var locationGroup = svg.append("g").attr("class", "locationGroup");
     var eventGroup = svg.append("g").attr("class", "eventGroup");
     var staticGroup = svg.append("g").attr("class", "staticGroup");
+    var locationGroup = svg.append("g").attr("class", "locationGroup");
     var locationList = [];
 
     var updateEvents = function updateEvents(events) {
@@ -778,35 +787,53 @@ var socviewmap = function socviewmap(container, data) {
         updateEvents(topRules);
     };
 
-    var topCountryCodes = [];
+    var topCountryCodes = {};
     var updateTopCountries = function updateTopCountries(codes) {
-        topCountryCodes = filterGroup(topCountryCodes, codes, compareCountry);
+        for (var key in codes) {
+            var list = topCountryCodes[key];
+            if (list == undefined || list == null) {
+                list = [];
+            }
+            list = filterGroup(list, codes[key], compareCountry);
 
-        //unhighlight old countries
-        for (var _i3 in topCountryCodes) {
-            worldCountryGroup.select("#CountryCode" + topCountryCodes[_i3]).classed("highlight", false);
-        }
+            //unhighlight old countries
+            for (var _i3 in list) {
+                worldCountryGroup.select("#CountryCode" + list[_i3]).classed("highlight", false);
+            }
 
-        //highlight all selected countries
-        topCountryCodes = codes;
-        for (var _i4 in topCountryCodes) {
-            worldCountryGroup.select("#CountryCode" + topCountryCodes[_i4]).classed("highlight", true);
+            //highlight all selected countries
+            list = codes[key];
+            for (var _i4 in list) {
+                worldCountryGroup.select("#CountryCode" + list[_i4]).classed("highlight", true);
+            }
+
+            //assign back
+            topCountryCodes[key] = list;
         }
     };
 
-    var topLocations = [];
+    var topLocations = {};
     var updateTopLocations = function updateTopLocations(locations) {
-        topLocations = filterGroup(topLocations, locations, compareLocation);
+        for (var key in locations) {
+            var list = topLocations[key];
+            if (list == undefined || list == null) {
+                list = [];
+            }
+            list = filterGroup(list, locations[key], compareLocation);
 
-        //unhighlight old locations
-        for (var _i5 in topLocations) {
-            markLocation(locationGroup, locationList, topLocations[_i5], false);
-        }
+            //unhighlight old locations
+            for (var _i5 in list) {
+                markLocation(locationGroup, locationList, list[_i5], false);
+            }
 
-        //highlight all selected location
-        topLocations = locations;
-        for (var _i6 in topLocations) {
-            markLocation(locationGroup, locationList, topLocations[_i6], true);
+            //highlight all selected location
+            list = locations[key];
+            for (var _i6 in list) {
+                markLocation(locationGroup, locationList, list[_i6], true);
+            }
+
+            //assign back
+            topLocations[key] = list;
         }
     };
 
