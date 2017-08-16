@@ -119,8 +119,9 @@ function shootEventStatic(svg, event) {
         .attr("stroke-linecap", "round")
         .attr("d", genCurve)
         .attr("stroke", gradientID_url)
-        .attr("fill", gradientID_url)
-        .transition()
+        .attr("fill", gradientID_url);
+    link.append("title").text(event.name);
+    link.transition()
         .duration(duration)
         .ease(easefn)
         .attrTween("stroke", mylineTween);

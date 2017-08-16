@@ -9,10 +9,14 @@
 .geomap .area {
     stroke:#ced8d0;
     fill:#f4f4e8;
+    fill-opacity: 0.3;
+    stroke-opacity: 0.3;
 }
 
 .geomap .area.highlight {
-    fill: #00c9ff;
+    /* fill: #00c9ff; */
+    fill-opacity: 1;
+    stroke-opacity: 1;
 }
 
 .geomap .legend_title {
@@ -21,16 +25,4 @@
 
 .geomap .legend_label {
     fill: #000;
-}
-
-.geomap .location.source {
-    fill: red;
-}
-
-.geomap .location.target {
-    fill: green;
-}
-
-.geomap .location.source_target {
-    fill: orange;
 }

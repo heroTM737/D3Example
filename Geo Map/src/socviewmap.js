@@ -3,10 +3,9 @@ let shootEventStatic = require('./shootEventStatic');
 let shootEventDynamic = require('./shootEventDynamic');
 let { getLocationId, getLinkId } = require('./tools');
 let { compareLocation, compareEvent, compareCountry } = require('./tools');
+var { location_r, location_r_hl, location_r_shoot } = require('./variables');
 
 let world_countries = Mapael.maps.world_countries;
-let location_r = 2;
-let location_r_hl = 5;
 
 let queue = [];
 let isShooting = false;
@@ -43,15 +42,6 @@ let checkThenAddLocation = function (locationGroup, locationList, location) {
         group.append("title").text(getTooltips(location));
     }
 
-    let node = locationGroup.select("#" + id);
-    if (location.type != undefined && location.type != null) {
-        node.classed(location.type, true);
-    }
-
-    let isSource = node.classed("source");
-    let isTarget = node.classed("target");
-    node.classed("source_target", (isSource && isTarget));
-
     return locationList;
 }
 
@@ -85,13 +75,23 @@ let shootAllEvent = function (locationList, locationGroup, eventGroup, staticGro
 let markLocation = function (locationGroup, locationList, location, status) {
     checkThenAddLocation(locationGroup, locationList, location);
     let id = getLocationId(location);
-    locationGroup.select("#" + id)
-        .classed("highlight", true)
-        .attr("fill", status ? "red" : "url(#radialGradient)")
+    let node = locationGroup.select("#" + id);
+
+    if (location.type != undefined && location.type != null) {
+        node.classed(location.type, status);
+    }
+
+    let isSource = node.classed("source");
+    let isTarget = node.classed("target");
+    node.classed("source_target", (isSource && isTarget));
+
+    node.classed("highlight", status)
+        // .attr("fill", (isSource || isTarget) ? "red" : "url(#radialGradient)")
+        .attr("fill", "url(#radialGradient)")
         .transition()
         .duration(1000)
         .ease("linear")
-        .attr("r", status ? location_r_hl : location_r);
+        .attr("r", (isSource || isTarget) ? location_r_hl : location_r);
 }
 
 let filterGroup = function (oldList, newList, compareFn) {

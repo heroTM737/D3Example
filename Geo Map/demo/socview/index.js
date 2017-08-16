@@ -61,10 +61,12 @@ $(document).ready(function () {
                 event = genEvent();
             } while (checkExist(event, topRules, compareEvent))
             event.type = "static";
+            event.name = "rule_" + i;
             topRules.push(event);
         }
 
         topRules.push({
+            name: "rule_deptrai",
             source: {
                 longitude: -118.2019,
                 latitude: 33.75421

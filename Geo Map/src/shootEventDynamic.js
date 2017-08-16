@@ -1,11 +1,8 @@
 var Mapael = require('./world_countries');
 var { getLocationId } = require('./tools');
+var { location_r, location_r_hl, location_r_shoot, easefn } = require('./variables');
 
 var world_countries = Mapael.maps.world_countries;
-var location_r_shoot = 10;
-var location_r_hl = 3;
-var location_r = 2;
-var easefn = "linear";
 
 var animateLocation = function (locationGroup, id, duration) {
     var node = locationGroup.select("#" + id);
@@ -13,14 +10,14 @@ var animateLocation = function (locationGroup, id, duration) {
         var node_r = node.classed("highlight") ? location_r_hl : location_r;
 
         locationGroup.select("#" + id)
-        .transition()
-        .duration(duration)
-        .ease(easefn)
-        .attr("r", location_r_shoot)
-        .transition()
-        .duration(duration)
-        .ease(easefn)
-        .attr("r", node_r);
+            .transition()
+            .duration(duration)
+            .ease(easefn)
+            .attr("r", location_r_shoot)
+            .transition()
+            .duration(duration)
+            .ease(easefn)
+            .attr("r", node_r);
     }
 }
 
