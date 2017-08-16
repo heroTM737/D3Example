@@ -1,0 +1,14 @@
+svg {
+    background: pink;
+    width: 500px;
+    height: 500px;
+}
+
+circle {
+    fill: red;
+}
+
+path {
+    stroke-width: 10px;
+    fill: none;
+}
