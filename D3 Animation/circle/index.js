@@ -1,4 +1,3 @@
-var svg = d3.select("svg");
 var cx = 100;
 var cy = 100;
 var r = 50;
@@ -13,6 +12,7 @@ var rotateFn = function (t) {
     return "rotate(" + a + " " + cx + " " + cy + ")";
 }
 
+var svg = d3.select("svg");
 var circle = svg.append("circle")
     .attr("cx", sx)
     .attr("cy", sy)
