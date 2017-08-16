@@ -16,7 +16,7 @@ var rotateFn = function (t) {
 var circle = svg.append("circle")
     .attr("cx", sx)
     .attr("cy", sy)
-    .attr("r", 5);
+    .attr("r", 1);
 
 var path = svg.append("path")
     .attr("stroke", "url(#grad1)")
