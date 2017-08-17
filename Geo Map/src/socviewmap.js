@@ -83,11 +83,20 @@ let markLocation = function (locationGroup, locationList, location, status) {
 
     let isSource = node.classed("source");
     let isTarget = node.classed("target");
-    node.classed("source_target", (isSource && isTarget));
+    let isSourceTarget = isSource && isTarget;
+    node.classed("source_target", isSourceTarget);
+
+    let gradient = "url(#radialGradient)";
+    if (isSourceTarget) {
+        gradient = "url(#radialGradientSourceTarget)";
+    } else if (isSource) {
+        gradient = "url(#radialGradientSource)";
+    } else if (isTarget) {
+        gradient = "url(#radialGradientTarget)";
+    }
 
     node.classed("highlight", status)
-        // .attr("fill", (isSource || isTarget) ? "red" : "url(#radialGradient)")
-        .attr("fill", "url(#radialGradient)")
+        .attr("fill", gradient)
         .transition()
         .duration(1000)
         .ease("linear")
@@ -132,6 +141,18 @@ let socviewmap = function (container, data) {
     let radialGradient = defs.append("radialGradient").attr("id", "radialGradient");
     radialGradient.append("stop").attr("offset", "0%").attr("stop-color", "red");
     radialGradient.append("stop").attr("offset", "100%").attr("stop-color", "red").attr("stop-opacity", "0");
+
+    let radialGradientSource = defs.append("radialGradient").attr("id", "radialGradientSource");
+    radialGradientSource.append("stop").attr("offset", "0%").attr("stop-color", "red");
+    radialGradientSource.append("stop").attr("offset", "100%").attr("stop-color", "red").attr("stop-opacity", "0");
+
+    let radialGradientTarget = defs.append("radialGradient").attr("id", "radialGradientTarget");
+    radialGradientTarget.append("stop").attr("offset", "0%").attr("stop-color", "green");
+    radialGradientTarget.append("stop").attr("offset", "100%").attr("stop-color", "green").attr("stop-opacity", "0");
+
+    let radialGradientSourceTarget = defs.append("radialGradient").attr("id", "radialGradientSourceTarget");
+    radialGradientSourceTarget.append("stop").attr("offset", "0%").attr("stop-color", "orange");
+    radialGradientSourceTarget.append("stop").attr("offset", "100%").attr("stop-color", "orange").attr("stop-opacity", "0");
 
     //draw world_countries
     let worldCountryGroup = svg.append("g").attr("class", "worldCountryGroup");

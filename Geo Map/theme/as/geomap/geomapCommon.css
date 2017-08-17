@@ -3,16 +3,13 @@
 }
 
 .geomap .location.source {
-    /* fill: red; */
     stroke: red;
 }
 
 .geomap .location.target {
-    /* fill: green; */
     stroke: green;
 }
 
 .geomap .location.source_target {
-    /* fill: orange; */
     stroke: orange;
 }

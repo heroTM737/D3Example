@@ -13,6 +13,12 @@ var rotateFn = function (t) {
 }
 
 var svg = d3.select("svg");
+
+var center = svg.append("circle")
+    .attr("cx", cx)
+    .attr("cy", cy)
+    .attr("r", 50);
+
 var circle = svg.append("circle")
     .attr("cx", sx)
     .attr("cy", sy)
