@@ -1,65 +1,62 @@
+/* normal style */
 .link {
   stroke: #99ccff; }
 
 .node text {
   fill: #616264; }
-
-.node circle.open {
-  stroke: #99ccff; }
-
-.node circle.close {
-  stroke: #002d82; }
-
+.node circle {
+  fill: #fff;
+  stroke: #425563; }
+.node.active circle {
+  stroke: #01a982; }
+.node.warning circle {
+  stroke: #ffd042; }
+.node.error circle {
+  stroke: #ff454f; }
 .node.cluster circle {
-  fill: #fff; }
-
-.node.persistor circle {
-  fill: #0000FF; }
-
+  stroke: #2587db; }
 .node.host circle {
-  fill: #6cb5d8; }
+  stroke: #937fdd; }
+.node.cluster.close circle {
+  stroke: #66abe6; }
+.node.host.close circle {
+  stroke: #b3a5e7; }
+.node.persistor.close circle {
+  stroke: #7b8892; }
 
-.node.correlator circle {
-  fill: #ffe8b5; }
-
-.node.aggregator circle {
-  fill: #afe19e; }
-
-/*fade out*/
-.node-fade-keep.link,
-.node-fade.link {
-  stroke: #ebf5ff !important; }
-
-.node-fade-keep text,
-.node-fade text {
-  fill: #dfe0e0; }
-
-.node-fade-keep circle.open,
-.node-fade circle.open {
+/*fade out style*/
+.node-fade.link,
+.node-fade-keep.link {
   stroke: #ebf5ff; }
-
-.node-fade-keep circle.close,
-.node-fade circle.close {
-  stroke: #ccd5e6; }
-
-.node-fade-keep.cluster circle,
-.node-fade.cluster circle {
-  fill: white !important; }
-
-.node-fade-keep.persistor circle,
-.node-fade.persistor circle {
-  fill: #ccccff !important; }
-
-.node-fade-keep.host circle,
-.node-fade.host circle {
-  fill: #e2f0f7 !important; }
-
-.node-fade-keep.correlator circle,
-.node-fade.correlator circle {
-  fill: floralwhite !important; }
-
-.node-fade-keep.aggregator circle,
-.node-fade.aggregator circle {
-  fill: #eff9ec !important; }
+.node-fade text,
+.node-fade-keep text {
+  fill: #dfe0e0; }
+.node-fade circle,
+.node-fade-keep circle {
+  stroke: #d9dde0; }
+.node-fade.active circle,
+.node-fade-keep.active circle {
+  stroke: #cceee6; }
+.node-fade.warning circle,
+.node-fade-keep.warning circle {
+  stroke: #fff6d9; }
+.node-fade.error circle,
+.node-fade-keep.error circle {
+  stroke: #ffdadc; }
+.node-fade.cluster circle,
+.node-fade-keep.cluster circle {
+  stroke: #d3e7f8; }
+.node-fade.host circle,
+.node-fade-keep.host circle {
+  stroke: #e9e5f8; }
+.node-fade.cluster.close circle,
+.node-fade-keep.cluster.close circle {
+  stroke: #d3e7f8; }
+.node-fade.host.close circle,
+.node-fade-keep.host.close circle {
+  stroke: #e9e5f8; }
+.node-fade.persistor.close circle,
+.node-fade-keep.persistor.close circle {
+  stroke: #d9dde0; }
 
 /*# sourceMappingURL=dcs.css.map */

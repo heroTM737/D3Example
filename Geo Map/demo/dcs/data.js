@@ -1,15 +1,32 @@
+var nodeType = ["correlator", "aggregator", "messagebus", "persistor", "dcache"];
+var statusType = ["active", "warning", "error"];
+
+function genNode(suffix) {
+  var typeIndex = Math.floor(Math.random() * nodeType.length);
+  var type = nodeType[typeIndex];
+
+  var statusIndex = Math.floor(Math.random() * statusType.length);
+  var status = statusType[typeIndex];
+
+  return {
+    name: type + "_" + suffix,
+    type: type,
+    status: status
+  }
+}
+
+// var count_host = 10;
+// var max_count_node = 5;
+
+var count_host = 5;
+var max_count_node = 3;
+
 function genData() {
   var cluster = {
     name: "cluster",
     type: "cluster",
     children: []
   }
-
-  // var count_host = 10;
-  // var count_persistor = 5;
-
-  var count_host = 5;
-  var count_persistor = 3;
 
   for (var i = 0; i < count_host; i++) {
     var host = {
@@ -18,47 +35,19 @@ function genData() {
       children: []
     }
     cluster.children.push(host);
+
+    var count_node = Math.floor(Math.random() * max_count_node) + 2;
+    for (var j = 0; j < count_node; j++) {
+      host.children.push(genNode(j));
+    }
   }
 
   var persistorIndex = Math.floor(Math.random() * count_host);
 
-  for (var i = 0; i < persistorIndex; i++) {
-    var host = cluster.children[i];
-    for (var j = 0; j < count_persistor; j++) {
-      host.children.push({
-        name: "correlator_" + j,
-        type: "correlator"
-      });
-    }
-  }
-
-  for (var i = persistorIndex + 1; i < count_host; i++) {
-    var host = cluster.children[i];
-    for (var j = 0; j < count_persistor; j++) {
-      host.children.push({
-        name: "aggregator_" + j,
-        type: "aggregator"
-      });
-    }
-  }
 
   var persistor = cluster.children[persistorIndex];
   persistor.name = "persistor";
   persistor.type = "persistor";
-
-  for (var j = 0; j < count_persistor; j++) {
-    persistor.children.push({
-      name: "correlator_" + j,
-      type: "correlator"
-    });
-  }
-
-  for (var j = 0; j < count_persistor; j++) {
-    persistor.children.push({
-      name: "aggregator" + j,
-      type: "aggregator"
-    });
-  }
 
   return [cluster];
 }

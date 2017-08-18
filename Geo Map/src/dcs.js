@@ -1,7 +1,20 @@
+function mapTypeToCharacter(type) {
+    switch (type) {
+        case "correlator": return "C";
+        case "aggregator": return "A";
+        case "messagebus": return "MB";
+        case "persistor": return "P";
+        case "dcache": return "DC";
+    }
+    return "";
+}
+
 function dcs(treeData) {
     var margin = { top: 5, right: 5, bottom: 5, left: 60 },
         width = 550 - margin.right - margin.left,
         height = 800 - margin.top - margin.bottom;
+    
+    var node_r = 15;
 
     var i = 0,
         duration = 750,
@@ -12,6 +25,8 @@ function dcs(treeData) {
 
     var diagonal = d3.svg.diagonal()
         .projection(function (d) { return [d.y, d.x]; });
+
+    var activeNode = null;
 
     var svg = d3.select("#tree").append("svg")
         .attr("width", width + margin.right + margin.left)
@@ -28,8 +43,6 @@ function dcs(treeData) {
     root = treeData[0];
     root.x0 = height / 2;
     root.y0 = 0;
-
-    var activeNode = null;
 
     var btnOpenGroup = svg.append("g")
         .attr("class", "btn-host")
@@ -104,7 +117,18 @@ function dcs(treeData) {
 
         // Enter any new nodes at the parent's previous position.
         var nodeEnter = node.enter().append("g")
-            .attr("class", function (d) { return "node " + d.type; })
+            .attr("class", function (d) {
+                var className =  "node " + d.type;
+                if (d.children) {
+                    className += " close";
+                } else if (d._children) {
+                    className += " open";
+                }
+                if (d.status) {
+                    className += " " + d.status;
+                }
+                return className; 
+            })
             .attr("transform", function (d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
             .attr("id", function (d) { return "node" + d.id; })
             .on("mouseover", function (d) { highlightNode({ node: d, status: true }); })
@@ -113,22 +137,24 @@ function dcs(treeData) {
             .on("dblclick", dblclick);
 
         nodeEnter.append("circle")
-            .attr("r", 1e-6)
-            .attr("class", function (d) { return d._children ? "close" : "open"; });
-
-        nodeEnter.append("title")
-            .text(function (d) { return d.name; })
+            .attr("r", 1e-6);
 
         nodeEnter.append("text")
-            .attr("x", function (d) { return d.children || d._children ? -13 : 13; })
+            .attr("x", "0")
+            .attr("dy", ".35em")
+            .attr("text-anchor", "middle")
+            .text(function (d) { return mapTypeToCharacter(d.type); })
+            .style("fill-opacity", 1e-6);
+
+        nodeEnter.append("text")
+            .attr("x", function (d) { return d.children || d._children ? -(node_r + 5) : (node_r + 5); })
             .attr("dy", ".35em")
             .attr("text-anchor", function (d) { return d.children || d._children ? "end" : "start"; })
             .text(function (d) { return d.name; })
-            .style("fill-opacity", 1e-6)
-            .attr("class", function (d) {
-                if (d.url != null) { return 'hyper'; }
-            })
-            .on("click", click);
+            .style("fill-opacity", 1e-6);
+        
+        nodeEnter.append("title")
+            .text(function (d) { return d.name; })
 
         // Transition nodes to their new position.
         var nodeUpdate = node.transition()
@@ -136,10 +162,9 @@ function dcs(treeData) {
             .attr("transform", function (d) { return "translate(" + d.y + "," + d.x + ")"; });
 
         nodeUpdate.select("circle")
-            .attr("r", 10)
-            .attr("class", function (d) { return d._children ? "close" : "open"; });
+            .attr("r", node_r);
 
-        nodeUpdate.select("text")
+        nodeUpdate.selectAll("text")
             .style("fill-opacity", 1);
 
         // Transition exiting nodes to the parent's new position.
@@ -234,6 +259,14 @@ function dcs(treeData) {
             //remove fade out selected node
             travelUpHighlight({ ...config, statusKeep: false });
             travelDownHighlight({ ...config, statusKeep: false });
+
+            config.classNameKeep = "node-highlight";
+            //remove highlight all node
+            travelDownHighlight({ ...config, status: null, statusKeep: false, node: root });
+
+            //highlight selected node
+            travelUpHighlight({ ...config });
+            travelDownHighlight({ ...config });
         } else {
             var status = config.status;
             if (activeNode == null && status != undefined && status != null) {
@@ -243,6 +276,14 @@ function dcs(treeData) {
                 //remove fade out selected node
                 travelUpHighlight({ ...config, status: false });
                 travelDownHighlight({ ...config, status: false });
+
+                config.className = "node-highlight";
+                //remove highlight all node
+                travelDownHighlight({ ...config, status: false, node: root });
+
+                //highlight selected node
+                travelUpHighlight({ ...config });
+                travelDownHighlight({ ...config });
             }
         }
     }

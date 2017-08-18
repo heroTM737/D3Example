@@ -1,65 +1,62 @@
+/* normal style */
 .link {
-  stroke: #a5a5a5; }
+  stroke: #8f9ba2; }
 
 .node text {
-  fill: #ccc; }
-
-.node circle.open {
-  stroke: #a5a5a5; }
-
-.node circle.close {
-  stroke: #fff; }
-
+  fill: #cccccc; }
+.node circle {
+  fill: #2b3d47;
+  stroke: #8f9ba2; }
+.node.active circle {
+  stroke: #01a982; }
+.node.warning circle {
+  stroke: #ffd042; }
+.node.error circle {
+  stroke: #ff454f; }
 .node.cluster circle {
-  fill: #344955; }
-
-.node.persistor circle {
-  fill: #3658b7; }
-
+  stroke: #2587db; }
 .node.host circle {
-  fill: #1583a0; }
+  stroke: #937fdd; }
+.node.cluster.close circle {
+  stroke: #2771af; }
+.node.host.close circle {
+  stroke: #746bb0; }
+.node.persistor.close circle {
+  stroke: #717f87; }
 
-.node.correlator circle {
-  fill: #738a57; }
-
-.node.aggregator circle {
-  fill: #1c5434; }
-
-/*fade out*/
-.node-fade-keep.link,
-.node-fade.link {
-  stroke: #43525a !important; }
-
-.node-fade-keep text,
-.node-fade text {
+/*fade out style*/
+.node-fade.link,
+.node-fade-keep.link {
+  stroke: #3f5059; }
+.node-fade text,
+.node-fade-keep text {
   fill: #4b5a62; }
-
-.node-fade-keep circle.open,
-.node-fade circle.open {
-  stroke: #43525a; }
-
-.node-fade-keep circle.close,
-.node-fade circle.close {
-  stroke: #55646c; }
-
-.node-fade-keep.cluster circle,
-.node-fade.cluster circle {
-  fill: #2d3f4a !important; }
-
-.node-fade-keep.persistor circle,
-.node-fade.persistor circle {
-  fill: #2d425d !important; }
-
-.node-fade-keep.host circle,
-.node-fade.host circle {
-  fill: #274b59 !important; }
-
-.node-fade-keep.correlator circle,
-.node-fade.correlator circle {
-  fill: #394c4a !important; }
-
-.node-fade-keep.aggregator circle,
-.node-fade.aggregator circle {
-  fill: #284243 !important; }
+.node-fade circle,
+.node-fade-keep circle {
+  stroke: #3f5059; }
+.node-fade.active circle,
+.node-fade-keep.active circle {
+  stroke: #235353; }
+.node-fade.warning circle,
+.node-fade-keep.warning circle {
+  stroke: #555a46; }
+.node-fade.error circle,
+.node-fade-keep.error circle {
+  stroke: #553f49; }
+.node-fade.cluster circle,
+.node-fade-keep.cluster circle {
+  stroke: #2a4c65; }
+.node-fade.host circle,
+.node-fade-keep.host circle {
+  stroke: #404a65; }
+.node-fade.cluster.close circle,
+.node-fade-keep.cluster.close circle {
+  stroke: #2a4c65; }
+.node-fade.host.close circle,
+.node-fade-keep.host.close circle {
+  stroke: #404a65; }
+.node-fade.persistor.close circle,
+.node-fade-keep.persistor.close circle {
+  stroke: #3f5059; }
 
 /*# sourceMappingURL=dcs.css.map */

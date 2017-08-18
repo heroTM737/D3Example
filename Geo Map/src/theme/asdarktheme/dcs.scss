@@ -1,94 +1,15 @@
-$opacity: 20%;
+$opacityHover: 20%;
+$opacityClose: 70%;
 $mixColor: #2b3d47;
 
-$link: #a5a5a5;
-$text: #ccc;
-$open: #a5a5a5;
-$close: #fff;
-$cluster: #344955;
-$persistor: #3658b7;
-$host: #1583a0;
-$correlator: #738a57;
-$aggregator: #1c5434;
+$link: #8f9ba2;
+$text: #cccccc;
+$node: #8f9ba2;
+$cluster: #2587db;
+$host: #937fdd;
 
-.link {
-  stroke: $link;
-}
+$active: #01a982;
+$warning: #ffd042;
+$error: #ff454f;
 
-.node text {
-  fill: $text;
-}
-
-.node circle.open {
-  stroke: $open;
-}
-
-.node circle.close {
-  stroke: $close;
-}
-
-.node.cluster circle {
-  fill: $cluster;
-}
-
-.node.persistor circle {
-  fill: $persistor;
-}
-
-.node.host circle {
-  fill: $host;
-}
-
-.node.correlator circle {
-  fill: $correlator;
-}
-
-.node.aggregator circle {
-  fill: $aggregator;
-}
-
-/*fade out*/
-.node-fade-keep.link,
-.node-fade.link {
-  stroke: mix($link, $mixColor, $opacity) !important;
-}
-
-.node-fade-keep text,
-.node-fade text {
-  fill: mix($text, $mixColor, $opacity);
-}
-
-.node-fade-keep circle.open,
-.node-fade circle.open {
-  stroke: mix($open, $mixColor, $opacity);
-}
-
-.node-fade-keep circle.close,
-.node-fade circle.close {
-  stroke: mix($close, $mixColor, $opacity);
-}
-
-.node-fade-keep.cluster circle,
-.node-fade.cluster circle {
-  fill: mix($cluster, $mixColor, $opacity) !important;
-}
-
-.node-fade-keep.persistor circle,
-.node-fade.persistor circle {
-  fill: mix($persistor, $mixColor, $opacity) !important;
-}
-
-.node-fade-keep.host circle,
-.node-fade.host circle {
-  fill: mix($host, $mixColor, $opacity) !important;
-}
-
-.node-fade-keep.correlator circle,
-.node-fade.correlator circle {
-  fill: mix($correlator, $mixColor, $opacity) !important;
-}
-
-.node-fade-keep.aggregator circle,
-.node-fade.aggregator circle {
-  fill: mix($aggregator, $mixColor, $opacity) !important;
-}
+@import "../as/dcscommon.scss";

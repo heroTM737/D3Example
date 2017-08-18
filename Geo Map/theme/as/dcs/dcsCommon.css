@@ -5,7 +5,7 @@
 .node circle {
   fill: #fff;
   stroke: #99ccff;
-  stroke-width: 1.5px;
+  stroke-width: 3px;
 }
 
 .node text {
@@ -16,6 +16,10 @@
 .link {
   fill: none;
   stroke-width: 1.5px;
+}
+
+.node-highlight.link {
+  stroke-width: 3px;
 }
 
 .btn-host {
