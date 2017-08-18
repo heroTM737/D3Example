@@ -130,6 +130,7 @@ let socviewmap = function (container, data) {
     let defs = svg.append("defs");
     let color1 = "orange";
     let color2 = "yellow";
+    let color_target = "#01a982";
     let linearGradient1 = defs.append("linearGradient").attr("id", "linearGradient1");
     linearGradient1.append("stop").attr("offset", "0%").attr("stop-color", color1);
     linearGradient1.append("stop").attr("offset", "100%").attr("stop-color", color2).attr("stop-opacity", "0");
@@ -147,8 +148,8 @@ let socviewmap = function (container, data) {
     radialGradientSource.append("stop").attr("offset", "100%").attr("stop-color", "red").attr("stop-opacity", "0");
 
     let radialGradientTarget = defs.append("radialGradient").attr("id", "radialGradientTarget");
-    radialGradientTarget.append("stop").attr("offset", "0%").attr("stop-color", "green");
-    radialGradientTarget.append("stop").attr("offset", "100%").attr("stop-color", "green").attr("stop-opacity", "0");
+    radialGradientTarget.append("stop").attr("offset", "0%").attr("stop-color", color_target);
+    radialGradientTarget.append("stop").attr("offset", "100%").attr("stop-color", color_target).attr("stop-opacity", "0");
 
     let radialGradientSourceTarget = defs.append("radialGradient").attr("id", "radialGradientSourceTarget");
     radialGradientSourceTarget.append("stop").attr("offset", "0%").attr("stop-color", "orange");

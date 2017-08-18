@@ -7,7 +7,7 @@
 }
 
 .geomap .location.target {
-    stroke: green;
+    stroke: #01a982;
 }
 
 .geomap .location.source_target {

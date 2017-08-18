@@ -8,13 +8,12 @@
 
 .geomap .area {
     stroke:#ced8d0;
-    fill:#f4f4e8;
+    fill:#ececdc;
     fill-opacity: 0.3;
     stroke-opacity: 0.3;
 }
 
 .geomap .area.highlight {
-    /* fill: #00c9ff; */
     fill-opacity: 1;
     stroke-opacity: 1;
 }

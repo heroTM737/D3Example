@@ -8,11 +8,14 @@
 
 .geomap .area {
     stroke:#2b3d47;
-    fill:#344955;
+    fill:#405866;
+    fill-opacity: 0.5;
+    stroke-opacity: 0.5;
 }
 
 .geomap .area.highlight {
-    fill: #00c9ff;
+    fill-opacity: 1;
+    stroke-opacity: 1;
 }
 
 .geomap .legend_title {
