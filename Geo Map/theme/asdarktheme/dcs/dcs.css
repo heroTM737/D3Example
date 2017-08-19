@@ -1,12 +1,15 @@
 /* normal style */
 .link {
-  stroke: #8f9ba2; }
+  stroke: #8f9ba2;
+  transition: fill 0.5s, stroke 0.5s; }
 
 .node text {
-  fill: #cccccc; }
+  fill: #cccccc;
+  transition: fill 0.5s, stroke 0.5s; }
 .node circle {
   fill: #2b3d47;
-  stroke: #8f9ba2; }
+  stroke: #8f9ba2;
+  transition: fill 0.5s, stroke 0.5s; }
 .node.active circle {
   stroke: #01a982; }
 .node.warning circle {

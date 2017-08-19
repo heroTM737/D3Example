@@ -1,16 +1,20 @@
+$duration: 0.5s;
 /* normal style */
 .link {
   stroke: $link;
+  transition: fill $duration, stroke $duration;
 }
 
 .node {
   text {
     fill: $text;
+    transition: fill $duration, stroke $duration;
   }
   
   circle {
     fill: $mixColor;
     stroke: $node;
+    transition: fill $duration, stroke $duration;
   }
 
   &.active circle {
