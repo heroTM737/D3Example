@@ -28,38 +28,27 @@
   stroke: #717f87; }
 
 /*fade out style*/
-.node-fade.link,
-.node-fade-keep.link {
+.node-fade.link {
   stroke: #3f5059; }
-.node-fade text,
-.node-fade-keep text {
+.node-fade text {
   fill: #4b5a62; }
-.node-fade circle,
-.node-fade-keep circle {
+.node-fade circle {
   stroke: #3f5059; }
-.node-fade.active circle,
-.node-fade-keep.active circle {
+.node-fade.active circle {
   stroke: #235353; }
-.node-fade.warning circle,
-.node-fade-keep.warning circle {
+.node-fade.warning circle {
   stroke: #555a46; }
-.node-fade.error circle,
-.node-fade-keep.error circle {
+.node-fade.error circle {
   stroke: #553f49; }
-.node-fade.cluster circle,
-.node-fade-keep.cluster circle {
+.node-fade.cluster circle {
   stroke: #2a4c65; }
-.node-fade.host circle,
-.node-fade-keep.host circle {
+.node-fade.host circle {
   stroke: #404a65; }
-.node-fade.cluster.close circle,
-.node-fade-keep.cluster.close circle {
+.node-fade.cluster.close circle {
   stroke: #2a4c65; }
-.node-fade.host.close circle,
-.node-fade-keep.host.close circle {
+.node-fade.host.close circle {
   stroke: #404a65; }
-.node-fade.persistor.close circle,
-.node-fade-keep.persistor.close circle {
+.node-fade.persistor.close circle {
   stroke: #3f5059; }
 
 /*# sourceMappingURL=dcs.css.map */

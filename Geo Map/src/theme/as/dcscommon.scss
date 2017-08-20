@@ -1,4 +1,5 @@
 $duration: 0.5s;
+
 /* normal style */
 .link {
   stroke: $link;
@@ -51,8 +52,7 @@ $duration: 0.5s;
 }
 
 /*fade out style*/
-.node-fade,
-.node-fade-keep {
+.node-fade {
   &.link {
     stroke: mix($link, $mixColor, $opacityHover);
   }
