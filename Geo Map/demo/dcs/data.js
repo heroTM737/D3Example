@@ -42,13 +42,6 @@ function genData() {
     }
   }
 
-  var persistorIndex = Math.floor(Math.random() * count_host);
-
-
-  var persistor = cluster.children[persistorIndex];
-  persistor.name = "persistor";
-  persistor.type = "persistor";
-
   return [cluster];
 }
 

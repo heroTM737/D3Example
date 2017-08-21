@@ -1,21 +1,22 @@
 $duration: 0.5s;
+$applyTransition: fill $duration, stroke $duration, stroke-width $duration; 
 
 /* normal style */
 .link {
   stroke: $link;
-  transition: fill $duration, stroke $duration;
+  transition: $applyTransition;
 }
 
 .node {
   text {
     fill: $text;
-    transition: fill $duration, stroke $duration;
+    transition: $applyTransition;
   }
   
   circle {
     fill: $mixColor;
     stroke: $node;
-    transition: fill $duration, stroke $duration;
+    transition: $applyTransition;
   }
 
   &.active circle {
@@ -45,14 +46,11 @@ $duration: 0.5s;
   &.host.close circle {
     stroke: mix($host, $mixColor, $opacityClose);
   }
-  
-  &.persistor.close circle {
-    stroke: mix($node, $mixColor, $opacityClose);
-  }
 }
 
 /*fade out style*/
-.node-fade {
+.node-fade,
+.node-fade-keep {
   &.link {
     stroke: mix($link, $mixColor, $opacityHover);
   }
@@ -91,10 +89,6 @@ $duration: 0.5s;
   
   &.host.close circle {
     stroke: mix($host, $mixColor, $opacityHover);
-  }
-  
-  &.persistor.close circle {
-    stroke: mix($node, $mixColor, $opacityHover);
   }
 }
 
