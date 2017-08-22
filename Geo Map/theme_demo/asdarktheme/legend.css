@@ -1,0 +1,19 @@
+.legendContainer {
+    position: fixed;
+    top: 50px;
+    right: -203px;
+    border: 1px solid #e6e6e6;
+    padding: 0;
+    opacity: 0;
+    transition: 0.5s ease-out;
+    background: #435663;
+}
+
+.legendContainer.fuckon {
+    opacity: 1;
+    right: 20px;
+}
+
+.legendContainer text {
+    fill: #e6e6e6;
+}

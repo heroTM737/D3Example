@@ -13,6 +13,8 @@
     <!-- style demo -->
     <link rel="stylesheet" type="text/css" href="../../theme_demo/asdarktheme/theme.css">
     <link rel="stylesheet" type="text/css" href="../../theme_demo/asdarktheme/geomap.css">
+    <link rel="stylesheet" type="text/css" href="../../theme/asdarktheme/switch.css">
+    <link rel="stylesheet" type="text/css" href="../../theme_demo/asdarktheme/legend.css">
 
     <!-- javascript -->
     <script src="../../lib/jquery/3.1.1/jquery.min.js"></script>
@@ -22,9 +24,16 @@
 </head>
 
 <body>
+        <div class="header" style="display:flex;flex-direction:row-reverse;padding-right: 15px;border: none;">
+                <div class="switch">
+                    <input type="checkbox" checked=true onChange="showLegend(this.checked)"></input>
+                    <span></span>
+                </div>
+            </div>
     <div class="container">
         <div class="geomap"></div>
     </div>
+    <div id="legendContainer" class="geomap legendContainer fuckon"></div>
     <script src="index.js"></script>
 </body>
 
