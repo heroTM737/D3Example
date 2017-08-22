@@ -132,7 +132,7 @@ $(document).ready(function () {
     }
 
     update();
-    // setInterval(update, 2000);
+    setInterval(update, 2000);
     var legendContainer = document.getElementById("legendContainer");
     createLegend(legendContainer);
     window.showLegend = function (show) {
