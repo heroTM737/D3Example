@@ -12,3 +12,8 @@
     opacity: 1;
     right: 20px;
 }
+
+.legendContainer line {
+    stroke: #e6e6e6;
+    stroke-width: 1px;
+}

@@ -17,3 +17,8 @@
 .legendContainer text {
     fill: #e6e6e6;
 }
+
+.legendContainer line {
+    stroke: #3f505d;
+    stroke-width: 1px;
+}

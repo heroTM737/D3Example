@@ -155,34 +155,28 @@ function createLegend(container) {
     var svg = d3.select(container).append("svg");
     svg.attr("width", svg_w).attr("height", svg_h);
 
-    // svg = addGradient(svg);
-
     for (var i = 1; i < 6; i++) {
         svg.append("line")
             .attr("x1", 0)
             .attr("y1", item_h * i)
             .attr("x2", svg_w)
             .attr("y2", item_h * i)
-            .attr("stroke", "#e6e6e6")
-            .attr("stroke-width", 1);
+            .attr("shape-rendering", "crispEdges");
     }
 
     var circles = [
         {
             class: "location",
-            r: 5,
             fill: "url(#radialGradient)",
             text: "Location"
         },
         {
             class: "location source highlight",
-            r: location_r,
             fill: "url(#radialGradientSource)",
             text: "Top Source"
         },
         {
             class: "location target highlight",
-            r: location_r,
             fill: "url(#radialGradientTarget)",
             text: "Top Target"
         },
@@ -201,7 +195,7 @@ function createLegend(container) {
             .attr("class", node.class)
             .attr("cx", margin_left + location_r)
             .attr("cy", item_h * i + item_h / 2)
-            .attr("r", node.r)
+            .attr("r", location_r)
             .attr("fill", node.fill);
         nodeGroup.append("text")
             .attr("x", margin_left * 2 + location_r * 2)
@@ -232,37 +226,82 @@ function createLegend(container) {
         .attr("alignment-baseline", "middle")
         .text("Event");
     eventGroup.append("title").text("Event");
+
+    var ruleGroup = svg.append("g");
+    ruleGroup.append("path")
+        .attr("class", "link-grow")
+        .attr("stroke-linejoin", "round")
+        .attr("stroke-linecap", "round")
+        .attr("fill", "red")
+        .attr("stroke", "red")
+        .attr("d", genCurve({
+            source: {
+                x: margin_left + location_r + 100,
+                y: item_h * 5 + 30
+            },
+            target: {
+                x: margin_left + location_r,
+                y: item_h * 5 + 30
+            }
+        }));
+    ruleGroup.append("text")
+        .attr("x", margin_left * 2 + location_r * 2)
+        .attr("y", item_h * 5 + item_h / 2)
+        .attr("alignment-baseline", "middle")
+        .text("Rule");
+    ruleGroup.append("title").text("Rule");
 }
 
-function addGradient(svg) {
-    let defs = svg.append("defs");
-    let color1 = "orange";
-    let color2 = "yellow";
-    let color_target = "#01a982";
+let cp1dMax = 30;
+let cp2d = 5;
+let color1 = "rgba(255,0,0,1)";
+let color2 = "rgba(255,0,0,0)";
+let easefn = "linear";
+let duration = Math.floor(Math.random() * 1000) + 1000;
 
-    let linearGradient1 = defs.append("linearGradient").attr("id", "linearGradient1");
-    linearGradient1.append("stop").attr("offset", "0%").attr("stop-color", color1);
-    linearGradient1.append("stop").attr("offset", "100%").attr("stop-color", color2).attr("stop-opacity", "0");
+let computeControlPoint1 = function (x0, y0, x1, y1) {
+    let cp1d = Math.sqrt((x1 - x0) * (x1 - x0) + (y1 - y0) * (y1 - y0)) / 2;
+    cp1d = cp1d > cp1dMax ? cp1dMax : cp1d;
+    let cx = (x0 + x1) / 2;
+    let cy = (y0 + y1) / 2;
+    let a = y1 - y0;
+    let b = x0 - x1;
+    let delta = Math.sqrt(1 / (a * a + b * b));
+    let x = cp1d * a * delta + cx;
+    let y = cp1d * b * delta + cy;
+    return { x: x, y: y }
+}
 
-    let linearGradient2 = defs.append("linearGradient").attr("id", "linearGradient2");
-    linearGradient2.append("stop").attr("offset", "0%").attr("stop-color", color2).attr("stop-opacity", "0");
-    linearGradient2.append("stop").attr("offset", "100%").attr("stop-color", color1);
+let computeControlPoint2 = function (x0, y0, x1, y1) {
+    let cx = x1;
+    let cy = y1;
+    let a = y0 - y1;
+    let b = x1 - x0;
+    let delta = Math.sqrt(1 / (a * a + b * b));
+    let x = cp2d * a * delta + cx;
+    let y = cp2d * b * delta + cy;
+    return { x: x, y: y }
+}
 
-    let radialGradient = defs.append("radialGradient").attr("id", "radialGradient");
-    radialGradient.append("stop").attr("offset", "0%").attr("stop-color", "red");
-    radialGradient.append("stop").attr("offset", "100%").attr("stop-color", "red").attr("stop-opacity", "0");
+let genCurve = function (d) {
+    let sx = d.source.x;
+    let sy = d.source.y;
+    let tx = d.target.x;
+    let ty = d.target.y;
 
-    let radialGradientSource = defs.append("radialGradient").attr("id", "radialGradientSource");
-    radialGradientSource.append("stop").attr("offset", "0%").attr("stop-color", "red");
-    radialGradientSource.append("stop").attr("offset", "100%").attr("stop-color", "red").attr("stop-opacity", "0");
+    let c1 = computeControlPoint1(sx, sy, tx, ty);
+    let c1x = c1.x;
+    let c1y = c1.y;
 
-    let radialGradientTarget = defs.append("radialGradient").attr("id", "radialGradientTarget");
-    radialGradientTarget.append("stop").attr("offset", "0%").attr("stop-color", color_target);
-    radialGradientTarget.append("stop").attr("offset", "100%").attr("stop-color", color_target).attr("stop-opacity", "0");
+    let c2 = computeControlPoint2(sx, sy, tx, ty);
+    let c2x = c2.x;
+    let c2y = c2.y;
 
-    let radialGradientSourceTarget = defs.append("radialGradient").attr("id", "radialGradientSourceTarget");
-    radialGradientSourceTarget.append("stop").attr("offset", "0%").attr("stop-color", "orange");
-    radialGradientSourceTarget.append("stop").attr("offset", "100%").attr("stop-color", "orange").attr("stop-opacity", "0");
+    let data = "";
+    data += "M " + sx + " " + sy;
+    data += "C " + c1x + " " + c1y + " " + c2x + " " + c2y + " " + tx + " " + ty;
+    data += "L " + c2x + " " + c2y;
+    data += "C " + c2x + " " + c2y + " " + c1x + " " + c1y + " " + sx + " " + sy;
 
-    return svg;
+    return data;
 }
