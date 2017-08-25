@@ -146,10 +146,10 @@ $(document).ready(function () {
 });
 
 function createLegend(container) {
-    var item_h = 50;
+    var item_h = 45;
     var margin_left = 15;
     var location_r = 10;
-    var svg_w = 200;
+    var svg_w = 270;
     var svg_h = item_h * 6;
 
     var svg = d3.select(container).append("svg");
@@ -168,23 +168,23 @@ function createLegend(container) {
         {
             class: "location",
             fill: "url(#radialGradient)",
-            text: "Location"
+            text: "Node"
         },
         {
             class: "location source highlight",
             fill: "url(#radialGradientSource)",
-            text: "Top Source"
+            text: "Top Source Node"
         },
         {
             class: "location target highlight",
             fill: "url(#radialGradientTarget)",
-            text: "Top Target"
+            text: "Top Destination Node"
         },
         {
             class: "location source target source_target highlight",
             r: location_r,
             fill: "url(#radialGradientSourceTarget)",
-            text: "Top Source and Target"
+            text: "Top Source & Destination Node"
         },
     ];
 
@@ -219,7 +219,7 @@ function createLegend(container) {
         .attr("cx", x1)
         .attr("cy", y1)
         .attr("r", 2)
-        .attr("fill", "orange");
+        .attr("fill", "#55aae6");
     eventGroup.append("text")
         .attr("x", margin_left * 2 + location_r * 2)
         .attr("y", item_h * 4 + item_h / 3)

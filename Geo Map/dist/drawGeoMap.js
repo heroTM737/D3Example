@@ -335,7 +335,11 @@ module.exports = {
     location_r_shoot: 10,
     location_r_hl: 4,
     location_r: 2,
-    easefn: "linear"
+    easefn: "linear",
+    color_event_path: "#55aae6",
+    color_source: "#ff454f",
+    color_target: "#01a982",
+    color_source_target: "orange"
 };
 
 /***/ }),
@@ -486,15 +490,14 @@ function dcs(treeData) {
                     console.log("No action defined for eventType = " + eventType);
             }
         }
-    };
 
-    var btnOpenGroup = createButton(svg, 0, 0, "Open all host");
-    btnOpenGroup.on("click", openAllHost);
+        // var btnOpenGroup = createButton(svg, 0, 0, "Open all host");
+        // btnOpenGroup.on("click", openAllHost);
 
-    var btnCloseGroup = createButton(svg, btn_w + btn_m, 0, "Close all host");
-    btnCloseGroup.on("click", closeAllHost);
+        // var btnCloseGroup = createButton(svg, btn_w + btn_m, 0, "Close all host");
+        // btnCloseGroup.on("click", closeAllHost);
 
-    update(root);
+    };update(root);
 
     function update(source) {
         // Compute the new tree layout.
@@ -640,7 +643,11 @@ var _require2 = __webpack_require__(0),
 var _require3 = __webpack_require__(2),
     location_r = _require3.location_r,
     location_r_hl = _require3.location_r_hl,
-    location_r_shoot = _require3.location_r_shoot;
+    location_r_shoot = _require3.location_r_shoot,
+    color_event_path = _require3.color_event_path,
+    color_source = _require3.color_source,
+    color_target = _require3.color_target,
+    color_source_target = _require3.color_source_target;
 
 var world_countries = Mapael.maps.world_countries;
 
@@ -755,10 +762,7 @@ var socviewmap = function socviewmap(container, data) {
 
     //define gradient
     var defs = svg.append("defs");
-    var color_event_path = "#55aae6";
-    var color_source = "#ff454f";
-    var color_target = "#01a982";
-    var color_source_target = "orange";
+
     var linearGradient1 = defs.append("linearGradient").attr("id", "linearGradient1");
     linearGradient1.append("stop").attr("offset", "0%").attr("stop-color", color_event_path);
     linearGradient1.append("stop").attr("offset", "100%").attr("stop-color", color_event_path).attr("stop-opacity", "0");
@@ -3406,7 +3410,8 @@ var _require2 = __webpack_require__(2),
     location_r = _require2.location_r,
     location_r_hl = _require2.location_r_hl,
     location_r_shoot = _require2.location_r_shoot,
-    easefn = _require2.easefn;
+    easefn = _require2.easefn,
+    color_event_path = _require2.color_event_path;
 
 var world_countries = Mapael.maps.world_countries;
 
@@ -3442,7 +3447,7 @@ var shootEventDynamic = function shootEventDynamic(eventGroup, locationGroup, ev
     var isReverse = Source.x - Target.x > 0;
     var path_Source_Target = eventGroup.append("path").attr("stroke", isReverse ? "url(#linearGradient1)" : "url(#linearGradient2)").attr("stroke-width", "1px").attr("fill", "none").attr("class", "link-gradient").attr("d", "M " + Source.x + " " + Source.y + " L " + Source.x + " " + Source.y).transition().duration(duration3).ease(easefn).attr("d", "M " + Source.x + " " + Source.y + " L " + middle.x + " " + middle.y).transition().duration(duration3).ease(easefn).attr("d", "M " + middle.x + " " + middle.y + " L " + Target.x + " " + Target.y).transition().duration(duration4).ease(easefn).attr("d", "M " + Target.x + " " + Target.y + " L " + Target.x + " " + Target.y).remove();
 
-    var event_Source_Target = eventGroup.append("circle").attr("r", 2).attr("style", "fill:orange").attr("cx", Source.x).attr("cy", Source.y).transition().duration(duration6).ease(easefn).attr("cx", Target.x).attr("cy", Target.y).each("end", function () {
+    var event_Source_Target = eventGroup.append("circle").attr("r", 2).attr("fill", color_event_path).attr("cx", Source.x).attr("cy", Source.y).transition().duration(duration6).ease(easefn).attr("cx", Target.x).attr("cy", Target.y).each("end", function () {
         animateLocation(locationGroup, targetId, duration6);
     }).remove();;
 };

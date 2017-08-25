@@ -1,6 +1,6 @@
 var Mapael = require('./world_countries');
 var { getLocationId } = require('./tools');
-var { location_r, location_r_hl, location_r_shoot, easefn } = require('./variables');
+var { location_r, location_r_hl, location_r_shoot, easefn, color_event_path } = require('./variables');
 
 var world_countries = Mapael.maps.world_countries;
 
@@ -68,7 +68,7 @@ var shootEventDynamic = function (eventGroup, locationGroup, event) {
 
     var event_Source_Target = eventGroup.append("circle")
         .attr("r", 2)
-        .attr("style", "fill:orange")
+        .attr("fill", color_event_path)
         .attr("cx", Source.x)
         .attr("cy", Source.y)
 

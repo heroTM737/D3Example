@@ -129,11 +129,11 @@ function dcs(treeData) {
         }
     }
 
-    var btnOpenGroup = createButton(svg, 0, 0, "Open all host");
-    btnOpenGroup.on("click", openAllHost);
+    // var btnOpenGroup = createButton(svg, 0, 0, "Open all host");
+    // btnOpenGroup.on("click", openAllHost);
 
-    var btnCloseGroup = createButton(svg, btn_w + btn_m, 0, "Close all host");
-    btnCloseGroup.on("click", closeAllHost);
+    // var btnCloseGroup = createButton(svg, btn_w + btn_m, 0, "Close all host");
+    // btnCloseGroup.on("click", closeAllHost);
 
     update(root);
 

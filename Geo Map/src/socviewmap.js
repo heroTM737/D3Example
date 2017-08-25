@@ -3,7 +3,8 @@ let shootEventStatic = require('./shootEventStatic');
 let shootEventDynamic = require('./shootEventDynamic');
 let { getLocationId, getLinkId } = require('./tools');
 let { compareLocation, compareEvent, compareCountry } = require('./tools');
-var { location_r, location_r_hl, location_r_shoot } = require('./variables');
+var { location_r, location_r_hl, location_r_shoot, 
+    color_event_path, color_source, color_target, color_source_target} = require('./variables');
 
 let world_countries = Mapael.maps.world_countries;
 
@@ -131,10 +132,7 @@ let socviewmap = function (container, data) {
 
     //define gradient
     let defs = svg.append("defs");
-    let color_event_path = "#55aae6";
-    let color_source = "#ff454f";
-    let color_target = "#01a982";
-    let color_source_target = "orange";
+
     let linearGradient1 = defs.append("linearGradient").attr("id", "linearGradient1");
     linearGradient1.append("stop").attr("offset", "0%").attr("stop-color", color_event_path);
     linearGradient1.append("stop").attr("offset", "100%").attr("stop-color", color_event_path).attr("stop-opacity", "0");
