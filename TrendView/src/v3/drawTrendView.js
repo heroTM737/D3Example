@@ -21,7 +21,7 @@
 		var unit = chartData.unit;
 		var lastValueUnit = unit;
 		var m = [5, 5, 5, 5]; //top-right-bottom-left
-		var chartHeight = height / 2;
+		var chartHeight = (height - m[0] - m[2]) / 2;
 		chartHeight = chartHeight >= 20 ? chartHeight : 20;
 
 		var fluctuationFunction = chartData.fluctuationFunction ? chartData.fluctuationFunction : defaultFluctuationFunction;
@@ -67,14 +67,9 @@
 			lastValueUnit = formatted.unit;
 			var titleElement = titleGroup.append("text")
 				.attr("x", m[3])
-				.attr("y", m[0])
-				// .attr("alignment-baseline", "hanging")
-				// .attr("dominant-baseline", "hanging")
+				.attr("y", height / 2)
+				.attr("dy", ".35em")
 				.text(title + "   " + lastValue + " " + lastValueUnit);
-			var titleElementBBox = titleElement[0][0].getBBox();
-			if (titleElementBBox.y < m[0]) {
-				titleElement.attr("y", m[0] - titleElementBBox.y);
-			}
 			if (!hideLineChart) {
 				//update fluctuation
 				fluctuationGroup.selectAll("*").remove();
@@ -102,8 +97,8 @@
 				}
 
 				//update line chart
-				var w = width - m[1] - m[3];
-				var h = chartHeight - m[0] - m[2];
+				var w = 70;
+				var h = chartHeight;
 				var maxOfData = Math.max.apply(Math, currentData);
 				var minOfData = Math.min.apply(Math, currentData);
 				var x = d3.scale.linear().domain([0, currentData.length - 1]).range([0, w]);
@@ -111,10 +106,10 @@
 
 				var line = d3.svg.line()
 					.x(function (d, i) {
-						return m[3] + x(i);
+						return width - m[1] - w + x(i);
 					})
 					.y(function (d) {
-						return height - chartHeight + m[0] + y(d);
+						return height - m[2] - h + y(d);
 					});
 
 				if (path == null) {

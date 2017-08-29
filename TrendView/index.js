@@ -11,8 +11,8 @@ function genData() {
     // return [0];
 }
 
-var width = 400;
-var height = 60;
+var width = 356;
+var height = 50;
 var refreshTime = 2000;
 function createChart(i, width, height) {
     var container = document.getElementById("trendViewContainer" + i);
@@ -23,7 +23,7 @@ function createChart(i, width, height) {
     }
     var updater = drawTrendView(container, chartData, width, height);
     setInterval(function () {
-        // updater.update([genData()]);
+        updater.update([genData()]);
     }, refreshTime);
 }
 
