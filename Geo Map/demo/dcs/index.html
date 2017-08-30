@@ -14,6 +14,8 @@
     <!-- style demo -->
     <link rel="stylesheet" type="text/css" href="../../theme_demo/as/theme.css">
     <link rel="stylesheet" type="text/css" href="../../theme_demo/as/dcs.css">
+    <link rel="stylesheet" type="text/css" href="../../theme/as/switch.css">
+    <link rel="stylesheet" type="text/css" href="../../theme_demo/as/legend.css">
 
     <!-- javascript libraries-->
     <script src="../../lib/jquery/3.1.1/jquery.min.js" charset="utf-8"></script>
@@ -28,11 +30,12 @@
         <div id="tree"></div>
         <div id="detail">
             <div class="switch">
-                <input type="checkbox" checked=true></input>
+                <input type="checkbox" onClick="showLegend(this.checked)"></input>
                 <span></span>
             </div>
         </div>
     </div>
+    <div id="legendContainer" class="legendContainer"></div>
     <!-- javascript -->
     <script src="index.js"></script>
 </body>
