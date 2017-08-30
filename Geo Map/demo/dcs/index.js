@@ -85,8 +85,7 @@ function createLegend(container) {
         nodeGroup.append("circle")
             .attr("cx", margin_left + r)
             .attr("cy", item_h * i + item_h / 2)
-            .attr("r", r)
-            .attr("fill", node.fill);
+            .attr("r", r);
         nodeGroup.append("text")
             .attr("x", margin_left + r)
             .attr("y", item_h * i + item_h / 2)

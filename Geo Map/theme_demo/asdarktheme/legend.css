@@ -22,3 +22,7 @@
     stroke: #5d6c77;
     stroke-width: 1px;
 }
+
+.legendContainer .node circle {
+    fill: none;
+}
