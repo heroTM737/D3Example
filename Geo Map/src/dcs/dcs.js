@@ -75,14 +75,14 @@ function dcs(treeData) {
         if (activeNode != null) {
             activeNode = null;
         }
-        highlightNode({ dataBus, node: root, status: false });
+        highlightNode({ dataBus, node: root, statusKeep: false });
     }
 
     function clickNode(d) {
         d3.event.stopPropagation();
         activeNode = d;
         showDetail(activeNode);
-        highlightNode({ dataBus, node: d, status: true });
+        highlightNode({ dataBus, node: d, statusKeep: true });
     }
 
     function doubleClickNode(d) {
@@ -106,14 +106,10 @@ function dcs(treeData) {
                     closeAllHost(eventData);
                     break;
                 case "MOUSE_OVER_NODE": //fire only no active node
-                    if (activeNode == null) {
-                        highlightNode({ dataBus, node: eventData, status: true });
-                    }
+                    highlightNode({ dataBus, node: eventData, status: true });
                     break;
                 case "MOUSE_OUT_NODE": //fire only no active node
-                    if (activeNode == null) {
-                        highlightNode({ dataBus, node: eventData, status: false });
-                    }
+                    highlightNode({ dataBus, node: eventData, status: false });
                     break;
                 case "CLICK_NODE":
                     clickNode(eventData);

@@ -48,6 +48,51 @@ $applyTransition: fill $duration, stroke $duration, stroke-width $duration;
   }
 }
 
+/*highlight style*/
+.node-highlight,
+.node-highlight-keep {
+  &.link {
+    stroke: $link !important;
+    stroke-width: 3px !important;
+  }
+
+  text {
+    fill: $text !important;
+  }
+  
+  circle {
+    stroke: $node !important;
+  }
+
+  &.active circle {
+    stroke: $active !important;
+  }
+
+  &.warning circle {
+    stroke: $warning !important;
+  }
+
+  &.error circle {
+    stroke: $error !important;
+  }
+  
+  &.cluster circle {
+    stroke: $cluster !important;
+  }
+  
+  &.host circle {
+    stroke: $host !important;
+  }
+  
+  &.cluster.close circle {
+    stroke: mix($cluster, $mixColor, $opacityClose) !important;
+  }
+  
+  &.host.close circle {
+    stroke: mix($host, $mixColor, $opacityClose) !important;
+  }
+}
+
 /*fade out style*/
 .node-fade,
 .node-fade-keep {

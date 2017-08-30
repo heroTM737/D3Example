@@ -435,14 +435,14 @@ function dcs(treeData) {
         if (activeNode != null) {
             activeNode = null;
         }
-        highlightNode({ dataBus: dataBus, node: root, status: false });
+        highlightNode({ dataBus: dataBus, node: root, statusKeep: false });
     }
 
     function clickNode(d) {
         d3.event.stopPropagation();
         activeNode = d;
         showDetail(activeNode);
-        highlightNode({ dataBus: dataBus, node: d, status: true });
+        highlightNode({ dataBus: dataBus, node: d, statusKeep: true });
     }
 
     function doubleClickNode(d) {
@@ -467,15 +467,11 @@ function dcs(treeData) {
                     break;
                 case "MOUSE_OVER_NODE":
                     //fire only no active node
-                    if (activeNode == null) {
-                        highlightNode({ dataBus: dataBus, node: eventData, status: true });
-                    }
+                    highlightNode({ dataBus: dataBus, node: eventData, status: true });
                     break;
                 case "MOUSE_OUT_NODE":
                     //fire only no active node
-                    if (activeNode == null) {
-                        highlightNode({ dataBus: dataBus, node: eventData, status: false });
-                    }
+                    highlightNode({ dataBus: dataBus, node: eventData, status: false });
                     break;
                 case "CLICK_NODE":
                     clickNode(eventData);
@@ -1076,35 +1072,35 @@ module.exports = { createButton: createButton, btn_w: btn_w, btn_h: btn_h, btn_m
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function highlightNode(config) {
     var dataBus = config.dataBus,
-        status = config.status;
+        status = config.status,
+        statusKeep = config.statusKeep;
 
-    if (status != undefined && status != null) {
-        //fade out all node
-        travelDownHighlight(_extends({}, config, {
-            node: dataBus.root,
-            className: {
-                "node-fade": status,
-                "node-highlight": false
-            }
-        }));
-
-        //highlight selected node
-        travelUpHighlight(_extends({}, config, {
-            className: {
-                "node-fade": false,
-                "node-highlight": status
-            }
-        }));
-
-        travelDownHighlight(_extends({}, config, {
-            className: {
-                "node-fade": false,
-                "node-highlight": status
-            }
-        }));
+    if (statusKeep != undefined && statusKeep != null) {
+        doHighlight(config, "node-fade-keep", "node-highlight-keep", statusKeep);
+    } else if (status != undefined && status != null) {
+        doHighlight(config, "node-fade", "node-highlight", status);
     }
+}
+
+function doHighlight(config, fadeClassName, highlightClassName, status) {
+    var _className, _className2;
+
+    //fade out all node
+    travelDownHighlight(_extends({}, config, {
+        node: config.dataBus.root,
+        className: (_className = {}, _defineProperty(_className, fadeClassName, status), _defineProperty(_className, highlightClassName, false), _className)
+    }));
+
+    //highlight selected node
+    var newConfig = _extends({}, config, {
+        className: (_className2 = {}, _defineProperty(_className2, fadeClassName, false), _defineProperty(_className2, highlightClassName, status), _className2)
+    });
+    travelUpHighlight(newConfig);
+    travelDownHighlight(newConfig);
 }
 
 function travelUpHighlight(config) {

@@ -1,33 +1,33 @@
 function highlightNode(config) {
-    let { dataBus, status } = config;
-    if (status != undefined && status != null) {
-        //fade out all node
-        travelDownHighlight({
-            ...config,
-            node: dataBus.root,
-            className: {
-                "node-fade": status,
-                "node-highlight": false,
-            }
-        });
-
-        //highlight selected node
-        travelUpHighlight({
-            ...config,
-            className: {
-                "node-fade": false,
-                "node-highlight": status,
-            }
-        });
-
-        travelDownHighlight({
-            ...config,
-            className: {
-                "node-fade": false,
-                "node-highlight": status,
-            }
-        });
+    let { dataBus, status, statusKeep } = config;
+    if (statusKeep != undefined && statusKeep != null) {
+        doHighlight(config, "node-fade-keep", "node-highlight-keep", statusKeep);
+    } else if (status != undefined && status != null) {
+        doHighlight(config, "node-fade", "node-highlight", status);
     }
+}
+
+function doHighlight(config, fadeClassName, highlightClassName, status) {
+    //fade out all node
+    travelDownHighlight({
+        ...config,
+        node: config.dataBus.root,
+        className: {
+            [fadeClassName]: status,
+            [highlightClassName]: false
+        }
+    });
+
+    //highlight selected node
+    let newConfig = {
+        ...config,
+        className: {
+            [fadeClassName]: false,
+            [highlightClassName]: status
+        }
+    }
+    travelUpHighlight(newConfig);
+    travelDownHighlight(newConfig);
 }
 
 function travelUpHighlight(config) {
