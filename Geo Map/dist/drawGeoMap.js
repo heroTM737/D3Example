@@ -617,7 +617,9 @@ function dcs(container, data, width, height) {
     }
 
     function showDetail(d) {
-        d3ChartActionCommand(cmd, d);
+        if (window.d3ChartActionCommand) {
+            d3ChartActionCommand(cmd, d);
+        }
     }
 }
 
