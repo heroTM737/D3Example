@@ -378,28 +378,31 @@ function mapTypeToCharacter(type) {
     return "";
 }
 
-//define common variable
+//define common letiable
 var margin = { top: 5, right: 5, bottom: 5, left: 60 };
-var width = 550 - margin.right - margin.left;
-var height = 800 - margin.top - margin.bottom;
 var node_r = 15;
 var duration = 750;
 
-function dcs(treeData) {
+function dcs(container, data, width, height) {
+    //clean container
+    d3.select(container).selectAll("*").remove();
+
+    var treeData = data.data;
+    var cmd = data.cmd;
+    width = width - margin.right - margin.left;
+    height = height - margin.top - margin.bottom;
     var count = 0;
-    var root;
     var activeNode = null;
     var eventBus = null;
+    var root = treeData[0];
+    root.x0 = height / 2;
+    root.y0 = 0;
 
     var tree = d3.layout.tree().size([height, width]);
 
-    var svg = d3.select("#tree").append("svg").attr("width", width + margin.right + margin.left).attr("height", height + margin.top + margin.bottom).on("click", function (d) {
+    var svg = d3.select(container).append("svg").attr("width", width + margin.right + margin.left).attr("height", height + margin.top + margin.bottom).on("click", function (d) {
         eventBus.fireEvent("CLEAR_HIGHLIGHT_NODE", d);
     }).append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-    root = treeData[0];
-    root.x0 = height / 2;
-    root.y0 = 0;
 
     var dataBus = { tree: tree, svg: svg, root: root };
 
@@ -456,7 +459,7 @@ function dcs(treeData) {
         update(d);
     }
 
-    var eventBus = {
+    eventBus = {
         fireEvent: function fireEvent(eventType, eventData) {
             switch (eventType) {
                 case "OPEN_ALL_HOST":
@@ -487,10 +490,10 @@ function dcs(treeData) {
             }
         }
 
-        // var btnOpenGroup = createButton(svg, 0, 0, "Open all host");
+        // let btnOpenGroup = createButton(svg, 0, 0, "Open all host");
         // btnOpenGroup.on("click", openAllHost);
 
-        // var btnCloseGroup = createButton(svg, btn_w + btn_m, 0, "Close all host");
+        // let btnCloseGroup = createButton(svg, btn_w + btn_m, 0, "Close all host");
         // btnCloseGroup.on("click", closeAllHost);
 
     };update(root);
@@ -544,9 +547,13 @@ function dcs(treeData) {
         }).style("fill-opacity", 1e-6);
 
         nodeEnter.append("text").attr("x", function (d) {
-            return d.children || d._children ? -(node_r + 5) : node_r + 5;
-        }).attr("dy", ".35em").attr("text-anchor", function (d) {
-            return d.children || d._children ? "end" : "start";
+            return d.type == "host" ? 0 : d.children || d._children ? -(node_r + 5) : node_r + 5;
+        }).attr("y", function (d) {
+            return d.type == "host" ? node_r : 0;
+        }).attr("dy", function (d) {
+            return d.type == "host" ? "1em" : ".35em";
+        }).attr("text-anchor", function (d) {
+            return d.type == "host" ? "middle" : d.children || d._children ? "end" : "start";
         }).text(function (d) {
             return d.name;
         }).style("fill-opacity", 1e-6);
@@ -610,7 +617,7 @@ function dcs(treeData) {
     }
 
     function showDetail(d) {
-        $("#detail").html("<div>" + d.name + "</div>");
+        d3ChartActionCommand(cmd, d);
     }
 }
 

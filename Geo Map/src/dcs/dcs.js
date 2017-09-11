@@ -1,7 +1,7 @@
 let { createButton, btn_w, btn_h, btn_m } = require('./buttons');
 let { highlightNode } = require('./highlight');
 
-var diagonal = d3.svg.diagonal()
+let diagonal = d3.svg.diagonal()
     .projection(function (d) { return [d.y, d.x]; });
 
 function mapTypeToCharacter(type) {
@@ -15,36 +15,41 @@ function mapTypeToCharacter(type) {
     return "";
 }
 
-//define common variable
-var margin = { top: 5, right: 5, bottom: 5, left: 60 };
-var width = 550 - margin.right - margin.left;
-var height = 800 - margin.top - margin.bottom;
-var node_r = 15;
-var duration = 750;
+//define common letiable
+let margin = { top: 5, right: 5, bottom: 5, left: 60 };
+let node_r = 15;
+let duration = 750;
 
-function dcs(treeData) {
-    var count = 0;
-    var root;
-    var activeNode = null;
-    var eventBus = null;
+function dcs(container, data, width, height) {
+    //clean container
+    d3.select(container).selectAll("*").remove();
 
-    var tree = d3.layout.tree().size([height, width]);
+    let treeData = data.data;
+    let cmd = data.cmd;
+    width = width - margin.right - margin.left;
+    height = height - margin.top - margin.bottom;
+    let count = 0;
+    let activeNode = null;
+    let eventBus = null;
+    let root = treeData[0];
+    root.x0 = height / 2;
+    root.y0 = 0;
 
-    var svg = d3.select("#tree").append("svg")
+    let tree = d3.layout.tree().size([height, width]);
+
+    let svg = d3.select(container).append("svg")
         .attr("width", width + margin.right + margin.left)
         .attr("height", height + margin.top + margin.bottom)
         .on("click", function (d) { eventBus.fireEvent("CLEAR_HIGHLIGHT_NODE", d); })
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    root = treeData[0];
-    root.x0 = height / 2;
-    root.y0 = 0;
 
-    var dataBus = {tree, svg, root};
+
+    let dataBus = { tree, svg, root };
 
     function openAllHost(d) {
-        var nodes = tree.nodes(root).reverse();
+        let nodes = tree.nodes(root).reverse();
         nodes.forEach(function (d) {
             if (d.type == "host") {
                 if (d.children == null) {
@@ -58,7 +63,7 @@ function dcs(treeData) {
     }
 
     function closeAllHost(d) {
-        var nodes = tree.nodes(root).reverse();
+        let nodes = tree.nodes(root).reverse();
         nodes.forEach(function (d) {
             if (d.type == "host") {
                 if (d.children != null) {
@@ -96,7 +101,7 @@ function dcs(treeData) {
         update(d);
     }
 
-    var eventBus = {
+    eventBus = {
         fireEvent: (eventType, eventData) => {
             switch (eventType) {
                 case "OPEN_ALL_HOST":
@@ -125,33 +130,33 @@ function dcs(treeData) {
         }
     }
 
-    // var btnOpenGroup = createButton(svg, 0, 0, "Open all host");
+    // let btnOpenGroup = createButton(svg, 0, 0, "Open all host");
     // btnOpenGroup.on("click", openAllHost);
 
-    // var btnCloseGroup = createButton(svg, btn_w + btn_m, 0, "Close all host");
+    // let btnCloseGroup = createButton(svg, btn_w + btn_m, 0, "Close all host");
     // btnCloseGroup.on("click", closeAllHost);
 
     update(root);
 
     function update(source) {
         // Compute the new tree layout.
-        var nodes = tree.nodes(root).reverse(),
+        let nodes = tree.nodes(root).reverse(),
             links = tree.links(nodes);
 
         // Normalize for fixed-depth.
         nodes.forEach(function (d) { d.y = d.depth * 180; });
 
         // Update the nodes…
-        var node = svg.selectAll("g.node")
+        let node = svg.selectAll("g.node")
             .data(nodes, function (d) {
                 d.links = [];
                 return d.id || (d.id = ++count);
             });
 
         // Enter any new nodes at the parent's previous position.
-        var nodeEnter = node.enter().append("g")
+        let nodeEnter = node.enter().append("g")
             .attr("class", function (d) {
-                var className = "node " + d.type;
+                let className = "node " + d.type;
                 if (d.children) {
                     className += " close";
                 } else if (d._children) {
@@ -180,9 +185,18 @@ function dcs(treeData) {
             .style("fill-opacity", 1e-6);
 
         nodeEnter.append("text")
-            .attr("x", function (d) { return d.children || d._children ? -(node_r + 5) : (node_r + 5); })
-            .attr("dy", ".35em")
-            .attr("text-anchor", function (d) { return d.children || d._children ? "end" : "start"; })
+            .attr("x", function (d) {
+                return d.type == "host" ? 0 : (d.children || d._children ? -(node_r + 5) : (node_r + 5));
+            })
+            .attr("y", function (d) {
+                return d.type == "host" ? node_r : 0;
+            })
+            .attr("dy", function (d) {
+                return d.type == "host" ? "1em" : ".35em";
+            })
+            .attr("text-anchor", function (d) {
+                return d.type == "host" ? "middle" : (d.children || d._children ? "end" : "start");
+            })
             .text(function (d) { return d.name; })
             .style("fill-opacity", 1e-6);
 
@@ -190,7 +204,7 @@ function dcs(treeData) {
             .text(function (d) { return d.name; })
 
         // Transition nodes to their new position.
-        var nodeUpdate = node.transition()
+        let nodeUpdate = node.transition()
             .duration(duration)
             .attr("transform", function (d) { return "translate(" + d.y + "," + d.x + ")"; });
 
@@ -201,7 +215,7 @@ function dcs(treeData) {
             .style("fill-opacity", 1);
 
         // Transition exiting nodes to the parent's new position.
-        var nodeExit = node.exit().transition()
+        let nodeExit = node.exit().transition()
             .duration(duration)
             .attr("transform", function (d) { return "translate(" + source.y + "," + source.x + ")"; })
             .remove();
@@ -213,7 +227,7 @@ function dcs(treeData) {
             .style("fill-opacity", 1e-6);
 
         // Update the links…
-        var link = svg.selectAll("path.link")
+        let link = svg.selectAll("path.link")
             .data(links, function (d) {
                 d.id = "from" + d.source.id + "to" + d.target.id;
                 d.source.links.push(d);
@@ -226,7 +240,7 @@ function dcs(treeData) {
             .attr("class", "link")
             .attr("id", function (d) { return d.id })
             .attr("d", function (d) {
-                var o = { x: source.x0, y: source.y0 };
+                let o = { x: source.x0, y: source.y0 };
                 return diagonal({ source: o, target: o });
             })
             .on("mouseover", function (d) { eventBus.fireEvent("MOUSE_OVER_NODE", d.target); })
@@ -241,7 +255,7 @@ function dcs(treeData) {
         link.exit().transition()
             .duration(duration)
             .attr("d", function (d) {
-                var o = { x: source.x, y: source.y };
+                let o = { x: source.x, y: source.y };
                 return diagonal({ source: o, target: o });
             })
             .remove();
@@ -254,7 +268,7 @@ function dcs(treeData) {
     }
 
     function showDetail(d) {
-        $("#detail").html("<div>" + d.name + "</div>");
+        d3ChartActionCommand(cmd, d);
     }
 }
 

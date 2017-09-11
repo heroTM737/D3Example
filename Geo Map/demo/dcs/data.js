@@ -42,6 +42,9 @@ function genData() {
     }
   }
 
-  return [cluster];
+  return {
+    data: [cluster],
+    cmd: "cmd"
+  };
 }
 
