@@ -52,7 +52,8 @@
 		var update = function (data, formatted) {
 			for (var i in data) {
 				currentData.shift();
-				currentData.push(Number(data.shift()));
+				var value = Number(data.shift().split(",").join(""));
+				currentData.push(value);
 			}
 
 			var lastValue = currentData[currentData.length - 1];
