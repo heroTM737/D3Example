@@ -703,7 +703,31 @@ var shootEvent = function shootEvent(locationGroup, eventGroup, staticGroup, eve
     }
 };
 
+var worker = null;
 var shootAllEvent = function shootAllEvent(locationList, locationGroup, eventGroup, staticGroup) {
+    // if (!isShooting) {
+    //     worker = new Worker("worker.js");
+    //     worker.onmessage = function (event) {
+    //         if (queue.length > 0) {
+    //             isShooting = true;
+    //             let event = queue.shift();
+    //             locationList = checkThenAddLocation(locationGroup, locationList, event.source);
+    //             locationList = checkThenAddLocation(locationGroup, locationList, event.target);
+    //             shootEvent(locationGroup, eventGroup, staticGroup, event);
+    //         } else {
+    //             isShooting = false;
+    //             worker.postMessage({
+    //                 run: false
+    //             });
+    //         }
+    //     };
+    //     isShooting = true;
+    //     worker.postMessage({
+    //         run: true
+    //     });
+    // } else {
+    //     console.log("kho hieu vc");
+    // }
     var interval = setInterval(function () {
         if (queue.length > 0) {
             isShooting = true;
@@ -822,7 +846,7 @@ var socviewmap = function socviewmap(container, data) {
 
     var topRules = [];
     var updateTopRules = function updateTopRules(rules) {
-        topRules = filterGroup(topRules, rules, compareEvent);
+        // topRules = filterGroup(topRules, rules, compareEvent);
 
         //remove old static events
         for (var _i2 in topRules) {

@@ -61,7 +61,31 @@ let shootEvent = function (locationGroup, eventGroup, staticGroup, event) {
     }
 }
 
+let worker = null;
 let shootAllEvent = function (locationList, locationGroup, eventGroup, staticGroup) {
+    // if (!isShooting) {
+    //     worker = new Worker("worker.js");
+    //     worker.onmessage = function (event) {
+    //         if (queue.length > 0) {
+    //             isShooting = true;
+    //             let event = queue.shift();
+    //             locationList = checkThenAddLocation(locationGroup, locationList, event.source);
+    //             locationList = checkThenAddLocation(locationGroup, locationList, event.target);
+    //             shootEvent(locationGroup, eventGroup, staticGroup, event);
+    //         } else {
+    //             isShooting = false;
+    //             worker.postMessage({
+    //                 run: false
+    //             });
+    //         }
+    //     };
+    //     isShooting = true;
+    //     worker.postMessage({
+    //         run: true
+    //     });
+    // } else {
+    //     console.log("kho hieu vc");
+    // }
     let interval = setInterval(function () {
         if (queue.length > 0) {
             isShooting = true;
@@ -191,7 +215,7 @@ let socviewmap = function (container, data) {
 
     let topRules = [];
     let updateTopRules = function (rules) {
-        topRules = filterGroup(topRules, rules, compareEvent);
+        // topRules = filterGroup(topRules, rules, compareEvent);
 
         //remove old static events
         for (let i in topRules) {
