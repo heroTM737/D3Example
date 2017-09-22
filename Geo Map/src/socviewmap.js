@@ -61,32 +61,10 @@ let shootEvent = function (locationGroup, eventGroup, staticGroup, event) {
     }
 }
 
-let worker = null;
+let interval = null;
 let shootAllEvent = function (locationList, locationGroup, eventGroup, staticGroup) {
-    // if (!isShooting) {
-    //     worker = new Worker("worker.js");
-    //     worker.onmessage = function (event) {
-    //         if (queue.length > 0) {
-    //             isShooting = true;
-    //             let event = queue.shift();
-    //             locationList = checkThenAddLocation(locationGroup, locationList, event.source);
-    //             locationList = checkThenAddLocation(locationGroup, locationList, event.target);
-    //             shootEvent(locationGroup, eventGroup, staticGroup, event);
-    //         } else {
-    //             isShooting = false;
-    //             worker.postMessage({
-    //                 run: false
-    //             });
-    //         }
-    //     };
-    //     isShooting = true;
-    //     worker.postMessage({
-    //         run: true
-    //     });
-    // } else {
-    //     console.log("kho hieu vc");
-    // }
-    let interval = setInterval(function () {
+    clearInterval(interval);
+    interval = setInterval(function () {
         if (queue.length > 0) {
             isShooting = true;
             let event = queue.shift();
@@ -213,26 +191,22 @@ let socviewmap = function (container, data) {
         }
     }
 
-    let topRules = [];
     let updateTopRules = function (rules) {
-        // topRules = filterGroup(topRules, rules, compareEvent);
-
-        //remove old static events
-        for (let i in topRules) {
-            let event = topRules[i];
-            if (event.type == "static") {
-                let group = staticGroup.select("#" + getLinkId(event));
-                group.transition()
-                    .duration(1000)
-                    .ease("linear")
-                    .attr("opacity", 0)
-                    .remove();
-            }
+        let map = {};
+        for (let i in rules) {
+            map[getLinkId(rules[i])] = "";
         }
 
+        //remove old static events
+        staticGroup.selectAll("g").each(function(d){
+            let gid = d3.select(this).attr("id");
+            if (map[gid] == undefined || map[gid] == null) {
+                d3.select(this).remove();
+            }
+        });
+
         //create new static events
-        topRules = rules;
-        updateEvents(topRules);
+        updateEvents(rules);
     }
 
     let topCountryCodes = {};

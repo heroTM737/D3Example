@@ -703,32 +703,10 @@ var shootEvent = function shootEvent(locationGroup, eventGroup, staticGroup, eve
     }
 };
 
-var worker = null;
+var interval = null;
 var shootAllEvent = function shootAllEvent(locationList, locationGroup, eventGroup, staticGroup) {
-    // if (!isShooting) {
-    //     worker = new Worker("worker.js");
-    //     worker.onmessage = function (event) {
-    //         if (queue.length > 0) {
-    //             isShooting = true;
-    //             let event = queue.shift();
-    //             locationList = checkThenAddLocation(locationGroup, locationList, event.source);
-    //             locationList = checkThenAddLocation(locationGroup, locationList, event.target);
-    //             shootEvent(locationGroup, eventGroup, staticGroup, event);
-    //         } else {
-    //             isShooting = false;
-    //             worker.postMessage({
-    //                 run: false
-    //             });
-    //         }
-    //     };
-    //     isShooting = true;
-    //     worker.postMessage({
-    //         run: true
-    //     });
-    // } else {
-    //     console.log("kho hieu vc");
-    // }
-    var interval = setInterval(function () {
+    clearInterval(interval);
+    interval = setInterval(function () {
         if (queue.length > 0) {
             isShooting = true;
             var event = queue.shift();
@@ -844,22 +822,22 @@ var socviewmap = function socviewmap(container, data) {
         }
     };
 
-    var topRules = [];
     var updateTopRules = function updateTopRules(rules) {
-        // topRules = filterGroup(topRules, rules, compareEvent);
-
-        //remove old static events
-        for (var _i2 in topRules) {
-            var event = topRules[_i2];
-            if (event.type == "static") {
-                var group = staticGroup.select("#" + getLinkId(event));
-                group.transition().duration(1000).ease("linear").attr("opacity", 0).remove();
-            }
+        var map = {};
+        for (var _i2 in rules) {
+            map[getLinkId(rules[_i2])] = "";
         }
 
+        //remove old static events
+        staticGroup.selectAll("g").each(function (d) {
+            var gid = d3.select(this).attr("id");
+            if (map[gid] == undefined || map[gid] == null) {
+                d3.select(this).remove();
+            }
+        });
+
         //create new static events
-        topRules = rules;
-        updateEvents(topRules);
+        updateEvents(rules);
     };
 
     var topCountryCodes = {};
