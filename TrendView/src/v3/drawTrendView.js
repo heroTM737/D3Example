@@ -41,6 +41,7 @@
 		var fluctuationGroup = graph.append("g").attr("class", "fluctuationGroup");
 		var lineGroup = graph.append("g").attr("class", "lineGroup");
 		var path = null;
+		var path_fill = null;
 		var formatted = null;
 		var currentData = [];
 		var number_of_entries = 12;
@@ -52,8 +53,12 @@
 		var update = function (data, formatted) {
 			for (var i in data) {
 				currentData.shift();
-				var value = Number(data.shift().split(",").join(""));
-				currentData.push(value);
+				var value = data.shift();
+				if (value instanceof Number) {
+					currentData.push(value);
+				} else {
+					currentData.push(Number(value.split(",").join("")));
+				}
 			}
 
 			var lastValue = currentData[currentData.length - 1];
@@ -86,16 +91,11 @@
 
 				var fluctuationElement = fluctuationGroup.append("text")
 					.attr("x", width - m[1])
-					.attr("y", m[0])
-					// .attr("alignment-baseline", "hanging")
-					// .attr("dominant-baseline", "hanging")
+					.attr("y", m[0] * 2)
+					.attr("dy", "0.5em")
 					.attr("text-anchor", "end")
 					.attr("fill", fluctuationColor)
 					.text((fluctuationValue > 0 ? "+" : "") + fluctuationValue + " " + fluctuationUnit);
-				var fluctuationElementBBox = fluctuationElement[0][0].getBBox();
-				if (fluctuationElementBBox.y < m[0]) {
-					fluctuationElement.attr("y", m[0] - fluctuationElementBBox.y);
-				}
 
 				//update line chart
 				var w = 70;
@@ -111,19 +111,32 @@
 					})
 					.y(function (d) {
 						return height - m[2] - h + y(d);
-					});
+					})
+					.interpolate("monotone");
+
+				var startX = width - m[1] - w + x(0);
+				var startY = height - m[2];
+				var endX = width - m[1] - w + x(currentData.length - 1);
+				var endY = height - m[2];
 
 				if (path == null) {
+					path_fill = lineGroup.append("path")
+						.attr("d", line(currentData) + "   L" + endX + "," + endY + "L" + startX + "," + startY + "Z")
+						.attr("class", "trendLineChartFill");
+
 					path = lineGroup.append("path")
 						.attr("d", line(currentData))
-						.attr("class", "trendLineChart")
-						.attr("shape-rendering", "geometricPrecision")
-						.attr("stroke-linejoin", "round");
+						.attr("class", "trendLineChart");
 				} else {
 					path.transition()
 						.duration(500)
 						.ease("linear")
 						.attr("d", line(currentData));
+
+					path_fill.transition()
+						.duration(500)
+						.ease("linear")
+						.attr("d", line(currentData) + "   L" + endX + "," + endY + "L" + startX + "," + startY + "Z");
 				}
 			}
 		}
