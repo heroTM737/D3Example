@@ -120,23 +120,23 @@
 				var endY = height - m[2];
 
 				if (path == null) {
-					path_fill = lineGroup.append("path")
-						.attr("d", line(currentData) + "   L" + endX + "," + endY + "L" + startX + "," + startY + "Z")
-						.attr("class", "trendLineChartFill");
+					// path_fill = lineGroup.append("path")
+					// 	.attr("d", line(currentData) + "   L" + endX + "," + endY + "L" + startX + "," + startY + "Z")
+					// 	.attr("class", "trendLineChartFill");
 
 					path = lineGroup.append("path")
 						.attr("d", line(currentData))
 						.attr("class", "trendLineChart");
 				} else {
+					// path_fill.transition()
+					// 	.duration(500)
+					// 	.ease("linear")
+					// 	.attr("d", line(currentData) + "   L" + endX + "," + endY + "L" + startX + "," + startY + "Z");
+
 					path.transition()
 						.duration(500)
 						.ease("linear")
 						.attr("d", line(currentData));
-
-					path_fill.transition()
-						.duration(500)
-						.ease("linear")
-						.attr("d", line(currentData) + "   L" + endX + "," + endY + "L" + startX + "," + startY + "Z");
 				}
 			}
 		}

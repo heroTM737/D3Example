@@ -1012,9 +1012,9 @@ function drawGeoMapMapael(container, data) {
     }
 
     var links = {};
-    for (var key in data.lines) {
-        var line = data.lines[key];
-        links[key] = {
+    for (var _key in data.lines) {
+        var line = data.lines[_key];
+        links[_key] = {
             factor: -0.3,
             between: [{
                 longitude: line.geometry.coordinates[0][0],
@@ -1026,27 +1026,31 @@ function drawGeoMapMapael(container, data) {
         };
     }
 
-    var map = new Mapael(container, {
-        map: {
-            name: "world_countries",
-            defaultLink: {
-                factor: 0.4
-            },
-            defaultPlot: {
-                size: 11
-            },
-            afterInit: function afterInit(container, paper, areas, plots, options) {
-                for (var key in plots) {
-                    plots[key].mapElem["0"].id = "plot_" + key;
-                    plots[key].mapElem["0"].mydata = { id: key };
-                    plots[key].mapElem["0"].oncontextmenu = getContextMenuFunction(data.contextMenuCommand, data.points[key]);
+    try {
+        var map = new Mapael(container, {
+            map: {
+                name: "world_countries",
+                defaultLink: {
+                    factor: 0.4
+                },
+                defaultPlot: {
+                    size: 11
+                },
+                afterInit: function afterInit(container, paper, areas, plots, options) {
+                    for (var _key2 in plots) {
+                        plots[_key2].mapElem["0"].id = "plot_" + _key2;
+                        plots[_key2].mapElem["0"].mydata = { id: _key2 };
+                        plots[_key2].mapElem["0"].oncontextmenu = getContextMenuFunction(data.contextMenuCommand, data.points[_key2]);
+                    }
                 }
-            }
-        },
-        plots: plots,
-        links: links,
-        legend: legend
-    });
+            },
+            plots: plots,
+            links: links,
+            legend: legend
+        });
+    } catch (e) {
+        console.log("Can not render chart");
+    }
 }
 
 module.exports = drawGeoMapMapael;
