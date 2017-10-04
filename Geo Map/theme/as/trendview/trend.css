@@ -1,0 +1,13 @@
+.trendview {
+    background: #f1f1f1;
+}
+
+.trendview .trendLineChart {
+    stroke: rgba(255, 0, 0, 0.5);
+    fill: none;
+}
+
+.trendview .trendLineChartFill {
+    fill: rgb(243, 205, 205);
+    stroke-width: 0px;
+}

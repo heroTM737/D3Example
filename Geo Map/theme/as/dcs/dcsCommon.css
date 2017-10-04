@@ -2,6 +2,10 @@
     cursor: pointer;
 }
 
+.node.host {
+  cursor: default;
+}
+
 .node circle {
   fill: #fff;
   stroke: #99ccff;

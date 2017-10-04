@@ -117,7 +117,9 @@ function dcs(container, data, width, height) {
                     highlightNode({ dataBus, node: eventData, status: false });
                     break;
                 case "CLICK_NODE":
-                    clickNode(eventData);
+                    if (eventData.type != "host") {
+                        clickNode(eventData);
+                    }
                     break;
                 case "DOUBLE_CLICK_NODE":
                     doubleClickNode(eventData);
