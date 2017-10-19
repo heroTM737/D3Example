@@ -2,7 +2,8 @@ var functionMap = {
     socviewmap: require('./socviewmap'),
     drawGeoMapMapael: require('./staticgeomap'),
     dcs: require('./dcs/dcs'),
-    simpleLineChart: require('./simpleLineChart')
+    simpleLineChart: require('./simpleLineChart'),
+    topology: require('./topology/topology')
 }
 
 //bind function to window

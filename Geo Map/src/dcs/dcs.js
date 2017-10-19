@@ -86,7 +86,9 @@ function dcs(container, data, width, height) {
     function clickNode(d) {
         d3.event.stopPropagation();
         activeNode = d;
-        showDetail(activeNode);
+        if (d.type != "host") {
+            showDetail(activeNode);
+        }
         highlightNode({ dataBus, node: d, statusKeep: true });
     }
 
@@ -117,9 +119,7 @@ function dcs(container, data, width, height) {
                     highlightNode({ dataBus, node: eventData, status: false });
                     break;
                 case "CLICK_NODE":
-                    if (eventData.type != "host") {
-                        clickNode(eventData);
-                    }
+                    clickNode(eventData);
                     break;
                 case "DOUBLE_CLICK_NODE":
                     doubleClickNode(eventData);
