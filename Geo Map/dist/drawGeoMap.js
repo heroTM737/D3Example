@@ -1130,7 +1130,7 @@ function topology(container, data, width, height) {
     configVar.container = svg;
     configVar.container_legend = svg_legend;
 
-    configVar.textConstants = data.topoConstants;
+    configVar.textConstants = data.textConstants;
     configVar.containerWidth = width;
     configVar.containerHeight = height;
     configVar.events = getEvents(configVar);
