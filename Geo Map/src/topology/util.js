@@ -89,63 +89,65 @@ function copyToClipBoard(text) {
 }
 
 function createContextMenuFuntion(contextMenuCommand, valueProvider, includeCopy) {
-	var contextMenuFunction = function(node_data) {
-		var contextMenu = [];
-	    
-		var menuJSO = d3ChartActionCommand(contextMenuCommand, valueProvider.getMenuData(node_data));
-		for (var i = 0; i < menuJSO.length; i++){
-			//add header
-			if (menuJSO[i].name != null && menuJSO[i].name != undefined && menuJSO[i].name != "") {
-				contextMenu.push({title: menuJSO[i].name});
-			}
-			
-			//add options
-			var data = menuJSO[i].data;
-			var menuItemAction = function(cmd){
-				return function(elm, d, i){
-					if (typeof valueProvider.onItemClick === "function") {
-						valueProvider.onItemClick();
-					}
-					d3ChartActionCommand(cmd, valueProvider.getMenuData(node_data));
-				}
-			};
-			for (var j = 0; j < data.length; j++){
-				contextMenu.push({
-					title: data[j].name,
-					action: menuItemAction(data[j].cmd)
-				});
-			}
-			
-			//add devider if it is not the last group
-			if (i < menuJSO.length - 1) {
-				contextMenu.push({
-		        	divider: true
-		        });
-			}
-		}
-	    
-	    return contextMenu;
-	}
-	
-	if (includeCopy) {
-		return function(node_data) {
-			var investigateArray = contextMenuFunction(node_data);
-			
-			//add divider
-			investigateArray.push({divider: true});
-			
-			//add copy option
-			var name = valueProvider.getName(node_data);
-			investigateArray.push({
-				title: 'copy to clipboard: <b>' + name + '</b>',
-		        action: function (elm, d, i) {
-		            copyToClipBoard(name);
-		        }
-			});
-			
-			return investigateArray;
-		}
-	}
-	
-	return contextMenuFunction;
+    var contextMenuFunction = function (node_data) {
+        var contextMenu = [];
+
+        var menuJSO = d3ChartActionCommand(contextMenuCommand, valueProvider.getMenuData(node_data));
+        for (var i = 0; i < menuJSO.length; i++) {
+            //add header
+            if (menuJSO[i].name != null && menuJSO[i].name != undefined && menuJSO[i].name != "") {
+                contextMenu.push({ title: menuJSO[i].name });
+            }
+
+            //add options
+            var data = menuJSO[i].data;
+            var menuItemAction = function (cmd) {
+                return function (elm, d, i) {
+                    if (typeof valueProvider.onItemClick === "function") {
+                        valueProvider.onItemClick();
+                    }
+                    d3ChartActionCommand(cmd, valueProvider.getMenuData(node_data));
+                }
+            };
+            for (var j = 0; j < data.length; j++) {
+                contextMenu.push({
+                    title: data[j].name,
+                    action: menuItemAction(data[j].cmd)
+                });
+            }
+
+            //add devider if it is not the last group
+            if (i < menuJSO.length - 1) {
+                contextMenu.push({
+                    divider: true
+                });
+            }
+        }
+
+        return contextMenu;
+    }
+
+    if (includeCopy) {
+        return function (node_data) {
+            var investigateArray = contextMenuFunction(node_data);
+
+            //add divider
+            investigateArray.push({ divider: true });
+
+            //add copy option
+            var name = valueProvider.getName(node_data);
+            investigateArray.push({
+                title: 'copy to clipboard: <b>' + name + '</b>',
+                action: function (elm, d, i) {
+                    copyToClipBoard(name);
+                }
+            });
+
+            return investigateArray;
+        }
+    }
+
+    return contextMenuFunction;
 }
+
+module.exports = { diagonal, shortenText, shortenExtendText, shortenEventText, shortenMachineText, deg2rad, genArc, copyToClipBoard, createContextMenuFuntion }

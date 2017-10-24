@@ -1,4 +1,5 @@
 let centerGraph = require('./centerGraph');
+let { diagonal, shortenText, shortenExtendText, shortenEventText, shortenMachineText, deg2rad, genArc, copyToClipBoard, createContextMenuFuntion } = require('./util');
 
 function mainGraph(configVar) {
     configVar.eventgraphIsMainGraphOn = true;

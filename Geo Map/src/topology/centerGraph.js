@@ -1,3 +1,5 @@
+let { diagonal, shortenText, shortenExtendText, shortenEventText, shortenMachineText, deg2rad, genArc, copyToClipBoard, createContextMenuFuntion } = require('./util');
+
 function centerGraph(node_center, node_extend, configVar) {
     configVar.graphDescription = node_center.data.name;
     configVar.eventgraphIsMainGraphOn = false;

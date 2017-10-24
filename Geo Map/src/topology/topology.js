@@ -5,8 +5,8 @@ let getEvents = require('./event');
 let processData = require('./processData');
 
 function topology (container, data, width, height) {
-    var svg = d3.select(container).append("svg");
-    var svg_legend = d3.select(container).append("svg");
+    var svg = d3.select(container).append("svg").node();
+    var svg_legend = d3.select(container).append("svg").node();
     configVar.container = svg;
     configVar.container_legend = svg_legend;
 
@@ -19,3 +19,5 @@ function topology (container, data, width, height) {
     mainGraph(configVar);
     eventGraphLegend(configVar);
 }
+
+module.exports = topology;
