@@ -1,3 +1,5 @@
+let centerGraph = require('./centerGraph');
+
 function getEvents(configVar) {
     var container = configVar.container;
     var outer;
@@ -51,14 +53,14 @@ function getEvents(configVar) {
 
     var node_click = function (d) {
         d3.event.stopPropagation();
-        center_graph(d, null, configVar);
+        centerGraph(d, null, configVar);
         closeContextMenu();
     }
 
     var node_combine_click = function (d) {
         d3.event.stopPropagation();
         if (d.count > 0) {
-            center_graph(d.center, d.source, configVar);
+            centerGraph(d.center, d.source, configVar);
         }
         closeContextMenu();
     }

@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 11);
+/******/ 	return __webpack_require__(__webpack_require__.s = 13);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -120,7 +120,7 @@ module.exports = { compareLocation: compareLocation, compareEvent: compareEvent,
  */
 
 (function (factory) {
-    module.exports = factory($, __webpack_require__(12));
+    module.exports = factory($, __webpack_require__(14));
 })(function ($, Mapael) {
     $.extend(true, Mapael, {
         maps: {
@@ -331,6 +331,782 @@ module.exports = { compareLocation: compareLocation, compareEvent: compareEvent,
 "use strict";
 
 
+var _require = __webpack_require__(4),
+    diagonal = _require.diagonal,
+    shortenText = _require.shortenText,
+    shortenExtendText = _require.shortenExtendText,
+    shortenEventText = _require.shortenEventText,
+    shortenMachineText = _require.shortenMachineText,
+    deg2rad = _require.deg2rad,
+    genArc = _require.genArc,
+    copyToClipBoard = _require.copyToClipBoard,
+    createContextMenuFuntion = _require.createContextMenuFuntion;
+
+function centerGraph(node_center, node_extend, configVar) {
+    configVar.graphDescription = node_center.data.name;
+    configVar.eventgraphIsMainGraphOn = false;
+    configVar.node_center = node_center;
+
+    //define in use variables
+    var node_radius = configVar.node_radius;
+
+    var L0_circle_radius = configVar.L0_circle_radius;
+    var L1_circle_radius = configVar.L1_circle_radius;
+    var L2_circle_radius = configVar.L2_circle_radius;
+    var L3_circle_radius = configVar.L3_circle_radius;
+
+    var L1_min_radius = configVar.L1_min_radius;
+    var L2_min_radius = configVar.L2_min_radius;
+
+    var L0_radius = configVar.L0_radius;
+    var L1_radius = configVar.L1_radius;
+    var L2_radius = configVar.L2_radius;
+
+    var L3_width = configVar.L3_width;
+    var L3_margin = configVar.L3_margin;
+
+    var c_marmin = 1;
+    var text_node_margin = configVar.text_node_margin;
+    var y_margin = configVar.y_margin;
+    var radius = configVar.node_radius;
+    var character_length = configVar.character_length;
+    var padding_y = configVar.padding_y;
+    var padding = configVar.padding;
+    var shift_x = configVar.shift_x;
+    var shift_y = configVar.shift_y;
+
+    //computation
+    var nodes_L1, step_angle;
+    var start_angle = 0;
+    if (node_center.type == "event") {
+        nodes_L1 = node_center.sources.values().concat(node_center.targets.values());
+        step_angle = 2 * Math.PI / (node_center.sources.values().length + node_center.targets.values().length);
+        start_angle = Math.PI - (node_center.sources.size() - 1) * step_angle / 2;
+    } else {
+        nodes_L1 = node_center.related_events.values();
+        step_angle = 2 * Math.PI / node_center.related_events.size();
+    }
+
+    var links = [];
+    var nodes_L2 = [];
+
+    L1_radius = Math.max(L1_min_radius, nodes_L1.length * (L1_circle_radius + c_marmin) / Math.PI + L1_circle_radius);
+    L2_radius = 2 * L1_radius;
+    extend_node_width = L2_circle_radius * 2 + text_node_margin + L3_width * character_length + padding_y;
+    var svg_width = L2_radius * 2 + L2_circle_radius + padding * 2 + L3_margin * 2 + L3_width * 2;
+    var svg_height = (L2_radius + L2_circle_radius + padding) * 2 + shift_y;
+    node_center.x = svg_width / 2;
+    node_center.y = L2_radius + L2_circle_radius + padding + shift_y;
+    configVar.center.x = node_center.x;
+    configVar.center.y = node_center.y;
+
+    nodes_L1.forEach(function (node_L1, index) {
+        var combine = {
+            id: "c" + node_center.id + "" + node_L1.id,
+            type: "combine",
+            count: 0,
+            center: node_center,
+            source: node_L1
+        };
+        nodes_L2.push(combine);
+
+        if (node_center.type == "event") {
+            combine.count = node_L1.related_events.size() - 1;
+            links.push({
+                id: "from_" + node_L1.id + "_to_" + node_center.id,
+                source: node_L1,
+                target: node_center
+            });
+
+            links.push({
+                id: "from_" + node_L1.id + "_to_" + combine.id,
+                source: node_L1,
+                target: combine
+            });
+        } else {
+            if (node_center.type == "source") {
+                combine.count = node_L1.targets.size();
+            } else {
+                combine.count = node_L1.sources.size();
+            }
+
+            links.push({
+                id: "from_" + node_center.id + "_to_" + node_L1.id,
+                source: node_center,
+                target: node_L1
+            });
+
+            links.push({
+                id: "from_" + combine.id + "_to_" + node_L1.id,
+                source: combine,
+                target: node_L1
+            });
+        }
+
+        var angle = start_angle + index * step_angle;
+        node_L1.x = node_center.x + Math.cos(angle) * L1_radius;
+        node_L1.y = node_center.y + Math.sin(angle) * L1_radius;
+        node_L1.a = angle / Math.PI * 180;
+
+        combine.x = node_center.x + Math.cos(angle) * L2_radius;
+        combine.y = node_center.y + Math.sin(angle) * L2_radius;
+        combine.a = node_L1.a;
+    });
+
+    var nodes_L3 = [];
+    var links_extend = [];
+    var combine_source;
+    var nodes_L3_height = 0;
+    if (node_extend != null && node_extend != undefined) {
+        switch (node_center.type) {
+            case "source":
+                nodes_L3 = node_extend.targets.values();
+                break;
+            case "target":
+                nodes_L3 = node_extend.sources.values();
+                break;
+            case "event":
+                nodes_L3 = node_extend.related_events.values();
+                break;
+        }
+
+        //remove center node
+        for (var i = 0; i < nodes_L3.length; i++) {
+            if (nodes_L3[i].id == node_center.id) {
+                nodes_L3.splice(i, 1);
+                break;
+            }
+        }
+
+        //extract combine source from nodes_L2
+        if (node_extend != null && node_extend != undefined) {
+            var combine_index = nodes_L1.indexOf(node_extend);
+            if (combine_index >= 0) {
+                combine_source = nodes_L2.splice(combine_index, 1)[0];
+            }
+        }
+
+        var direction = 1;
+        if (combine_source.x < node_center.x) {
+            direction = -1;
+        }
+
+        var combine_transit = {
+            x: node_center.x + (L2_radius + L2_circle_radius + 10) * direction,
+            y: combine_source.y
+
+            //define coordinate
+        };nodes_L3_height = nodes_L3.length * (L3_circle_radius * 2 + y_margin) - y_margin;
+        var base_y = combine_source.y - nodes_L3_height / 2;
+        if (base_y + nodes_L3_height > node_center.y + L2_radius) {
+            base_y = node_center.y + L2_radius - nodes_L3_height;
+        }
+
+        if (base_y < node_center.y - L2_radius) {
+            base_y = node_center.y - L2_radius - L3_circle_radius;
+        }
+
+        nodes_L3.forEach(function (node_L3, index) {
+            node_L3.x = node_center.x + (L2_radius + L2_circle_radius + L3_margin + L3_circle_radius) * direction;
+            node_L3.y = base_y + L3_circle_radius + index * (L3_circle_radius * 2 + y_margin);
+
+            links_extend.push({
+                id: "from_" + combine_source.id + "_to_" + node_L3.id,
+                source: combine_transit,
+                target: node_L3
+            });
+        });
+    }
+    if (combine_source != null) {
+
+        configVar.events.combine_highlight = function (d, state) {
+            var container = configVar.container;
+            if (d.id == node_extend.id) {
+                d3.select(container).selectAll(".linkx").classed('link-highlight', state);
+                d3.select(container).selectAll("#extend_line").classed('link-highlight', state);
+
+                if (d.type == "event") {
+                    d3.select(container).select("#from_" + combine_source.id + "_to_" + node_extend.id).classed('link-highlight', state);
+                } else {
+                    d3.select(container).select("#from_" + node_extend.id + "_to_" + combine_source.id).classed('link-highlight', state);
+                }
+            } else {
+                var checkRelated = node_extend.related_nodes.get(d.id) != null;
+                var checkNotCenter = d.id != node_center.id;
+                var checkType = false;
+                if (node_center.type == "event") {
+                    if (d.type == node_center.type) {
+                        checkType = true;
+                    }
+                } else {
+                    if (d.type == "source" || d.type == "target" || d.type == "source_target") {
+                        checkType = true;
+                    }
+                }
+
+                if (checkRelated && checkNotCenter && checkType) {
+                    var target_link_id = "from_" + combine_source.id + "_to_" + d.id;
+
+                    //bring related link to front if highlight
+                    if (state) {
+                        d3.select(container).selectAll('.linkx').sort(function (a, b) {
+                            return a.id == target_link_id;
+                        });
+                    }
+
+                    //highlight related link
+                    d3.select(container).selectAll(".linkx").classed('link-highlight', function (dl) {
+                        return dl.id == target_link_id && state;
+                    });
+
+                    //highlight extend line
+                    d3.select(container).selectAll("#extend_line").classed('link-highlight', state);
+
+                    if (d.type == "event") {
+                        d3.select(container).select("#from_" + node_extend.id + "_to_" + combine_source.id).classed('link-highlight', state);
+                    } else {
+                        d3.select(container).select("#from_" + combine_source.id + "_to_" + node_extend.id).classed('link-highlight', state);
+                    }
+                }
+            }
+        };
+    }
+
+    //clear
+    d3.select(configVar.container).selectAll("*").remove();
+
+    //render
+    if (nodes_L3.length > 0) {
+        svg_height = Math.max(svg_height, nodes_L3_height + padding * 2 + shift_y);
+    }
+
+    var svg = d3.select(configVar.container);
+    svg.attr("viewBox", "0 0 " + svg_width + " " + svg_height);
+    svg.attr("width", svg_width);
+    svg.attr("height", svg_height);
+    var L0_className = [];
+    var L1_className = [];
+    var L2_className = [];
+    var L3_className = [];
+    var isEventCenter = true;
+    if (node_center.type == "event") {
+        L0_className = ["event-group"];
+        L1_className = ["machine-group"];
+        L2_className = ["event-combine-group"];
+        isEventCenter = true;
+    } else if (node_center.type == "source") {
+        L0_className = ["machine-group", "source"];
+        L1_className = ["event-group"];
+        L2_className = ["machine-combine-group", "target"];
+        isEventCenter = false;
+    } else {
+        L0_className = ["machine-group", "target"];
+        L1_className = ["event-group"];
+        L2_className = ["machine-combine-group", "source"];
+        isEventCenter = false;
+    }
+
+    //draw links
+    var link = svg.append("g").selectAll("line").data(links).enter().append("line").attr("class", "link").attr("id", function (d) {
+        return d.id;
+    }).attr("x1", function (d) {
+        return d.source.x;
+    }).attr("y1", function (d) {
+        return d.source.y;
+    }).attr("x2", function (d) {
+        return d.target.x;
+    }).attr("y2", function (d) {
+        return d.target.y;
+    });
+
+    if (combine_source != null) {
+        var extend_curve = function extend_curve(d) {
+            var x1 = (d.source.x + d.target.x) / 2;
+            var y1 = d.source.y;
+            var x2 = x1;
+            var y2 = y1;
+
+            var m = "M " + d.source.x + " " + d.source.y;
+            var c = "C " + x1 + " " + y1 + " " + x2 + " " + y2 + " " + (d.target.x - L3_circle_radius * direction) + " " + d.target.y;
+
+            return m + c;
+        };
+
+        var linkx = svg.append("g").selectAll("path").data(links_extend).enter().append("path").attr("class", "link linkx").attr("id", function (d) {
+            return d.id;
+        }).attr("d", extend_curve);
+
+        var extend_line = svg.append("line").attr("id", "extend_line").attr("x1", function (d) {
+            return combine_source.x;
+        }).attr("y1", function (d) {
+            return combine_source.y;
+        }).attr("x2", function (d) {
+            return combine_transit.x;
+        }).attr("y2", function (d) {
+            return combine_transit.y;
+        });
+    }
+
+    //draw L0 or center
+    var node_L0_group = createGroup(configVar, "L0-group", L0_className, [node_center]);
+    var node_L0 = draw_L0(node_L0_group, isEventCenter, configVar);
+
+    //draw L1
+    var node_L1_group = createGroup(configVar, "L1-group", L1_className, nodes_L1);
+    var node_L1 = draw_L1(node_L1_group, isEventCenter, configVar);
+
+    //draw L2
+    var node_L2_group = createGroup(configVar, "L2-group", L2_className, nodes_L2, null, null, getEvents(configVar).node_combine_click);
+    var node_L2 = draw_L2(node_L2_group, isEventCenter, configVar);
+    var node_L2_text = node_L2_group.append("text").attr("class", "text").attr('id', function (d) {
+        return "x" + d.id;
+    }).attr("text-anchor", "middle").attr("x", function (d) {
+        return d.x;
+    }).attr("y", function (d) {
+        return d.y;
+    }).text(function (d) {
+        return d.count;
+    });
+
+    //draw L3
+    var node_L3_group = createGroup(configVar, "L3-group", [], nodes_L3);
+    var node_L3 = draw_L3(node_L3_group, isEventCenter, configVar);
+    var node_L3_text = node_L3_group.append("text").attr("class", "text").attr('id', function (d) {
+        return "x" + d.id;
+    }).attr("text-anchor", direction > 0 ? "start" : "end").attr("x", function (d) {
+        return d.x + (L3_circle_radius + text_node_margin) * direction;
+    }).attr("y", function (d) {
+        return d.y;
+    }).text(function (d) {
+        return shortenExtendText(d.data.name, configVar);
+    });
+
+    //adjust text position to work on IE and Edge
+    var item, item_h;
+    nodes_L2.forEach(function (node, index) {
+        item = node_L2_text[0][index];
+        item_h = item.getBoundingClientRect().height;
+        item.setAttribute("y", node.y + item_h / 4);
+    });
+    nodes_L3.forEach(function (node, index) {
+        item = node_L3_text[0][index];
+        item_h = item.getBoundingClientRect().height;
+        item.setAttribute("y", node.y + item_h / 4);
+    });
+
+    //redraw buttons
+    buttons(configVar);
+}
+
+function rotate_node(d, config) {
+    if (d.a == null || d.a == undefined) {
+        d.a = 0;
+    }
+    var rotate = d.x < config.center.x ? d.a + 180 : d.a;
+    rotate %= 360;
+    rotate += " " + d.x + " " + d.y;
+    return "rotate(" + rotate + ")";
+}
+
+function draw_L0(node_L0_group, isEventCenter, configVar) {
+    var L0_circle_radius = configVar.L0_circle_radius;
+    if (isEventCenter) {
+        var node_L0 = node_L0_group.append("rect").attr("class", "event").attr('id', function (d) {
+            return d.id;
+        }).attr("x", function (d) {
+            return d.x - L0_circle_radius;
+        }).attr("y", function (d) {
+            return d.y - L0_circle_radius;
+        }).attr("width", L0_circle_radius * 2).attr("height", L0_circle_radius * 2);
+    } else {
+        var node_L0 = node_L0_group.append("circle").attr("class", function (d) {
+            return "machine " + (d.type == "source" ? "source" : "target");
+        }).attr('id', function (d) {
+            return d.id;
+        }).attr("cx", function (d) {
+            return d.x;
+        }).attr("cy", function (d) {
+            return d.y;
+        }).attr("r", function (d) {
+            return L0_circle_radius;
+        });
+    }
+}
+
+function draw_L1(node_L1_group, isEventCenter, configVar) {
+    var L1_circle_radius = configVar.L1_circle_radius;
+    if (isEventCenter) {
+        var node_L1 = node_L1_group.append("circle").attr("class", function (d) {
+            return "machine " + (d.type == "source" ? "source" : "target");
+        }).attr('id', function (d) {
+            return d.id;
+        }).attr("cx", function (d) {
+            return d.x;
+        }).attr("cy", function (d) {
+            return d.y;
+        }).attr("r", function (d) {
+            return L1_circle_radius;
+        });
+    } else {
+        var node_L1 = node_L1_group.append("rect").attr("class", "event").attr('id', function (d) {
+            return d.id;
+        }).attr("transform", function (d) {
+            return rotate_node(d, configVar);
+        }).attr("x", function (d) {
+            return d.x - L1_circle_radius;
+        }).attr("y", function (d) {
+            return d.y - L1_circle_radius;
+        }).attr("width", L1_circle_radius * 2).attr("height", L1_circle_radius * 2);
+    }
+}
+
+function draw_L2(node_L2_group, isEventCenter, configVar) {
+    var L2_circle_radius = configVar.L2_circle_radius;
+    if (isEventCenter) {
+        var node_L2 = node_L2_group.append("rect").attr("class", "").attr('id', function (d) {
+            return d.id;
+        }).attr("transform", function (d) {
+            return rotate_node(d, configVar);
+        }).attr("x", function (d) {
+            return d.x - L2_circle_radius;
+        }).attr("y", function (d) {
+            return d.y - L2_circle_radius;
+        }).attr("width", function (d) {
+            return L2_circle_radius * 2;
+        }).attr("height", function (d) {
+            return L2_circle_radius * 2;
+        });
+    } else {
+        var node_L2 = node_L2_group.append("circle").attr("class", "").attr('id', function (d) {
+            return d.id;
+        }).attr("cx", function (d) {
+            return d.x;
+        }).attr("cy", function (d) {
+            return d.y;
+        }).attr("r", function (d) {
+            return L2_circle_radius;
+        });
+    }
+}
+
+function draw_L3(node_L3_group, isEventCenter, configVar) {
+    var radius = configVar.L3_circle_radius;
+    if (isEventCenter) {
+        var node_L3 = node_L3_group.append("rect").attr("class", "event").attr('id', function (d) {
+            return d.id;
+        }).attr("x", function (d) {
+            return d.x - radius;
+        }).attr("y", function (d) {
+            return d.y - radius;
+        }).attr("width", function (d) {
+            return radius * 2;
+        }).attr("height", function (d) {
+            return radius * 2;
+        });
+    } else {
+        var node_L3 = node_L3_group.append("circle").attr("class", function (d) {
+            return "machine " + (d.type == "source" ? "source" : "target");
+        }).attr('id', function (d) {
+            return d.id;
+        }).attr("cx", function (d) {
+            return d.x;
+        }).attr("cy", function (d) {
+            return d.y;
+        }).attr("r", function (d) {
+            return radius;
+        });
+    }
+}
+
+function createGroup(configVar, className, classNameExtend, data, mouseOver, mouseOut, click) {
+    var mouseEvents = configVar.events;
+    var node_mouseover = mouseEvents.node_mouseover;
+    var node_mouseout = mouseEvents.node_mouseout;
+    var node_click = mouseEvents.node_click;
+
+    var node_group = d3.select(configVar.container).selectAll("." + className).data(data).enter().append("g").attr("class", function (d) {
+        var extendName = "";
+        classNameExtend.forEach(function (node, index) {
+            extendName += " " + node;
+        });
+        return className + extendName;
+    }).attr('id', function (d) {
+        return "g" + d.id;
+    }).on("mouseover", mouseOver == undefined ? node_mouseover : mouseOver).on("mouseout", mouseOut == undefined ? node_mouseout : mouseOut).on("click", click == undefined ? node_click : click).on("contextmenu", function (d, i) {
+        if (d.type != "combine") {
+            d3.contextMenu(createContextMenuFuntion(configVar.data.contextMenuCommand, {
+                getName: function getName(node_data) {
+                    return node_data.data.name;
+                },
+                getMenuData: function getMenuData(node_data) {
+                    return { id: node_data.data.id, type: node_data.type };
+                }
+            }, true))(d, i);
+        }
+    });
+
+    var node_title = node_group.append("title").text(function (d) {
+        if (d.data != null) {
+            return d.data.name;
+        } else {
+            return d.count;
+        }
+    });
+
+    return node_group;
+}
+
+module.exports = centerGraph;
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var centerGraph = __webpack_require__(2);
+
+var _require = __webpack_require__(4),
+    diagonal = _require.diagonal,
+    shortenText = _require.shortenText,
+    shortenExtendText = _require.shortenExtendText,
+    shortenEventText = _require.shortenEventText,
+    shortenMachineText = _require.shortenMachineText,
+    deg2rad = _require.deg2rad,
+    genArc = _require.genArc,
+    copyToClipBoard = _require.copyToClipBoard,
+    createContextMenuFuntion = _require.createContextMenuFuntion;
+
+function mainGraph(configVar) {
+    configVar.eventgraphIsMainGraphOn = true;
+
+    //define in use variables
+    var source_machines = configVar.data.source_machines;
+    var target_machines = configVar.data.target_machines;
+    var events = configVar.data.events;
+
+    var text_node_margin = configVar.text_node_margin;
+    var machine_max_text_length_px = configVar.machine_max_text_length_px;
+    var rw = configVar.rw;
+    var rh = configVar.rh;
+    var radius = configVar.node_radius;
+    var y_margin = configVar.y_margin;
+    var padding = configVar.padding;
+    var shift_x = configVar.shift_x;
+    var shift_y = configVar.shift_y;
+    var center = {};
+
+    //define links
+    var links = d3.map();
+    events.forEach(function (event_key, event) {
+        event.sources.forEach(function (source_key, source) {
+            var link = {
+                id: "from_" + source.id + "_to_" + event.id,
+                source: source,
+                target: event
+            };
+            links.set(link.id, link);
+        });
+
+        event.targets.forEach(function (target_key, target) {
+            var link = {
+                id: "from_" + target.id + "_to_" + event.id,
+                source: target,
+                target: event
+            };
+            links.set(link.id, link);
+        });
+    });
+
+    //define svg size
+    var radius_by_events_size = events.size() * (rh + y_margin) / 2;
+    var radius_by_event_width = rw;
+    var radius_by_machine_size = Math.max(source_machines.size(), target_machines.size()) * (radius + y_margin) * 4 / Math.PI;
+    center.radius = Math.max(radius_by_events_size, radius_by_event_width);
+    center.radius = Math.max(center.radius, radius_by_machine_size);
+    center.x = padding + shift_x + Math.min(center.radius, center.radius / 2 + 100) + text_node_margin + machine_max_text_length_px;
+    center.y = padding + shift_y + center.radius + rh;
+    configVar.center.x = center.x;
+    configVar.center.y = center.y;
+    var svg_width = shift_x + (padding + Math.min(center.radius, center.radius / 2 + 100) + text_node_margin + machine_max_text_length_px) * 2;
+    var svg_height = shift_y + (padding + center.radius + rh) * 2;
+
+    //define coordinate
+    var max = d3.max([source_machines.size(), target_machines.size(), events.size()]);
+    var event_start = center.y - Math.min(center.radius, events.size() * (rh + y_margin) / 2 - rh / 2);
+
+    var angle, step_angle, base_angle;
+    var ratio = 0.5;
+    source_machines.values().forEach(function (node, index) {
+        step_angle = Math.PI / source_machines.size();
+        base_angle = step_angle / 2 - Math.PI / 2;
+        angle = index * step_angle + base_angle;
+        angle = angle * ratio;
+        node.x = center.x - center.radius * Math.cos(angle);
+        node.y = center.y - center.radius * Math.sin(angle);
+
+        if (node.x < center.x - center.radius / 2) {
+            node.x = node.x + center.radius / 2 - 100;
+        }
+    });
+
+    target_machines.values().forEach(function (node, index) {
+        step_angle = Math.PI / target_machines.size();
+        base_angle = step_angle / 2 - Math.PI / 2;
+        angle = index * step_angle + base_angle;
+        angle = angle * ratio;
+        node.x = center.x + center.radius * Math.cos(angle);
+        node.y = center.y - center.radius * Math.sin(angle);
+
+        if (node.x > center.x + center.radius / 2) {
+            node.x = node.x - center.radius / 2 + 100;
+        }
+    });
+
+    events.values().forEach(function (event, index) {
+        event.x = center.x;
+        event.y = event_start + index * (rh + y_margin);
+    });
+
+    //clear
+    d3.select(configVar.container).selectAll("*").remove();
+
+    //render
+    var svg = d3.select(configVar.container);
+    svg.attr("viewBox", "0 0 " + svg_width + " " + svg_height);
+    svg.attr("width", svg_width);
+    svg.attr("height", svg_height);
+
+    configVar.events.combine_highlight = function (d, state) {};
+    var node_mouseover = configVar.events.node_mouseover;
+    var node_mouseout = configVar.events.node_mouseout;
+    var node_click = configVar.events.node_click;
+
+    var contextMenuCommand = configVar.data.contextMenuCommand;
+    var menuFN = d3.contextMenu(createContextMenuFuntion(contextMenuCommand, {
+        getName: function getName(node_data) {
+            return node_data.data.name;
+        },
+        getMenuData: function getMenuData(node_data) {
+            return { id: node_data.data.id, type: node_data.type };
+        }
+    }, true));
+
+    var link = svg.selectAll("path ").data(links.values()).enter().append("path").attr("class", "link").attr("id", function (d) {
+        return d.id;
+    }).attr("d", diagonal(configVar));
+
+    var source_group = svg.selectAll(".source-group").data(source_machines.values()).enter().append("g").attr("class", "source-group").attr('id', function (d) {
+        return "g" + d.id;
+    }).on("mouseover", node_mouseover).on("mouseout", node_mouseout).on("click", node_click).on("contextmenu", menuFN);
+
+    var source_title = source_group.append("title").text(function (d) {
+        return d.data.name;
+    });
+
+    var source_machine = source_group.append("circle").attr("class", "machine source").attr('id', function (d) {
+        return d.id;
+    }).attr("cx", function (d) {
+        return d.x;
+    }).attr("cy", function (d) {
+        return d.y;
+    }).attr("r", function (d) {
+        return radius;
+    });
+
+    var source_text = source_group.append("text").attr("class", "text machine-text").attr('id', function (d) {
+        return "x" + d.id;
+    }).attr("text-anchor", "end").attr("x", function (d) {
+        return d.x - radius * 2;
+    }).attr("y", function (d) {
+        return d.y;
+    }).text(function (d) {
+        return shortenMachineText(d.data.name, configVar);
+    });
+
+    var target_group = svg.selectAll(".target-group").data(target_machines.values()).enter().append("g").attr("class", "target-group").attr('id', function (d) {
+        return "g" + d.id;
+    }).on("mouseover", node_mouseover).on("mouseout", node_mouseout).on("click", node_click).on("contextmenu", menuFN);
+
+    var target_title = target_group.append("title").text(function (d) {
+        return d.data.name;
+    });
+
+    var target_machine = target_group.append("circle").attr("class", "machine target").attr('id', function (d) {
+        return d.id;
+    }).attr("cx", function (d) {
+        return d.x;
+    }).attr("cy", function (d) {
+        return d.y;
+    }).attr("r", function (d) {
+        return radius;
+    });
+
+    var target_text = target_group.append("text").attr("class", "text machine-text").attr('id', function (d) {
+        return "x" + d.id;
+    }).attr("x", function (d) {
+        return d.x + radius * 2;
+    }).attr("y", function (d) {
+        return d.y;
+    }).text(function (d) {
+        return shortenMachineText(d.data.name, configVar);
+    });
+
+    var event_group = svg.selectAll(".event-group").data(events.values()).enter().append("g").attr("class", "event-group").attr('id', function (d) {
+        return "g" + d.id;
+    }).on("mouseover", node_mouseover).on("mouseout", node_mouseout).on("click", node_click).on("contextmenu", menuFN);
+
+    var event = event_group.append("rect").attr("class", "event").attr('id', function (d) {
+        return d.id;
+    }).attr("x", function (d) {
+        return d.x - rw / 2;
+    }).attr("y", function (d) {
+        return d.y - rh / 2;
+    }).attr("width", rw).attr("height", rh);
+
+    var event_title = event_group.append("title").text(function (d) {
+        return d.data.name;
+    });
+
+    var event_text = event_group.append("text").attr("class", "text event-text").attr('id', function (d) {
+        return "x" + d.id;
+    }).attr("text-anchor", "middle").attr("x", function (d) {
+        return d.x;
+    }).attr("y", function (d) {
+        return d.y;
+    }).text(function (d) {
+        return shortenEventText(d.data.name, configVar);
+    });
+
+    //adjust text position to work on IE and Edge
+    var item, item_h;
+    events.values().forEach(function (node, index) {
+        item = event_text[0][index];
+        item_h = item.getBoundingClientRect().height;
+        item.setAttribute("y", node.y + item_h / 4);
+    });
+    source_machines.values().forEach(function (node, index) {
+        item = source_text[0][index];
+        item_h = item.getBoundingClientRect().height;
+        item.setAttribute("y", node.y + item_h / 4);
+    });
+    target_machines.values().forEach(function (node, index) {
+        item = target_text[0][index];
+        item_h = item.getBoundingClientRect().height;
+        item.setAttribute("y", node.y + item_h / 4);
+    });
+}
+
+module.exports = mainGraph;
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 var diagonal = function diagonal(configVar) {
     var rw = configVar.rw;
     var diagonal = d3.svg.diagonal().source(function (d) {
@@ -479,7 +1255,7 @@ function createContextMenuFuntion(contextMenuCommand, valueProvider, includeCopy
 module.exports = { diagonal: diagonal, shortenText: shortenText, shortenExtendText: shortenExtendText, shortenEventText: shortenEventText, shortenMachineText: shortenMachineText, deg2rad: deg2rad, genArc: genArc, copyToClipBoard: copyToClipBoard, createContextMenuFuntion: createContextMenuFuntion };
 
 /***/ }),
-/* 3 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -497,19 +1273,19 @@ module.exports = {
 };
 
 /***/ }),
-/* 4 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _require = __webpack_require__(9),
+var _require = __webpack_require__(11),
     createButton = _require.createButton,
     btn_w = _require.btn_w,
     btn_h = _require.btn_h,
     btn_m = _require.btn_m;
 
-var _require2 = __webpack_require__(10),
+var _require2 = __webpack_require__(12),
     highlightNode = _require2.highlightNode;
 
 var diagonal = d3.svg.diagonal().projection(function (d) {
@@ -782,7 +1558,7 @@ function dcs(container, data, width, height) {
 module.exports = dcs;
 
 /***/ }),
-/* 5 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -836,15 +1612,15 @@ function simpleLineChart(container, data, width, height) {
 module.exports = simpleLineChart;
 
 /***/ }),
-/* 6 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var Mapael = __webpack_require__(1);
-var shootEventStatic = __webpack_require__(14);
-var shootEventDynamic = __webpack_require__(13);
+var shootEventStatic = __webpack_require__(16);
+var shootEventDynamic = __webpack_require__(15);
 
 var _require = __webpack_require__(0),
     getLocationId = _require.getLocationId,
@@ -855,7 +1631,7 @@ var _require2 = __webpack_require__(0),
     compareEvent = _require2.compareEvent,
     compareCountry = _require2.compareCountry;
 
-var _require3 = __webpack_require__(3),
+var _require3 = __webpack_require__(5),
     location_r = _require3.location_r,
     location_r_hl = _require3.location_r_hl,
     location_r_shoot = _require3.location_r_shoot,
@@ -1131,7 +1907,7 @@ var socviewmap = function socviewmap(container, data) {
 module.exports = socviewmap;
 
 /***/ }),
-/* 7 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1266,21 +2042,21 @@ function drawGeoMapMapael(container, data) {
 module.exports = drawGeoMapMapael;
 
 /***/ }),
-/* 8 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var configVar = __webpack_require__(20);
-var mainGraph = __webpack_require__(18);
-var eventGraphLegend = __webpack_require__(17);
-var getEvents = __webpack_require__(16);
+var mainGraph = __webpack_require__(3);
+var eventGraphLegend = __webpack_require__(18);
+var getEvents = __webpack_require__(17);
 var processData = __webpack_require__(19);
 
 function topology(container, data, width, height) {
-    var svg = d3.select(container).append("svg");
-    var svg_legend = d3.select(container).append("svg");
+    var svg = d3.select(container).append("svg").node();
+    var svg_legend = d3.select(container).append("svg").node();
     configVar.container = svg;
     configVar.container_legend = svg_legend;
 
@@ -1297,7 +2073,7 @@ function topology(container, data, width, height) {
 module.exports = topology;
 
 /***/ }),
-/* 9 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1320,7 +2096,7 @@ function createButton(svg, x, y, text) {
 module.exports = { createButton: createButton, btn_w: btn_w, btn_h: btn_h, btn_m: btn_m };
 
 /***/ }),
-/* 10 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1413,18 +2189,18 @@ function highlightById(_ref) {
 module.exports = { highlightNode: highlightNode };
 
 /***/ }),
-/* 11 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var functionMap = {
-    socviewmap: __webpack_require__(6),
-    drawGeoMapMapael: __webpack_require__(7),
-    dcs: __webpack_require__(4),
-    simpleLineChart: __webpack_require__(5),
-    topology: __webpack_require__(8)
+    socviewmap: __webpack_require__(8),
+    drawGeoMapMapael: __webpack_require__(9),
+    dcs: __webpack_require__(6),
+    simpleLineChart: __webpack_require__(7),
+    topology: __webpack_require__(10)
 
     //bind function to window
 };for (var i in functionMap) {
@@ -1436,7 +2212,7 @@ var functionMap = {
 }
 
 /***/ }),
-/* 12 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3649,7 +4425,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 });
 
 /***/ }),
-/* 13 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3660,7 +4436,7 @@ var Mapael = __webpack_require__(1);
 var _require = __webpack_require__(0),
     getLocationId = _require.getLocationId;
 
-var _require2 = __webpack_require__(3),
+var _require2 = __webpack_require__(5),
     location_r = _require2.location_r,
     location_r_hl = _require2.location_r_hl,
     location_r_shoot = _require2.location_r_shoot,
@@ -3709,7 +4485,7 @@ var shootEventDynamic = function shootEventDynamic(eventGroup, locationGroup, ev
 module.exports = shootEventDynamic;
 
 /***/ }),
-/* 14 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3830,545 +4606,13 @@ function shootEventStatic(svg, event) {
 module.exports = shootEventStatic;
 
 /***/ }),
-/* 15 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _require = __webpack_require__(2),
-    diagonal = _require.diagonal,
-    shortenText = _require.shortenText,
-    shortenExtendText = _require.shortenExtendText,
-    shortenEventText = _require.shortenEventText,
-    shortenMachineText = _require.shortenMachineText,
-    deg2rad = _require.deg2rad,
-    genArc = _require.genArc,
-    copyToClipBoard = _require.copyToClipBoard,
-    createContextMenuFuntion = _require.createContextMenuFuntion;
-
-function centerGraph(node_center, node_extend, configVar) {
-    configVar.graphDescription = node_center.data.name;
-    configVar.eventgraphIsMainGraphOn = false;
-    configVar.node_center = node_center;
-
-    //define in use variables
-    var node_radius = configVar.node_radius;
-
-    var L0_circle_radius = configVar.L0_circle_radius;
-    var L1_circle_radius = configVar.L1_circle_radius;
-    var L2_circle_radius = configVar.L2_circle_radius;
-    var L3_circle_radius = configVar.L3_circle_radius;
-
-    var L1_min_radius = configVar.L1_min_radius;
-    var L2_min_radius = configVar.L2_min_radius;
-
-    var L0_radius = configVar.L0_radius;
-    var L1_radius = configVar.L1_radius;
-    var L2_radius = configVar.L2_radius;
-
-    var L3_width = configVar.L3_width;
-    var L3_margin = configVar.L3_margin;
-
-    var c_marmin = 1;
-    var text_node_margin = configVar.text_node_margin;
-    var y_margin = configVar.y_margin;
-    var radius = configVar.node_radius;
-    var character_length = configVar.character_length;
-    var padding_y = configVar.padding_y;
-    var padding = configVar.padding;
-    var shift_x = configVar.shift_x;
-    var shift_y = configVar.shift_y;
-
-    //computation
-    var nodes_L1, step_angle;
-    var start_angle = 0;
-    if (node_center.type == "event") {
-        nodes_L1 = node_center.sources.values().concat(node_center.targets.values());
-        step_angle = 2 * Math.PI / (node_center.sources.values().length + node_center.targets.values().length);
-        start_angle = Math.PI - (node_center.sources.size() - 1) * step_angle / 2;
-    } else {
-        nodes_L1 = node_center.related_events.values();
-        step_angle = 2 * Math.PI / node_center.related_events.size();
-    }
-
-    var links = [];
-    var nodes_L2 = [];
-
-    L1_radius = Math.max(L1_min_radius, nodes_L1.length * (L1_circle_radius + c_marmin) / Math.PI + L1_circle_radius);
-    L2_radius = 2 * L1_radius;
-    extend_node_width = L2_circle_radius * 2 + text_node_margin + L3_width * character_length + padding_y;
-    var svg_width = L2_radius * 2 + L2_circle_radius + padding * 2 + L3_margin * 2 + L3_width * 2;
-    var svg_height = (L2_radius + L2_circle_radius + padding) * 2 + shift_y;
-    node_center.x = svg_width / 2;
-    node_center.y = L2_radius + L2_circle_radius + padding + shift_y;
-    configVar.center.x = node_center.x;
-    configVar.center.y = node_center.y;
-
-    nodes_L1.forEach(function (node_L1, index) {
-        var combine = {
-            id: "c" + node_center.id + "" + node_L1.id,
-            type: "combine",
-            count: 0,
-            center: node_center,
-            source: node_L1
-        };
-        nodes_L2.push(combine);
-
-        if (node_center.type == "event") {
-            combine.count = node_L1.related_events.size() - 1;
-            links.push({
-                id: "from_" + node_L1.id + "_to_" + node_center.id,
-                source: node_L1,
-                target: node_center
-            });
-
-            links.push({
-                id: "from_" + node_L1.id + "_to_" + combine.id,
-                source: node_L1,
-                target: combine
-            });
-        } else {
-            if (node_center.type == "source") {
-                combine.count = node_L1.targets.size();
-            } else {
-                combine.count = node_L1.sources.size();
-            }
-
-            links.push({
-                id: "from_" + node_center.id + "_to_" + node_L1.id,
-                source: node_center,
-                target: node_L1
-            });
-
-            links.push({
-                id: "from_" + combine.id + "_to_" + node_L1.id,
-                source: combine,
-                target: node_L1
-            });
-        }
-
-        var angle = start_angle + index * step_angle;
-        node_L1.x = node_center.x + Math.cos(angle) * L1_radius;
-        node_L1.y = node_center.y + Math.sin(angle) * L1_radius;
-        node_L1.a = angle / Math.PI * 180;
-
-        combine.x = node_center.x + Math.cos(angle) * L2_radius;
-        combine.y = node_center.y + Math.sin(angle) * L2_radius;
-        combine.a = node_L1.a;
-    });
-
-    var nodes_L3 = [];
-    var links_extend = [];
-    var combine_source;
-    var nodes_L3_height = 0;
-    if (node_extend != null && node_extend != undefined) {
-        switch (node_center.type) {
-            case "source":
-                nodes_L3 = node_extend.targets.values();
-                break;
-            case "target":
-                nodes_L3 = node_extend.sources.values();
-                break;
-            case "event":
-                nodes_L3 = node_extend.related_events.values();
-                break;
-        }
-
-        //remove center node
-        for (var i = 0; i < nodes_L3.length; i++) {
-            if (nodes_L3[i].id == node_center.id) {
-                nodes_L3.splice(i, 1);
-                break;
-            }
-        }
-
-        //extract combine source from nodes_L2
-        if (node_extend != null && node_extend != undefined) {
-            var combine_index = nodes_L1.indexOf(node_extend);
-            if (combine_index >= 0) {
-                combine_source = nodes_L2.splice(combine_index, 1)[0];
-            }
-        }
-
-        var direction = 1;
-        if (combine_source.x < node_center.x) {
-            direction = -1;
-        }
-
-        var combine_transit = {
-            x: node_center.x + (L2_radius + L2_circle_radius + 10) * direction,
-            y: combine_source.y
-
-            //define coordinate
-        };nodes_L3_height = nodes_L3.length * (L3_circle_radius * 2 + y_margin) - y_margin;
-        var base_y = combine_source.y - nodes_L3_height / 2;
-        if (base_y + nodes_L3_height > node_center.y + L2_radius) {
-            base_y = node_center.y + L2_radius - nodes_L3_height;
-        }
-
-        if (base_y < node_center.y - L2_radius) {
-            base_y = node_center.y - L2_radius - L3_circle_radius;
-        }
-
-        nodes_L3.forEach(function (node_L3, index) {
-            node_L3.x = node_center.x + (L2_radius + L2_circle_radius + L3_margin + L3_circle_radius) * direction;
-            node_L3.y = base_y + L3_circle_radius + index * (L3_circle_radius * 2 + y_margin);
-
-            links_extend.push({
-                id: "from_" + combine_source.id + "_to_" + node_L3.id,
-                source: combine_transit,
-                target: node_L3
-            });
-        });
-    }
-    if (combine_source != null) {
-
-        configVar.events.combine_highlight = function (d, state) {
-            var container = configVar.container;
-            if (d.id == node_extend.id) {
-                d3.select(container).selectAll(".linkx").classed('link-highlight', state);
-                d3.select(container).selectAll("#extend_line").classed('link-highlight', state);
-
-                if (d.type == "event") {
-                    d3.select(container).select("#from_" + combine_source.id + "_to_" + node_extend.id).classed('link-highlight', state);
-                } else {
-                    d3.select(container).select("#from_" + node_extend.id + "_to_" + combine_source.id).classed('link-highlight', state);
-                }
-            } else {
-                var checkRelated = node_extend.related_nodes.get(d.id) != null;
-                var checkNotCenter = d.id != node_center.id;
-                var checkType = false;
-                if (node_center.type == "event") {
-                    if (d.type == node_center.type) {
-                        checkType = true;
-                    }
-                } else {
-                    if (d.type == "source" || d.type == "target" || d.type == "source_target") {
-                        checkType = true;
-                    }
-                }
-
-                if (checkRelated && checkNotCenter && checkType) {
-                    var target_link_id = "from_" + combine_source.id + "_to_" + d.id;
-
-                    //bring related link to front if highlight
-                    if (state) {
-                        d3.select(container).selectAll('.linkx').sort(function (a, b) {
-                            return a.id == target_link_id;
-                        });
-                    }
-
-                    //highlight related link
-                    d3.select(container).selectAll(".linkx").classed('link-highlight', function (dl) {
-                        return dl.id == target_link_id && state;
-                    });
-
-                    //highlight extend line
-                    d3.select(container).selectAll("#extend_line").classed('link-highlight', state);
-
-                    if (d.type == "event") {
-                        d3.select(container).select("#from_" + node_extend.id + "_to_" + combine_source.id).classed('link-highlight', state);
-                    } else {
-                        d3.select(container).select("#from_" + combine_source.id + "_to_" + node_extend.id).classed('link-highlight', state);
-                    }
-                }
-            }
-        };
-    }
-
-    //clear
-    d3.select(configVar.container).selectAll("*").remove();
-
-    //render
-    if (nodes_L3.length > 0) {
-        svg_height = Math.max(svg_height, nodes_L3_height + padding * 2 + shift_y);
-    }
-
-    var svg = d3.select(configVar.container);
-    svg.attr("viewBox", "0 0 " + svg_width + " " + svg_height);
-    svg.attr("width", svg_width);
-    svg.attr("height", svg_height);
-    var L0_className = [];
-    var L1_className = [];
-    var L2_className = [];
-    var L3_className = [];
-    var isEventCenter = true;
-    if (node_center.type == "event") {
-        L0_className = ["event-group"];
-        L1_className = ["machine-group"];
-        L2_className = ["event-combine-group"];
-        isEventCenter = true;
-    } else if (node_center.type == "source") {
-        L0_className = ["machine-group", "source"];
-        L1_className = ["event-group"];
-        L2_className = ["machine-combine-group", "target"];
-        isEventCenter = false;
-    } else {
-        L0_className = ["machine-group", "target"];
-        L1_className = ["event-group"];
-        L2_className = ["machine-combine-group", "source"];
-        isEventCenter = false;
-    }
-
-    //draw links
-    var link = svg.append("g").selectAll("line").data(links).enter().append("line").attr("class", "link").attr("id", function (d) {
-        return d.id;
-    }).attr("x1", function (d) {
-        return d.source.x;
-    }).attr("y1", function (d) {
-        return d.source.y;
-    }).attr("x2", function (d) {
-        return d.target.x;
-    }).attr("y2", function (d) {
-        return d.target.y;
-    });
-
-    if (combine_source != null) {
-        var extend_curve = function extend_curve(d) {
-            var x1 = (d.source.x + d.target.x) / 2;
-            var y1 = d.source.y;
-            var x2 = x1;
-            var y2 = y1;
-
-            var m = "M " + d.source.x + " " + d.source.y;
-            var c = "C " + x1 + " " + y1 + " " + x2 + " " + y2 + " " + (d.target.x - L3_circle_radius * direction) + " " + d.target.y;
-
-            return m + c;
-        };
-
-        var linkx = svg.append("g").selectAll("path").data(links_extend).enter().append("path").attr("class", "link linkx").attr("id", function (d) {
-            return d.id;
-        }).attr("d", extend_curve);
-
-        var extend_line = svg.append("line").attr("id", "extend_line").attr("x1", function (d) {
-            return combine_source.x;
-        }).attr("y1", function (d) {
-            return combine_source.y;
-        }).attr("x2", function (d) {
-            return combine_transit.x;
-        }).attr("y2", function (d) {
-            return combine_transit.y;
-        });
-    }
-
-    //draw L0 or center
-    var node_L0_group = createGroup(configVar, "L0-group", L0_className, [node_center]);
-    var node_L0 = draw_L0(node_L0_group, isEventCenter, configVar);
-
-    //draw L1
-    var node_L1_group = createGroup(configVar, "L1-group", L1_className, nodes_L1);
-    var node_L1 = draw_L1(node_L1_group, isEventCenter, configVar);
-
-    //draw L2
-    var node_L2_group = createGroup(configVar, "L2-group", L2_className, nodes_L2, null, null, getEvents(configVar).node_combine_click);
-    var node_L2 = draw_L2(node_L2_group, isEventCenter, configVar);
-    var node_L2_text = node_L2_group.append("text").attr("class", "text").attr('id', function (d) {
-        return "x" + d.id;
-    }).attr("text-anchor", "middle").attr("x", function (d) {
-        return d.x;
-    }).attr("y", function (d) {
-        return d.y;
-    }).text(function (d) {
-        return d.count;
-    });
-
-    //draw L3
-    var node_L3_group = createGroup(configVar, "L3-group", [], nodes_L3);
-    var node_L3 = draw_L3(node_L3_group, isEventCenter, configVar);
-    var node_L3_text = node_L3_group.append("text").attr("class", "text").attr('id', function (d) {
-        return "x" + d.id;
-    }).attr("text-anchor", direction > 0 ? "start" : "end").attr("x", function (d) {
-        return d.x + (L3_circle_radius + text_node_margin) * direction;
-    }).attr("y", function (d) {
-        return d.y;
-    }).text(function (d) {
-        return shortenExtendText(d.data.name, configVar);
-    });
-
-    //adjust text position to work on IE and Edge
-    var item, item_h;
-    nodes_L2.forEach(function (node, index) {
-        item = node_L2_text[0][index];
-        item_h = item.getBoundingClientRect().height;
-        item.setAttribute("y", node.y + item_h / 4);
-    });
-    nodes_L3.forEach(function (node, index) {
-        item = node_L3_text[0][index];
-        item_h = item.getBoundingClientRect().height;
-        item.setAttribute("y", node.y + item_h / 4);
-    });
-
-    //redraw buttons
-    buttons(configVar);
-}
-
-function rotate_node(d, config) {
-    if (d.a == null || d.a == undefined) {
-        d.a = 0;
-    }
-    var rotate = d.x < config.center.x ? d.a + 180 : d.a;
-    rotate %= 360;
-    rotate += " " + d.x + " " + d.y;
-    return "rotate(" + rotate + ")";
-}
-
-function draw_L0(node_L0_group, isEventCenter, configVar) {
-    var L0_circle_radius = configVar.L0_circle_radius;
-    if (isEventCenter) {
-        var node_L0 = node_L0_group.append("rect").attr("class", "event").attr('id', function (d) {
-            return d.id;
-        }).attr("x", function (d) {
-            return d.x - L0_circle_radius;
-        }).attr("y", function (d) {
-            return d.y - L0_circle_radius;
-        }).attr("width", L0_circle_radius * 2).attr("height", L0_circle_radius * 2);
-    } else {
-        var node_L0 = node_L0_group.append("circle").attr("class", function (d) {
-            return "machine " + (d.type == "source" ? "source" : "target");
-        }).attr('id', function (d) {
-            return d.id;
-        }).attr("cx", function (d) {
-            return d.x;
-        }).attr("cy", function (d) {
-            return d.y;
-        }).attr("r", function (d) {
-            return L0_circle_radius;
-        });
-    }
-}
-
-function draw_L1(node_L1_group, isEventCenter, configVar) {
-    var L1_circle_radius = configVar.L1_circle_radius;
-    if (isEventCenter) {
-        var node_L1 = node_L1_group.append("circle").attr("class", function (d) {
-            return "machine " + (d.type == "source" ? "source" : "target");
-        }).attr('id', function (d) {
-            return d.id;
-        }).attr("cx", function (d) {
-            return d.x;
-        }).attr("cy", function (d) {
-            return d.y;
-        }).attr("r", function (d) {
-            return L1_circle_radius;
-        });
-    } else {
-        var node_L1 = node_L1_group.append("rect").attr("class", "event").attr('id', function (d) {
-            return d.id;
-        }).attr("transform", function (d) {
-            return rotate_node(d, configVar);
-        }).attr("x", function (d) {
-            return d.x - L1_circle_radius;
-        }).attr("y", function (d) {
-            return d.y - L1_circle_radius;
-        }).attr("width", L1_circle_radius * 2).attr("height", L1_circle_radius * 2);
-    }
-}
-
-function draw_L2(node_L2_group, isEventCenter, configVar) {
-    var L2_circle_radius = configVar.L2_circle_radius;
-    if (isEventCenter) {
-        var node_L2 = node_L2_group.append("rect").attr("class", "").attr('id', function (d) {
-            return d.id;
-        }).attr("transform", function (d) {
-            return rotate_node(d, configVar);
-        }).attr("x", function (d) {
-            return d.x - L2_circle_radius;
-        }).attr("y", function (d) {
-            return d.y - L2_circle_radius;
-        }).attr("width", function (d) {
-            return L2_circle_radius * 2;
-        }).attr("height", function (d) {
-            return L2_circle_radius * 2;
-        });
-    } else {
-        var node_L2 = node_L2_group.append("circle").attr("class", "").attr('id', function (d) {
-            return d.id;
-        }).attr("cx", function (d) {
-            return d.x;
-        }).attr("cy", function (d) {
-            return d.y;
-        }).attr("r", function (d) {
-            return L2_circle_radius;
-        });
-    }
-}
-
-function draw_L3(node_L3_group, isEventCenter, configVar) {
-    var radius = configVar.L3_circle_radius;
-    if (isEventCenter) {
-        var node_L3 = node_L3_group.append("rect").attr("class", "event").attr('id', function (d) {
-            return d.id;
-        }).attr("x", function (d) {
-            return d.x - radius;
-        }).attr("y", function (d) {
-            return d.y - radius;
-        }).attr("width", function (d) {
-            return radius * 2;
-        }).attr("height", function (d) {
-            return radius * 2;
-        });
-    } else {
-        var node_L3 = node_L3_group.append("circle").attr("class", function (d) {
-            return "machine " + (d.type == "source" ? "source" : "target");
-        }).attr('id', function (d) {
-            return d.id;
-        }).attr("cx", function (d) {
-            return d.x;
-        }).attr("cy", function (d) {
-            return d.y;
-        }).attr("r", function (d) {
-            return radius;
-        });
-    }
-}
-
-function createGroup(configVar, className, classNameExtend, data, mouseOver, mouseOut, click) {
-    var mouseEvents = configVar.events;
-    var node_mouseover = mouseEvents.node_mouseover;
-    var node_mouseout = mouseEvents.node_mouseout;
-    var node_click = mouseEvents.node_click;
-
-    var node_group = d3.select(configVar.container).selectAll("." + className).data(data).enter().append("g").attr("class", function (d) {
-        var extendName = "";
-        classNameExtend.forEach(function (node, index) {
-            extendName += " " + node;
-        });
-        return className + extendName;
-    }).attr('id', function (d) {
-        return "g" + d.id;
-    }).on("mouseover", mouseOver == undefined ? node_mouseover : mouseOver).on("mouseout", mouseOut == undefined ? node_mouseout : mouseOut).on("click", click == undefined ? node_click : click).on("contextmenu", function (d, i) {
-        if (d.type != "combine") {
-            d3.contextMenu(createContextMenuFuntion(configVar.data.contextMenuCommand, {
-                getName: function getName(node_data) {
-                    return node_data.data.name;
-                },
-                getMenuData: function getMenuData(node_data) {
-                    return { id: node_data.data.id, type: node_data.type };
-                }
-            }, true))(d, i);
-        }
-    });
-
-    var node_title = node_group.append("title").text(function (d) {
-        if (d.data != null) {
-            return d.data.name;
-        } else {
-            return d.count;
-        }
-    });
-
-    return node_group;
-}
-
-module.exports = centerGraph;
-
-/***/ }),
-/* 16 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
+var centerGraph = __webpack_require__(2);
 
 function getEvents(configVar) {
     var container = configVar.container;
@@ -4423,14 +4667,14 @@ function getEvents(configVar) {
 
     var node_click = function node_click(d) {
         d3.event.stopPropagation();
-        center_graph(d, null, configVar);
+        centerGraph(d, null, configVar);
         closeContextMenu();
     };
 
     var node_combine_click = function node_combine_click(d) {
         d3.event.stopPropagation();
         if (d.count > 0) {
-            center_graph(d.center, d.source, configVar);
+            centerGraph(d.center, d.source, configVar);
         }
         closeContextMenu();
     };
@@ -4453,11 +4697,13 @@ function closeContextMenu() {
 module.exports = getEvents;
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
+
+var mainGraph = __webpack_require__(3);
 
 function eventGraphLegend(configVar) {
     var svg = d3.select(configVar.container_legend);
@@ -4508,7 +4754,7 @@ function buttons(configVar) {
         var homeGroup = group.append("g").attr("class", function () {
             return "homeGroup";
         }).on("click", function () {
-            main_graph(configVar);
+            mainGraph(configVar);
         });
 
         var homeButton = homeGroup.append("circle").attr("class", "homeButton").attr("cx", configVar.center.x).attr("cy", margin + originalHomeImageSize * scale / 2).attr("r", originalHomeImageSize * scale / 2);
@@ -4543,248 +4789,6 @@ function buttons(configVar) {
 }
 
 module.exports = eventGraphLegend;
-
-/***/ }),
-/* 18 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var centerGraph = __webpack_require__(15);
-
-var _require = __webpack_require__(2),
-    diagonal = _require.diagonal,
-    shortenText = _require.shortenText,
-    shortenExtendText = _require.shortenExtendText,
-    shortenEventText = _require.shortenEventText,
-    shortenMachineText = _require.shortenMachineText,
-    deg2rad = _require.deg2rad,
-    genArc = _require.genArc,
-    copyToClipBoard = _require.copyToClipBoard,
-    createContextMenuFuntion = _require.createContextMenuFuntion;
-
-function mainGraph(configVar) {
-    configVar.eventgraphIsMainGraphOn = true;
-
-    //define in use variables
-    var source_machines = configVar.data.source_machines;
-    var target_machines = configVar.data.target_machines;
-    var events = configVar.data.events;
-
-    var text_node_margin = configVar.text_node_margin;
-    var machine_max_text_length_px = configVar.machine_max_text_length_px;
-    var rw = configVar.rw;
-    var rh = configVar.rh;
-    var radius = configVar.node_radius;
-    var y_margin = configVar.y_margin;
-    var padding = configVar.padding;
-    var shift_x = configVar.shift_x;
-    var shift_y = configVar.shift_y;
-    var center = {};
-
-    //define links
-    var links = d3.map();
-    events.forEach(function (event_key, event) {
-        event.sources.forEach(function (source_key, source) {
-            var link = {
-                id: "from_" + source.id + "_to_" + event.id,
-                source: source,
-                target: event
-            };
-            links.set(link.id, link);
-        });
-
-        event.targets.forEach(function (target_key, target) {
-            var link = {
-                id: "from_" + target.id + "_to_" + event.id,
-                source: target,
-                target: event
-            };
-            links.set(link.id, link);
-        });
-    });
-
-    //define svg size
-    var radius_by_events_size = events.size() * (rh + y_margin) / 2;
-    var radius_by_event_width = rw;
-    var radius_by_machine_size = Math.max(source_machines.size(), target_machines.size()) * (radius + y_margin) * 4 / Math.PI;
-    center.radius = Math.max(radius_by_events_size, radius_by_event_width);
-    center.radius = Math.max(center.radius, radius_by_machine_size);
-    center.x = padding + shift_x + Math.min(center.radius, center.radius / 2 + 100) + text_node_margin + machine_max_text_length_px;
-    center.y = padding + shift_y + center.radius + rh;
-    configVar.center.x = center.x;
-    configVar.center.y = center.y;
-    var svg_width = shift_x + (padding + Math.min(center.radius, center.radius / 2 + 100) + text_node_margin + machine_max_text_length_px) * 2;
-    var svg_height = shift_y + (padding + center.radius + rh) * 2;
-
-    //define coordinate
-    var max = d3.max([source_machines.size(), target_machines.size(), events.size()]);
-    var event_start = center.y - Math.min(center.radius, events.size() * (rh + y_margin) / 2 - rh / 2);
-
-    var angle, step_angle, base_angle;
-    var ratio = 0.5;
-    source_machines.values().forEach(function (node, index) {
-        step_angle = Math.PI / source_machines.size();
-        base_angle = step_angle / 2 - Math.PI / 2;
-        angle = index * step_angle + base_angle;
-        angle = angle * ratio;
-        node.x = center.x - center.radius * Math.cos(angle);
-        node.y = center.y - center.radius * Math.sin(angle);
-
-        if (node.x < center.x - center.radius / 2) {
-            node.x = node.x + center.radius / 2 - 100;
-        }
-    });
-
-    target_machines.values().forEach(function (node, index) {
-        step_angle = Math.PI / target_machines.size();
-        base_angle = step_angle / 2 - Math.PI / 2;
-        angle = index * step_angle + base_angle;
-        angle = angle * ratio;
-        node.x = center.x + center.radius * Math.cos(angle);
-        node.y = center.y - center.radius * Math.sin(angle);
-
-        if (node.x > center.x + center.radius / 2) {
-            node.x = node.x - center.radius / 2 + 100;
-        }
-    });
-
-    events.values().forEach(function (event, index) {
-        event.x = center.x;
-        event.y = event_start + index * (rh + y_margin);
-    });
-
-    //clear
-    d3.select(configVar.container).selectAll("*").remove();
-
-    //render
-    var svg = d3.select(configVar.container);
-    svg.attr("viewBox", "0 0 " + svg_width + " " + svg_height);
-    svg.attr("width", svg_width);
-    svg.attr("height", svg_height);
-
-    configVar.events.combine_highlight = function (d, state) {};
-    var node_mouseover = configVar.events.node_mouseover;
-    var node_mouseout = configVar.events.node_mouseout;
-    var node_click = configVar.events.node_click;
-
-    var contextMenuCommand = configVar.data.contextMenuCommand;
-    var menuFN = d3.contextMenu(createContextMenuFuntion(contextMenuCommand, {
-        getName: function getName(node_data) {
-            return node_data.data.name;
-        },
-        getMenuData: function getMenuData(node_data) {
-            return { id: node_data.data.id, type: node_data.type };
-        }
-    }, true));
-
-    var link = svg.selectAll("path ").data(links.values()).enter().append("path").attr("class", "link").attr("id", function (d) {
-        return d.id;
-    }).attr("d", diagonal(configVar));
-
-    var source_group = svg.selectAll(".source-group").data(source_machines.values()).enter().append("g").attr("class", "source-group").attr('id', function (d) {
-        return "g" + d.id;
-    }).on("mouseover", node_mouseover).on("mouseout", node_mouseout).on("click", node_click).on("contextmenu", menuFN);
-
-    var source_title = source_group.append("title").text(function (d) {
-        return d.data.name;
-    });
-
-    var source_machine = source_group.append("circle").attr("class", "machine source").attr('id', function (d) {
-        return d.id;
-    }).attr("cx", function (d) {
-        return d.x;
-    }).attr("cy", function (d) {
-        return d.y;
-    }).attr("r", function (d) {
-        return radius;
-    });
-
-    var source_text = source_group.append("text").attr("class", "text machine-text").attr('id', function (d) {
-        return "x" + d.id;
-    }).attr("text-anchor", "end").attr("x", function (d) {
-        return d.x - radius * 2;
-    }).attr("y", function (d) {
-        return d.y;
-    }).text(function (d) {
-        return shortenMachineText(d.data.name, configVar);
-    });
-
-    var target_group = svg.selectAll(".target-group").data(target_machines.values()).enter().append("g").attr("class", "target-group").attr('id', function (d) {
-        return "g" + d.id;
-    }).on("mouseover", node_mouseover).on("mouseout", node_mouseout).on("click", node_click).on("contextmenu", menuFN);
-
-    var target_title = target_group.append("title").text(function (d) {
-        return d.data.name;
-    });
-
-    var target_machine = target_group.append("circle").attr("class", "machine target").attr('id', function (d) {
-        return d.id;
-    }).attr("cx", function (d) {
-        return d.x;
-    }).attr("cy", function (d) {
-        return d.y;
-    }).attr("r", function (d) {
-        return radius;
-    });
-
-    var target_text = target_group.append("text").attr("class", "text machine-text").attr('id', function (d) {
-        return "x" + d.id;
-    }).attr("x", function (d) {
-        return d.x + radius * 2;
-    }).attr("y", function (d) {
-        return d.y;
-    }).text(function (d) {
-        return shortenMachineText(d.data.name, configVar);
-    });
-
-    var event_group = svg.selectAll(".event-group").data(events.values()).enter().append("g").attr("class", "event-group").attr('id', function (d) {
-        return "g" + d.id;
-    }).on("mouseover", node_mouseover).on("mouseout", node_mouseout).on("click", node_click).on("contextmenu", menuFN);
-
-    var event = event_group.append("rect").attr("class", "event").attr('id', function (d) {
-        return d.id;
-    }).attr("x", function (d) {
-        return d.x - rw / 2;
-    }).attr("y", function (d) {
-        return d.y - rh / 2;
-    }).attr("width", rw).attr("height", rh);
-
-    var event_title = event_group.append("title").text(function (d) {
-        return d.data.name;
-    });
-
-    var event_text = event_group.append("text").attr("class", "text event-text").attr('id', function (d) {
-        return "x" + d.id;
-    }).attr("text-anchor", "middle").attr("x", function (d) {
-        return d.x;
-    }).attr("y", function (d) {
-        return d.y;
-    }).text(function (d) {
-        return shortenEventText(d.data.name, configVar);
-    });
-
-    //adjust text position to work on IE and Edge
-    var item, item_h;
-    events.values().forEach(function (node, index) {
-        item = event_text[0][index];
-        item_h = item.getBoundingClientRect().height;
-        item.setAttribute("y", node.y + item_h / 4);
-    });
-    source_machines.values().forEach(function (node, index) {
-        item = source_text[0][index];
-        item_h = item.getBoundingClientRect().height;
-        item.setAttribute("y", node.y + item_h / 4);
-    });
-    target_machines.values().forEach(function (node, index) {
-        item = target_text[0][index];
-        item_h = item.getBoundingClientRect().height;
-        item.setAttribute("y", node.y + item_h / 4);
-    });
-}
-
-module.exports = mainGraph;
 
 /***/ }),
 /* 19 */

@@ -1,3 +1,5 @@
+let mainGraph = require('./mainGraph');
+
 function eventGraphLegend(configVar) {
     var svg = d3.select(configVar.container_legend);
 
@@ -79,7 +81,7 @@ function buttons(configVar) {
                 return "homeGroup";
             })
             .on("click", function () {
-                main_graph(configVar);
+                mainGraph(configVar);
             });
 
         var homeButton = homeGroup.append("circle")
