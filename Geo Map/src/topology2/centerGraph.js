@@ -1,7 +1,6 @@
 let { diagonal, shortenText, shortenExtendText, shortenEventText, shortenMachineText, deg2rad, genArc, copyToClipBoard, createContextMenuFuntion } = require('./util');
 
 let getEvents = null;
-let homeButton = null;
 
 function centerGraph(node_center, node_extend, configVar) {
     configVar.graphDescription = node_center.data.name;
@@ -387,7 +386,7 @@ function centerGraph(node_center, node_extend, configVar) {
     });
 
     //redraw buttons
-    homeButton(configVar);
+    buttons(configVar);
 }
 
 function rotate_node(d, config) {
@@ -580,7 +579,10 @@ function createGroup(configVar, className, classNameExtend, data, mouseOver, mou
         .on("click", click == undefined ? node_click : click)
         .on("contextmenu", function (d, i) {
             if (d.type != "combine") {
-                webViewControllerGraph.d3ActionCommand(contextMenuCommand, d.data.id , -1, -1);
+                d3.contextMenu(createContextMenuFuntion(configVar.data.contextMenuCommand, {
+                	getName: function (node_data) {return node_data.data.name},
+            		getMenuData: function (node_data) {return {id: node_data.data.id, type: node_data.type}}
+	            }, true))(d, i);
             }
         });
 
@@ -600,4 +602,3 @@ module.exports = centerGraph;
 
 //need to move require under module.exports since we have circular dependency
 getEvents = require('./event');
-homeButton = require('./homeButton');

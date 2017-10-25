@@ -1,6 +1,5 @@
+let centerGraph = require('./centerGraph');
 let { diagonal, shortenText, shortenExtendText, shortenEventText, shortenMachineText, deg2rad, genArc, copyToClipBoard, createContextMenuFuntion } = require('./util');
-
-let centerGraph = null;
 
 function mainGraph(configVar) {
     configVar.eventgraphIsMainGraphOn = true;
@@ -108,9 +107,10 @@ function mainGraph(configVar) {
     var node_click = configVar.events.node_click;
     
     var contextMenuCommand = configVar.data.contextMenuCommand;
-    var menuFN = function(d) {
-        webViewControllerGraph.d3ActionCommand(contextMenuCommand, d.data.id , -1, -1);
-    }
+    var menuFN = d3.contextMenu(createContextMenuFuntion(contextMenuCommand, {
+    	getName: function (node_data) {return node_data.data.name},
+    	getMenuData: function (node_data) {return {id: node_data.data.id, type: node_data.type}}
+    }, true));
 
     var link = svg.selectAll("path ")
         .data(links.values())
@@ -131,7 +131,7 @@ function mainGraph(configVar) {
         .on("mouseover", node_mouseover)
         .on("mouseout", node_mouseout)
         .on("click", node_click)
-        .on("mousedown", menuFN);
+        .on("contextmenu", menuFN);
 
     var source_title = source_group.append("title")
         .text(function (d) {
@@ -179,7 +179,7 @@ function mainGraph(configVar) {
         .on("mouseover", node_mouseover)
         .on("mouseout", node_mouseout)
         .on("click", node_click)
-        .on("mousedown", menuFN);
+        .on("contextmenu", menuFN);
 
     var target_title = target_group.append("title")
         .text(function (d) {
@@ -226,7 +226,7 @@ function mainGraph(configVar) {
         .on("mouseover", node_mouseover)
         .on("mouseout", node_mouseout)
         .on("click", node_click)
-        .on("mousedown", menuFN);
+        .on("contextmenu", menuFN);
 
     var event = event_group.append("rect")
         .attr("class", "event")
@@ -283,5 +283,3 @@ function mainGraph(configVar) {
 }
 
 module.exports = mainGraph;
-
-centerGraph = require('./centerGraph');

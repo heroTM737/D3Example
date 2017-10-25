@@ -1,4 +1,4 @@
-let centerGraph = null;
+let centerGraph = require('./centerGraph');
 
 function getEvents(configVar) {
     var container = configVar.container;
@@ -81,6 +81,3 @@ function closeContextMenu() {
 }
 
 module.exports = getEvents;
-
-//need to move require under module.exports since we have circular dependency
-centerGraph = require('./centerGraph');
