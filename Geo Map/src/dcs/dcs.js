@@ -86,7 +86,7 @@ function dcs(container, data, width, height) {
     function clickNode(d) {
         d3.event.stopPropagation();
         activeNode = d;
-        if (d.type != "host") {
+        if (d.type != "host" && d.type != "messagebus") {
             showDetail(activeNode);
         }
         highlightNode({ dataBus, node: d, statusKeep: true });

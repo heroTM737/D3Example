@@ -1465,7 +1465,7 @@ function dcs(container, data, width, height) {
     function clickNode(d) {
         d3.event.stopPropagation();
         activeNode = d;
-        if (d.type != "host") {
+        if (d.type != "host" && d.type != "messagebus") {
             showDetail(activeNode);
         }
         highlightNode({ dataBus: dataBus, node: d, statusKeep: true });
@@ -4752,6 +4752,8 @@ function homeButton(configVar) {
         var item = graphText[0][0];
         var item_h = item.getBoundingClientRect().height;
         item.setAttribute("y", text_y + item_h / 4);
+        var textWidth = item.getBoundingClientRect().width + 10;
+        graphBox.attr("x", configVar.center.x - textWidth / 2).attr("width", textWidth);
     }
 }
 

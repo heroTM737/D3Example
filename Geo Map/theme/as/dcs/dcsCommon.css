@@ -2,7 +2,8 @@
     cursor: pointer;
 }
 
-.node.host {
+.node.host,
+.node.messagebus {
   cursor: default;
 }
 
