@@ -1,4 +1,7 @@
-var nodeType = ["correlator", "aggregator", "messagebus", "persistor", "dcache"];
+// var nodeType = ["correlator", "aggregator", "messagebus", "persistor", "dcache"];
+// var statusType = ["active", "warning", "error"];
+
+var nodeType = ["CORRELATOR", "AGGREGATOR", "MBUS_DATA", "MANANGER", "DCACHE"];
 var statusType = ["active", "warning", "error"];
 
 function genNode(suffix) {
@@ -9,9 +12,10 @@ function genNode(suffix) {
   var status = statusType[typeIndex];
 
   return {
-    name: type + "_" + suffix,
-    type: type,
-    status: status
+    id: type.toLowerCase() + "_" + Math.random(),
+    name : type.toLowerCase() + "_" + suffix,
+    type : type,
+    status : status
   }
 }
 
@@ -23,15 +27,17 @@ var max_count_node = 3;
 
 function genData() {
   var cluster = {
+    id: "cluster",
     name: "cluster",
-    type: "cluster",
+    type: "CLUSTER",
     children: []
   }
 
   for (var i = 0; i < count_host; i++) {
     var host = {
+      id: "host_" + i,
       name: "host_" + i,
-      type: "host",
+      type: "HOST",
       children: []
     }
     cluster.children.push(host);

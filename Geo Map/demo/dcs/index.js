@@ -1,5 +1,5 @@
 $(document).ready(() => {
-    dcs(document.getElementById("tree"), genData(), 500, 850);
+    dcs(document.getElementById("tree"), genData(), 700, 850);
     var legendContainer = document.getElementById("legendContainer");
     createLegend(legendContainer);
     window.showLegend = function (show) {

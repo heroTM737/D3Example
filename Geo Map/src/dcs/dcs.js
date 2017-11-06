@@ -6,11 +6,11 @@ let diagonal = d3.svg.diagonal()
 
 function mapTypeToCharacter(type) {
     switch (type) {
-        case "correlator": return "C";
-        case "aggregator": return "A";
-        case "messagebus": return "MB";
-        case "persistor": return "P";
-        case "dcache": return "DC";
+        case "CORRELATOR": return "C";
+        case "AGGREGATOR": return "A";
+        case "MBUS_DATA": return "MB";
+        case "MANAGER": return "P";
+        case "DCACHE": return "DC";
     }
     return "";
 }
@@ -158,7 +158,7 @@ function dcs(container, data, width, height) {
         // Enter any new nodes at the parent's previous position.
         let nodeEnter = node.enter().append("g")
             .attr("class", function (d) {
-                let className = "node " + d.type;
+                let className = "node " + d.type.toLowerCase();
                 if (d.children) {
                     className += " close";
                 } else if (d._children) {
