@@ -1,0 +1,12 @@
+.stackArea {
+    background: #f1f1f1;
+}
+
+.stackArea .stackAreaLine {
+    stroke: blue;
+    fill: none;
+}
+
+.stackArea .stackAreaFill {
+    stroke-width: 0px;
+}
