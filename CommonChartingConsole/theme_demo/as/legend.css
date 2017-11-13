@@ -1,0 +1,23 @@
+.legendContainer {
+    position: fixed;
+    top: 50px;
+    right: -203px;
+    border: 1px solid #e6e6e6;
+    padding: 0;
+    opacity: 0;
+    transition: 0.5s ease-out;
+}
+
+.legendContainer.fuckon {
+    opacity: 1;
+    right: 20px;
+}
+
+.legendContainer line {
+    stroke: #e6e6e6;
+    stroke-width: 1px;
+}
+
+.legendContainer .node circle {
+    fill: none;
+}

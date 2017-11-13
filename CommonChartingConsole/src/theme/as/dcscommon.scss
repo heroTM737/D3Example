@@ -1,0 +1,139 @@
+$duration: 0.5s;
+$applyTransition: fill $duration, stroke $duration, stroke-width $duration; 
+
+/* normal style */
+.link {
+  stroke: $link;
+  transition: $applyTransition;
+}
+
+.node {
+  text {
+    fill: $text;
+    transition: $applyTransition;
+  }
+  
+  circle {
+    fill: $mixColor;
+    stroke: $node;
+    transition: $applyTransition;
+  }
+
+  &.active circle {
+    stroke: $active;
+  }
+
+  &.warning circle {
+    stroke: $warning;
+  }
+
+  &.error circle {
+    stroke: $error;
+  }
+  
+  &.cluster circle {
+    stroke: $cluster;
+  }
+  
+  &.host circle {
+    stroke: $host;
+  }
+  
+  &.cluster.close circle {
+    stroke: mix($cluster, $mixColor, $opacityClose);
+  }
+  
+  &.host.close circle {
+    stroke: mix($host, $mixColor, $opacityClose);
+  }
+}
+
+/*highlight style*/
+.node-highlight,
+.node-highlight-keep {
+  &.link {
+    stroke: $link !important;
+    stroke-width: 3px !important;
+  }
+
+  text {
+    fill: $text !important;
+  }
+  
+  circle {
+    stroke: $node !important;
+  }
+
+  &.active circle {
+    stroke: $active !important;
+  }
+
+  &.warning circle {
+    stroke: $warning !important;
+  }
+
+  &.error circle {
+    stroke: $error !important;
+  }
+  
+  &.cluster circle {
+    stroke: $cluster !important;
+  }
+  
+  &.host circle {
+    stroke: $host !important;
+  }
+  
+  &.cluster.close circle {
+    stroke: mix($cluster, $mixColor, $opacityClose) !important;
+  }
+  
+  &.host.close circle {
+    stroke: mix($host, $mixColor, $opacityClose) !important;
+  }
+}
+
+/*fade out style*/
+.node-fade,
+.node-fade-keep {
+  &.link {
+    stroke: mix($link, $mixColor, $opacityHover);
+  }
+
+  text {
+    fill: mix($text, $mixColor, $opacityHover);
+  }
+
+  circle {
+    stroke: mix($node, $mixColor, $opacityHover);
+  }
+
+  &.active circle {
+    stroke: mix($active, $mixColor, $opacityHover);
+  }
+
+  &.warning circle {
+    stroke: mix($warning, $mixColor, $opacityHover);
+  }
+
+  &.error circle {
+    stroke: mix($error, $mixColor, $opacityHover);
+  }
+
+  &.cluster circle {
+    stroke: mix($cluster, $mixColor, $opacityHover);
+  }
+  
+  &.host circle {
+    stroke: mix($host, $mixColor, $opacityHover);
+  }
+  
+  &.cluster.close circle {
+    stroke: mix($cluster, $mixColor, $opacityHover);
+  }
+  
+  &.host.close circle {
+    stroke: mix($host, $mixColor, $opacityHover);
+  }
+}
+

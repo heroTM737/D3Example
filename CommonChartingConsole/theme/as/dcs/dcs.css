@@ -1,0 +1,93 @@
+/* normal style */
+.link {
+  stroke: #99ccff;
+  transition: fill 0.5s, stroke 0.5s, stroke-width 0.5s; }
+
+.node text {
+  fill: #616264;
+  transition: fill 0.5s, stroke 0.5s, stroke-width 0.5s; }
+.node circle {
+  fill: #fff;
+  stroke: #425563;
+  transition: fill 0.5s, stroke 0.5s, stroke-width 0.5s; }
+.node.active circle {
+  stroke: #01a982; }
+.node.warning circle {
+  stroke: #ffd042; }
+.node.error circle {
+  stroke: #ff454f; }
+.node.cluster circle {
+  stroke: #2587db; }
+.node.host circle {
+  stroke: #937fdd; }
+.node.cluster.close circle {
+  stroke: #66abe6; }
+.node.host.close circle {
+  stroke: #b3a5e7; }
+
+/*highlight style*/
+.node-highlight.link,
+.node-highlight-keep.link {
+  stroke: #99ccff !important;
+  stroke-width: 3px !important; }
+.node-highlight text,
+.node-highlight-keep text {
+  fill: #616264 !important; }
+.node-highlight circle,
+.node-highlight-keep circle {
+  stroke: #425563 !important; }
+.node-highlight.active circle,
+.node-highlight-keep.active circle {
+  stroke: #01a982 !important; }
+.node-highlight.warning circle,
+.node-highlight-keep.warning circle {
+  stroke: #ffd042 !important; }
+.node-highlight.error circle,
+.node-highlight-keep.error circle {
+  stroke: #ff454f !important; }
+.node-highlight.cluster circle,
+.node-highlight-keep.cluster circle {
+  stroke: #2587db !important; }
+.node-highlight.host circle,
+.node-highlight-keep.host circle {
+  stroke: #937fdd !important; }
+.node-highlight.cluster.close circle,
+.node-highlight-keep.cluster.close circle {
+  stroke: #66abe6 !important; }
+.node-highlight.host.close circle,
+.node-highlight-keep.host.close circle {
+  stroke: #b3a5e7 !important; }
+
+/*fade out style*/
+.node-fade.link,
+.node-fade-keep.link {
+  stroke: #ebf5ff; }
+.node-fade text,
+.node-fade-keep text {
+  fill: #dfe0e0; }
+.node-fade circle,
+.node-fade-keep circle {
+  stroke: #d9dde0; }
+.node-fade.active circle,
+.node-fade-keep.active circle {
+  stroke: #cceee6; }
+.node-fade.warning circle,
+.node-fade-keep.warning circle {
+  stroke: #fff6d9; }
+.node-fade.error circle,
+.node-fade-keep.error circle {
+  stroke: #ffdadc; }
+.node-fade.cluster circle,
+.node-fade-keep.cluster circle {
+  stroke: #d3e7f8; }
+.node-fade.host circle,
+.node-fade-keep.host circle {
+  stroke: #e9e5f8; }
+.node-fade.cluster.close circle,
+.node-fade-keep.cluster.close circle {
+  stroke: #d3e7f8; }
+.node-fade.host.close circle,
+.node-fade-keep.host.close circle {
+  stroke: #e9e5f8; }
+
+/*# sourceMappingURL=dcs.css.map */

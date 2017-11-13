@@ -1,0 +1,15 @@
+.geomap.socview .area {
+    transition: 1s linear;
+}
+
+.geomap .location.source {
+    stroke: #ff454f;
+}
+
+.geomap .location.target {
+    stroke: #01a982;
+}
+
+.geomap .location.source_target {
+    stroke: orange;
+}
