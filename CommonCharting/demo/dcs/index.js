@@ -1,5 +1,12 @@
 $(document).ready(() => {
-    dcs(document.getElementById("tree"), genData(), 700, 850);
+    var conainer = document.getElementById("tree");
+    var data = genData();
+    var tree = dcs(conainer, data, 700, 850);
+    setTimeout(() => {
+        data.data[0].children[0].children.push(genNode("later"));
+        tree.update(data);
+    }, 2000);
+
     var legendContainer = document.getElementById("legendContainer");
     createLegend(legendContainer);
     window.showLegend = function (show) {
@@ -9,7 +16,7 @@ $(document).ready(() => {
             $(legendContainer).removeClass("fuckon");
         }
     }
-})
+});
 
 function createLegend(container) {
     var r = 15;

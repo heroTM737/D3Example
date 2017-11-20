@@ -278,7 +278,7 @@ function dcs(container, data, width, height) {
         }
     }
 
-    return {};
+    return {update};
 }
 
 module.exports = dcs;
