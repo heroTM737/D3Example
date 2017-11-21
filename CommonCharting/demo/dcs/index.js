@@ -2,14 +2,38 @@ $(document).ready(() => {
     var conainer = document.getElementById("tree");
     var data = genData();
     var tree = dcs(conainer, data, 700, 850);
-    setTimeout(() => {
+    var update = function () {
         var root = data.data[0];
-        root.children[0].children.push(genNode("later"));
-        console.log("");
+        var hostIndex = -1;
+
+        //remove node
+        if (Math.random() > 0.5) {
+            hostIndex = Math.floor(Math.random() * 10) % count_host;
+            var children = root.children[hostIndex].children;
+            if (children && children.length > 0) {
+                root.children[hostIndex].children.splice(0, 1);
+            }
+        }
+
+        //add node
+        if (Math.random() > 0.5) {
+            hostIndex = Math.floor(Math.random() * 10) % count_host;
+            if (!root.children[hostIndex].children) {
+                root.children[hostIndex].children = [];
+            }
+            root.children[hostIndex].children.push(genNode("later"));
+        }
+
+        //renew status
         travelTree(root);
+
+        //update the tree
         tree.update(data.data[0]);
-        
-    }, 2000);
+
+        //restart timer
+        setTimeout(update, 2000);
+    }
+    setTimeout(update, 2000);
 
     var legendContainer = document.getElementById("legendContainer");
     createLegend(legendContainer);
@@ -27,9 +51,6 @@ function travelTree(root) {
     if (type != "HOST" && type != "CLUSTER") {
         var statusIndex = Math.floor(Math.random() * statusType.length);
         var newStatus = statusType[statusIndex];
-        if (root.status != newStatus) {
-            console.log(root.name, root.status, newStatus);
-        }
         root.status = newStatus;
     }
 
