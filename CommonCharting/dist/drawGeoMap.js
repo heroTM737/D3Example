@@ -1381,11 +1381,8 @@ var _require = __webpack_require__(12),
     btn_h = _require.btn_h,
     btn_m = _require.btn_m;
 
-var _require2 = __webpack_require__(14),
-    highlightNode = _require2.highlightNode;
-
-var _require3 = __webpack_require__(13),
-    createEventBus = _require3.createEventBus;
+var _require2 = __webpack_require__(13),
+    createEventBus = _require2.createEventBus;
 
 var diagonal = d3.svg.diagonal().projection(function (d) {
     return [d.y, d.x];
@@ -1435,7 +1432,7 @@ function dcs(container, data, width, height) {
         eventBus.fireEvent("CLEAR_HIGHLIGHT_NODE", d);
     }).append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    var dataBus = { tree: tree, svg: svg, root: root };
+    var dataBus = { tree: tree, svg: svg, root: root, update: update };
     var eventBus = createEventBus(dataBus);
 
     // let btnOpenGroup = createButton(svg, 0, 0, "Open all host");
@@ -2133,10 +2130,14 @@ module.exports = { createButton: createButton, btn_w: btn_w, btn_h: btn_h, btn_m
 "use strict";
 
 
+var _require = __webpack_require__(14),
+    highlightNode = _require.highlightNode;
+
 function createEventBus(dataBus) {
     var tree = dataBus.tree,
         svg = dataBus.svg,
-        root = dataBus.root;
+        root = dataBus.root,
+        update = dataBus.update;
 
     var activeNode = null;
 

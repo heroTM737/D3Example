@@ -1,5 +1,4 @@
 let { createButton, btn_w, btn_h, btn_m } = require('./buttons');
-let { highlightNode } = require('./highlight');
 let { createEventBus } = require('./eventBus');
 
 let diagonal = d3.svg.diagonal()
@@ -49,7 +48,7 @@ function dcs(container, data, width, height) {
 
 
 
-    let dataBus = { tree, svg, root };
+    let dataBus = { tree, svg, root, update };
     let eventBus = createEventBus(dataBus);
 
     // let btnOpenGroup = createButton(svg, 0, 0, "Open all host");

@@ -1,5 +1,7 @@
+let { highlightNode } = require('./highlight');
+
 function createEventBus(dataBus) {
-    let { tree, svg, root } = dataBus;
+    let { tree, svg, root, update } = dataBus;
     let activeNode = null;
 
     function openAllHost(d) {
