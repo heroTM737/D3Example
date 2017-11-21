@@ -1,5 +1,6 @@
 let { createButton, btn_w, btn_h, btn_m } = require('./buttons');
 let { highlightNode } = require('./highlight');
+let { createEventBus } = require('./eventBus');
 
 let diagonal = d3.svg.diagonal()
     .projection(function (d) { return [d.y, d.x]; });
@@ -32,8 +33,7 @@ function dcs(container, data, width, height) {
     width = width - margin.right - margin.left;
     height = height - margin.top - margin.bottom;
     let count = 0;
-    let activeNode = null;
-    let eventBus = null;
+
     let root = treeData[0];
     root.x0 = height / 2;
     root.y0 = 0;
@@ -50,96 +50,13 @@ function dcs(container, data, width, height) {
 
 
     let dataBus = { tree, svg, root };
-
-    function openAllHost(d) {
-        let nodes = tree.nodes(root).reverse();
-        nodes.forEach(function (d) {
-            if (d.type == "HOST") {
-                if (d.children == null) {
-                    d.children = d._children;
-                    d._children = null;
-                    // update(d);
-                }
-            }
-        });
-        update(root);
-    }
-
-    function closeAllHost(d) {
-        let nodes = tree.nodes(root).reverse();
-        nodes.forEach(function (d) {
-            if (d.type == "HOST") {
-                if (d.children != null) {
-                    d._children = d.children;
-                    d.children = null;
-                    // update(d);
-                }
-            }
-        });
-        update(root);
-    }
-
-    function clearHighlightNode() {
-        if (activeNode != null) {
-            activeNode = null;
-        }
-        highlightNode({ dataBus, node: root, statusKeep: false });
-    }
-
-    function clickNode(d) {
-        d3.event.stopPropagation();
-        activeNode = d;
-        if (d.type != "HOST" && d.type != "MBUS_DATA" && d.type != "DCACHE") {
-            showDetail(activeNode);
-        }
-        highlightNode({ dataBus, node: d, statusKeep: true });
-    }
-
-    function doubleClickNode(d) {
-        if (d.children) {
-            d._children = d.children;
-            d.children = null;
-        } else {
-            d.children = d._children;
-            d._children = null;
-        }
-        update(d);
-    }
-
-    eventBus = {
-        fireEvent: (eventType, eventData) => {
-            switch (eventType) {
-                case "OPEN_ALL_HOST":
-                    openAllHost(eventData);
-                    break;
-                case "CLOSE_ALL_HOST":
-                    closeAllHost(eventData);
-                    break;
-                case "MOUSE_OVER_NODE": //fire only no active node
-                    highlightNode({ dataBus, node: eventData, status: true });
-                    break;
-                case "MOUSE_OUT_NODE": //fire only no active node
-                    highlightNode({ dataBus, node: eventData, status: false });
-                    break;
-                case "CLICK_NODE":
-                    clickNode(eventData);
-                    break;
-                case "DOUBLE_CLICK_NODE":
-                    doubleClickNode(eventData);
-                    break;
-                case "CLEAR_HIGHLIGHT_NODE":
-                    clearHighlightNode();
-                    break;
-                default: console.log("No action defined for eventType = " + eventType);
-            }
-        }
-    }
+    let eventBus = createEventBus(dataBus);
 
     // let btnOpenGroup = createButton(svg, 0, 0, "Open all host");
-    // btnOpenGroup.on("click", openAllHost);
+    // btnOpenGroup.on("click", d => eventBus.fireEvent("OPEN_ALL_HOST", d));
 
     // let btnCloseGroup = createButton(svg, btn_w + btn_m, 0, "Close all host");
-    // btnCloseGroup.on("click", closeAllHost);
+    // btnCloseGroup.on("click", d => eventBus.fireEvent("CLOSE_ALL_HOST", d));
 
     update(root);
 
@@ -172,12 +89,12 @@ function dcs(container, data, width, height) {
                 }
                 return className;
             })
-            .attr("transform", function (d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
-            .attr("id", function (d) { return "node" + d.id; })
-            .on("mouseover", function (d) { eventBus.fireEvent("MOUSE_OVER_NODE", d); })
-            .on("mouseout", function (d) { eventBus.fireEvent("MOUSE_OUT_NODE", d); })
-            .on("click", (d) => eventBus.fireEvent("CLICK_NODE", d))
-            .on("dblclick", (d) => eventBus.fireEvent("DOUBLE_CLICK_NODE", d));
+            .attr("transform", d => { return "translate(" + source.y0 + "," + source.x0 + ")"; })
+            .attr("id", d => { return "node" + d.id; })
+            .on("mouseover", d => eventBus.fireEvent("MOUSE_OVER_NODE", d))
+            .on("mouseout", d => eventBus.fireEvent("MOUSE_OUT_NODE", d))
+            .on("click", d => eventBus.fireEvent("CLICK_NODE", d))
+            .on("dblclick", d => eventBus.fireEvent("DOUBLE_CLICK_NODE", d));
 
         nodeEnter.append("circle")
             .attr("r", 1e-6);
