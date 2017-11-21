@@ -3,8 +3,12 @@ $(document).ready(() => {
     var data = genData();
     var tree = dcs(conainer, data, 700, 850);
     setTimeout(() => {
-        data.data[0].children[0].children.push(genNode("later"));
-        tree.update(data);
+        var root = data.data[0];
+        root.children[0].children.push(genNode("later"));
+        console.log("");
+        travelTree(root);
+        tree.update(data.data[0]);
+        
     }, 2000);
 
     var legendContainer = document.getElementById("legendContainer");
@@ -17,6 +21,23 @@ $(document).ready(() => {
         }
     }
 });
+
+function travelTree(root) {
+    var type = root.type;
+    if (type != "HOST" && type != "CLUSTER") {
+        var statusIndex = Math.floor(Math.random() * statusType.length);
+        var newStatus = statusType[statusIndex];
+        if (root.status != newStatus) {
+            console.log(root.name, root.status, newStatus);
+        }
+        root.status = newStatus;
+    }
+
+    var children = root.children;
+    if (children && children.length > 0) {
+        children.forEach(child => travelTree(child));
+    }
+}
 
 function createLegend(container) {
     var r = 15;

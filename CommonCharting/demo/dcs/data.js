@@ -1,22 +1,21 @@
-// var nodeType = ["correlator", "aggregator", "messagebus", "persistor", "dcache"];
-// var statusType = ["active", "warning", "error"];
-
 var nodeType = ["CORRELATOR", "AGGREGATOR", "MBUS_DATA", "MANANGER", "DCACHE"];
 var statusType = ["active", "warning", "error"];
 
+var count = 0;
 function genNode(suffix) {
   var typeIndex = Math.floor(Math.random() * nodeType.length);
   var type = nodeType[typeIndex];
 
   var statusIndex = Math.floor(Math.random() * statusType.length);
-  var status = statusType[typeIndex];
+  var status = statusType[statusIndex];
 
-  return {
-    id: type.toLowerCase() + "_" + Math.random(),
-    name : type.toLowerCase() + "_" + suffix,
+  var node = {
+    name : type.toLowerCase() + "_" + suffix + "_" + count++,
     type : type,
     status : status
   }
+
+  return node;
 }
 
 // var count_host = 10;
@@ -27,7 +26,6 @@ var max_count_node = 3;
 
 function genData() {
   var cluster = {
-    id: "cluster",
     name: "cluster",
     type: "CLUSTER",
     children: []
@@ -35,7 +33,6 @@ function genData() {
 
   for (var i = 0; i < count_host; i++) {
     var host = {
-      id: "host_" + i,
       name: "host_" + i,
       type: "HOST",
       children: []

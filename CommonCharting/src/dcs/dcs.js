@@ -148,7 +148,7 @@ function dcs(container, data, width, height) {
         let nodes = tree.nodes(root).reverse(),
             links = tree.links(nodes);
 
-        // Normalize for fixed-depth.
+        // Normalize for fixed-depth
         nodes.forEach(function (d) { d.y = d.depth * 180; });
 
         // Update the nodes…
@@ -163,9 +163,9 @@ function dcs(container, data, width, height) {
             .attr("class", function (d) {
                 let className = "node " + d.type.toLowerCase();
                 if (d.children) {
-                    className += " close";
-                } else if (d._children) {
                     className += " open";
+                } else if (d._children) {
+                    className += " close";
                 }
                 if (d.status) {
                     className += " " + d.status;
@@ -231,6 +231,19 @@ function dcs(container, data, width, height) {
         nodeExit.select("text")
             .style("fill-opacity", 1e-6);
 
+        svg.selectAll(".node").attr("class", function (d) {
+            let className = "node " + d.type.toLowerCase();
+            if (d.children) {
+                className += " open";
+            } else if (d._children) {
+                className += " close";
+            }
+            if (d.status) {
+                className += " " + d.status;
+            }
+            return className;
+        });
+
         // Update the links…
         let link = svg.selectAll("path.link")
             .data(links, function (d) {
@@ -278,7 +291,7 @@ function dcs(container, data, width, height) {
         }
     }
 
-    return {update};
+    return { update };
 }
 
 module.exports = dcs;
