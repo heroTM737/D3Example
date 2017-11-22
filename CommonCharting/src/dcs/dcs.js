@@ -1,5 +1,6 @@
 let { createButton, btn_w, btn_h, btn_m } = require('./buttons');
 let { createEventBus } = require('./eventBus');
+let { travelTree } = require('./../tm');
 
 let diagonal = d3.svg.diagonal()
     .projection(function (d) { return [d.y, d.x]; });
@@ -23,33 +24,23 @@ let duration = 750;
 function dcs(container, data, width, height) {
     //clean container
     d3.select(container).selectAll("*").remove();
-
-    let treeData = data.data;
-    if (treeData == undefined || treeData == null || treeData.length < 1) {
-        return {};
-    }
-    let cmd = data.cmd;
     width = width - margin.right - margin.left;
     height = height - margin.top - margin.bottom;
+
+    let treeData = null;
+    let cmd = null;
+    let root = null;
+    let nodeMap = null;
     let count = 0;
-
-    let root = treeData[0];
-    root.x0 = height / 2;
-    root.y0 = 0;
-
     let tree = d3.layout.tree().size([height, width]);
+    let eventBus = null;
 
     let svg = d3.select(container).append("svg")
         .attr("width", width + margin.right + margin.left)
         .attr("height", height + margin.top + margin.bottom)
-        .on("click", function (d) { eventBus.fireEvent("CLEAR_HIGHLIGHT_NODE", d); })
+        .on("click", d => eventBus.fireEvent("CLEAR_HIGHLIGHT_NODE", d))
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-
-
-    let dataBus = { tree, svg, root, update };
-    let eventBus = createEventBus(dataBus);
 
     // let btnOpenGroup = createButton(svg, 0, 0, "Open all host");
     // btnOpenGroup.on("click", d => eventBus.fireEvent("OPEN_ALL_HOST", d));
@@ -57,7 +48,30 @@ function dcs(container, data, width, height) {
     // let btnCloseGroup = createButton(svg, btn_w + btn_m, 0, "Close all host");
     // btnCloseGroup.on("click", d => eventBus.fireEvent("CLOSE_ALL_HOST", d));
 
+    reset(data);
     update(root);
+
+    function reset(newData) {
+        treeData = newData.data;
+        if (treeData == undefined || treeData == null || treeData.length < 1) {
+            return {};
+        }
+        cmd = newData.cmd;
+        count = 0;
+        root = treeData[0];
+        root.x0 = height / 2;
+        root.y0 = 0;
+
+        let dataBus = { tree, svg, root, update };
+        eventBus = createEventBus(dataBus);
+
+        nodeMap = {};
+        travelTree(root, node => {
+            nodeMap[node.dataId] = node;
+        });
+
+        update(root);
+    }
 
     function update(source) {
         // Compute the new tree layout.
@@ -65,7 +79,7 @@ function dcs(container, data, width, height) {
             links = tree.links(nodes);
 
         // Normalize for fixed-depth
-        nodes.forEach(function (d) { d.y = d.depth * 180; });
+        nodes.forEach(d => d.y = d.depth * 180);
 
         // Update the nodes…
         let node = svg.selectAll("g.node")
@@ -201,13 +215,29 @@ function dcs(container, data, width, height) {
         });
     }
 
-    function showDetail(d) {
-        if (window.d3ChartActionCommand) {
-            d3ChartActionCommand(cmd, d);
-        }
+    function updateTree(newData) {
+        travelTree(newData.data[0], node => {
+            var currentNode = nodeMap[node.dataId];
+            if (currentNode) {
+                node.x = currentNode.x;
+                node.y = currentNode.y;
+                node.x0 = currentNode.x0;
+                node.y0 = currentNode.y0;
+
+                console.log(currentNode);
+                if (currentNode._children) {
+                    // console.log("closed");
+                    node._children = node.children;
+                    node.children = null;
+                } else {
+                    // console.log("opened");
+                }
+            }
+        });
+        reset(newData);
     }
 
-    return { update };
+    return { update: updateTree };
 }
 
 module.exports = dcs;

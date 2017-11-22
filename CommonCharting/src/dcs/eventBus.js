@@ -48,6 +48,12 @@ function createEventBus(dataBus) {
         highlightNode({ dataBus, node: d, statusKeep: true });
     }
 
+    function showDetail(d) {
+        if (window.d3ChartActionCommand) {
+            d3ChartActionCommand(cmd, d);
+        }
+    }
+
     function doubleClickNode(d) {
         if (d.children) {
             d._children = d.children;

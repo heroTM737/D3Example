@@ -8,11 +8,13 @@ function genNode(suffix) {
 
   var statusIndex = Math.floor(Math.random() * statusType.length);
   var status = statusType[statusIndex];
-
+  var id = type.toLowerCase() + "_" + suffix + "_" + count++;
   var node = {
-    name : type.toLowerCase() + "_" + suffix + "_" + count++,
-    type : type,
-    status : status
+    id: id,
+    dataId: id,
+    name: id,
+    type: type,
+    status: status
   }
 
   return node;
@@ -25,7 +27,12 @@ var count_host = 5;
 var max_count_node = 3;
 
 function genData() {
+  count = 0;
+  count_host = Math.floor(Math.random() * 10) % 5 + 2;
+
   var cluster = {
+    id: "CLUSTER",
+    dataId: "CLUSTER",
     name: "cluster",
     type: "CLUSTER",
     children: []
@@ -33,6 +40,8 @@ function genData() {
 
   for (var i = 0; i < count_host; i++) {
     var host = {
+      id: "host_" + i,
+      dataId: "host_" + i,
       name: "host_" + i,
       type: "HOST",
       children: []
@@ -41,7 +50,7 @@ function genData() {
 
     var count_node = Math.floor(Math.random() * max_count_node) + 2;
     for (var j = 0; j < count_node; j++) {
-      host.children.push(genNode(j));
+      host.children.push(genNode(i));
     }
   }
 

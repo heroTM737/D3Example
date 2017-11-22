@@ -1,4 +1,5 @@
 $(document).ready(() => {
+    var refreshInterval = 3000;
     var conainer = document.getElementById("tree");
     var data = genData();
     var tree = dcs(conainer, data, 700, 850);
@@ -25,18 +26,50 @@ $(document).ready(() => {
         }
 
         //renew status
-        travelTree(root);
+        travelTree(root, node => {
+            var type = node.type;
+            if (type != "HOST" && type != "CLUSTER") {
+                var statusIndex = Math.floor(Math.random() * statusType.length);
+                var newStatus = statusType[statusIndex];
+                node.status = newStatus;
+            }
+        });
+
+        //clone data
+        travelTree(root, node => {
+            //remove to prevent circular
+            delete node.parent;
+            delete node.links;
+        });
+        var json = JSON.stringify(data);
+        data = JSON.parse(json);
 
         //update the tree
-        tree.update(data.data[0]);
+        tree.update(data);
 
         //restart timer
-        setTimeout(update, 2000);
+        setTimeout(update, refreshInterval);
     }
-    setTimeout(update, 2000);
 
-    var legendContainer = document.getElementById("legendContainer");
-    createLegend(legendContainer);
+    setTimeout(update, refreshInterval);
+
+    createLegend();
+});
+
+function travelTree(root, callback) {
+    callback(root);
+    if (root._children) {
+        root.children = root._children;
+        root._children = null;
+    }
+    var children = root.children;
+    if (children && children.length > 0) {
+        children.forEach(child => travelTree(child, callback));
+    }
+}
+
+function createLegend(container) {
+    var container = document.getElementById("legendContainer");
     window.showLegend = function (show) {
         if (show) {
             $(legendContainer).addClass("fuckon");
@@ -44,23 +77,7 @@ $(document).ready(() => {
             $(legendContainer).removeClass("fuckon");
         }
     }
-});
 
-function travelTree(root) {
-    var type = root.type;
-    if (type != "HOST" && type != "CLUSTER") {
-        var statusIndex = Math.floor(Math.random() * statusType.length);
-        var newStatus = statusType[statusIndex];
-        root.status = newStatus;
-    }
-
-    var children = root.children;
-    if (children && children.length > 0) {
-        children.forEach(child => travelTree(child));
-    }
-}
-
-function createLegend(container) {
     var r = 15;
     var margin_left = 15;
     var item_h = 45;
