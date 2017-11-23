@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 15);
+/******/ 	return __webpack_require__(__webpack_require__.s = 18);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -120,7 +120,7 @@ module.exports = { compareLocation: compareLocation, compareEvent: compareEvent,
  */
 
 (function (factory) {
-    module.exports = factory($, __webpack_require__(16));
+    module.exports = factory($, __webpack_require__(15));
 })(function ($, Mapael) {
     $.extend(true, Mapael, {
         maps: {
@@ -331,7 +331,25 @@ module.exports = { compareLocation: compareLocation, compareEvent: compareEvent,
 "use strict";
 
 
-var _require = __webpack_require__(5),
+module.exports = {
+    location_r_shoot: 10,
+    location_r_hl: 4,
+    location_r: 2,
+    easefn: "linear",
+    color_event_path: "#55aae6",
+    color_source: "#ff454f",
+    color_target: "#01a982",
+    color_source_target: "orange"
+};
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _require = __webpack_require__(6),
     diagonal = _require.diagonal,
     shortenText = _require.shortenText,
     shortenExtendText = _require.shortenExtendText,
@@ -861,16 +879,16 @@ function createGroup(configVar, className, classNameExtend, data, mouseOver, mou
 module.exports = centerGraph;
 
 //need to move require under module.exports since we have circular dependency
-getEvents = __webpack_require__(3);
+getEvents = __webpack_require__(4);
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var centerGraph = __webpack_require__(2);
+var centerGraph = __webpack_require__(3);
 
 function getEvents(configVar) {
     var container = configVar.container;
@@ -955,15 +973,15 @@ function closeContextMenu() {
 module.exports = getEvents;
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var centerGraph = __webpack_require__(2);
+var centerGraph = __webpack_require__(3);
 
-var _require = __webpack_require__(5),
+var _require = __webpack_require__(6),
     diagonal = _require.diagonal,
     shortenText = _require.shortenText,
     shortenExtendText = _require.shortenExtendText,
@@ -1197,7 +1215,7 @@ function mainGraph(configVar) {
 module.exports = mainGraph;
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1351,25 +1369,61 @@ function createContextMenuFuntion(contextMenuCommand, valueProvider, includeCopy
 module.exports = { diagonal: diagonal, shortenText: shortenText, shortenExtendText: shortenExtendText, shortenEventText: shortenEventText, shortenMachineText: shortenMachineText, deg2rad: deg2rad, genArc: genArc, copyToClipBoard: copyToClipBoard, createContextMenuFuntion: createContextMenuFuntion };
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-module.exports = {
-    location_r_shoot: 10,
-    location_r_hl: 4,
-    location_r: 2,
-    easefn: "linear",
-    color_event_path: "#55aae6",
-    color_source: "#ff454f",
-    color_target: "#01a982",
-    color_source_target: "orange"
-};
+function simpleLineChart(container, data, width, height) {
+    //clean container
+    d3.select(container).selectAll("*").remove();
+
+    //init variable
+    var w = width - 6;
+    var h = height - 6;
+    var startX = 0;
+    var startY = 0;
+    var endX = w;
+    var endY = h;
+    var path_fill = null;
+    var path = null;
+
+    var svg = d3.select(container).append("svg").attr("width", width).attr("height", height);
+    var lineGroup = svg.append("g").attr("transform", "translate(3, 3)");
+
+    var update = function update(data) {
+        var maxOfData = Math.max.apply(Math, data);
+        var minOfData = Math.min.apply(Math, data);
+        var x = d3.scale.linear().domain([0, data.length - 1]).range([0, endX - startX]);
+        var y = d3.scale.linear().domain([minOfData, maxOfData]).range([endY - startY, 0]);
+
+        var line = d3.svg.line().x(function (d, i) {
+            return x(i);
+        }).y(function (d) {
+            return y(d);
+        }).interpolate("monotone");
+
+        if (path == null) {
+            path_fill = lineGroup.append("path").attr("d", line(data) + "   L" + endX + "," + (endY + 1) + "L" + startX + "," + (endY + 1) + "Z").attr("class", "trendLineChartFill");
+
+            path = lineGroup.append("path").attr("d", line(data)).attr("class", "trendLineChart");
+        } else {
+            path_fill.transition().duration(500).ease("linear").attr("d", line(data) + "   L" + endX + "," + (endY + 1) + "L" + startX + "," + (endY + 1) + "Z");
+
+            path.transition().duration(500).ease("linear").attr("d", line(data));
+        }
+    };
+
+    update(data);
+
+    return { update: update };
+}
+
+module.exports = simpleLineChart;
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1620,60 +1674,6 @@ function dcs(container, data, width, height) {
 module.exports = dcs;
 
 /***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-function simpleLineChart(container, data, width, height) {
-    //clean container
-    d3.select(container).selectAll("*").remove();
-
-    //init variable
-    var w = width - 6;
-    var h = height - 6;
-    var startX = 0;
-    var startY = 0;
-    var endX = w;
-    var endY = h;
-    var path_fill = null;
-    var path = null;
-
-    var svg = d3.select(container).append("svg").attr("width", width).attr("height", height);
-    var lineGroup = svg.append("g").attr("transform", "translate(3, 3)");
-
-    var update = function update(data) {
-        var maxOfData = Math.max.apply(Math, data);
-        var minOfData = Math.min.apply(Math, data);
-        var x = d3.scale.linear().domain([0, data.length - 1]).range([0, endX - startX]);
-        var y = d3.scale.linear().domain([minOfData, maxOfData]).range([endY - startY, 0]);
-
-        var line = d3.svg.line().x(function (d, i) {
-            return x(i);
-        }).y(function (d) {
-            return y(d);
-        }).interpolate("monotone");
-
-        if (path == null) {
-            path_fill = lineGroup.append("path").attr("d", line(data) + "   L" + endX + "," + (endY + 1) + "L" + startX + "," + (endY + 1) + "Z").attr("class", "trendLineChartFill");
-
-            path = lineGroup.append("path").attr("d", line(data)).attr("class", "trendLineChart");
-        } else {
-            path_fill.transition().duration(500).ease("linear").attr("d", line(data) + "   L" + endX + "," + (endY + 1) + "L" + startX + "," + (endY + 1) + "Z");
-
-            path.transition().duration(500).ease("linear").attr("d", line(data));
-        }
-    };
-
-    update(data);
-
-    return { update: update };
-}
-
-module.exports = simpleLineChart;
-
-/***/ }),
 /* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1681,8 +1681,8 @@ module.exports = simpleLineChart;
 
 
 var Mapael = __webpack_require__(1);
-var shootEventStatic = __webpack_require__(18);
-var shootEventDynamic = __webpack_require__(17);
+var shootEventStatic = __webpack_require__(17);
+var shootEventDynamic = __webpack_require__(16);
 
 var _require = __webpack_require__(0),
     getLocationId = _require.getLocationId,
@@ -1693,7 +1693,7 @@ var _require2 = __webpack_require__(0),
     compareEvent = _require2.compareEvent,
     compareCountry = _require2.compareCountry;
 
-var _require3 = __webpack_require__(6),
+var _require3 = __webpack_require__(2),
     location_r = _require3.location_r,
     location_r_hl = _require3.location_r_hl,
     location_r_shoot = _require3.location_r_shoot,
@@ -2111,9 +2111,9 @@ module.exports = drawGeoMapMapael;
 
 
 var configVar = __webpack_require__(22);
-var mainGraph = __webpack_require__(4);
+var mainGraph = __webpack_require__(5);
 var eventGraphLegend = __webpack_require__(20);
-var getEvents = __webpack_require__(3);
+var getEvents = __webpack_require__(4);
 var processData = __webpack_require__(21);
 
 function topology(container, data, width, height) {
@@ -2368,29 +2368,6 @@ module.exports = { highlightNode: highlightNode };
 
 /***/ }),
 /* 15 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var functionMap = {
-    socviewmap: __webpack_require__(9),
-    drawGeoMapMapael: __webpack_require__(10),
-    dcs: __webpack_require__(7),
-    simpleLineChart: __webpack_require__(8),
-    topology: __webpack_require__(11)
-
-    //bind function to window
-};for (var i in functionMap) {
-    if (window[i] != undefined && window[i] != null) {
-        console.log("function name conflict \"" + i + "\"");
-    } else {
-        window[i] = functionMap[i];
-    }
-}
-
-/***/ }),
-/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4603,7 +4580,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 });
 
 /***/ }),
-/* 17 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4614,7 +4591,7 @@ var Mapael = __webpack_require__(1);
 var _require = __webpack_require__(0),
     getLocationId = _require.getLocationId;
 
-var _require2 = __webpack_require__(6),
+var _require2 = __webpack_require__(2),
     location_r = _require2.location_r,
     location_r_hl = _require2.location_r_hl,
     location_r_shoot = _require2.location_r_shoot,
@@ -4663,7 +4640,7 @@ var shootEventDynamic = function shootEventDynamic(eventGroup, locationGroup, ev
 module.exports = shootEventDynamic;
 
 /***/ }),
-/* 18 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4784,6 +4761,29 @@ function shootEventStatic(svg, event) {
 module.exports = shootEventStatic;
 
 /***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var functionMap = {
+    socviewmap: __webpack_require__(9),
+    drawGeoMapMapael: __webpack_require__(10),
+    dcs: __webpack_require__(8),
+    simpleLineChart: __webpack_require__(7),
+    topology: __webpack_require__(11)
+
+    //bind function to window
+};for (var i in functionMap) {
+    if (window[i] != undefined && window[i] != null) {
+        console.log("function name conflict \"" + i + "\"");
+    } else {
+        window[i] = functionMap[i];
+    }
+}
+
+/***/ }),
 /* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4816,7 +4816,7 @@ module.exports = { travelTree: travelTree, breadthFirstTravelTree: breadthFirstT
 "use strict";
 
 
-var mainGraph = __webpack_require__(4);
+var mainGraph = __webpack_require__(5);
 
 function eventGraphLegend(configVar) {
     var svg = d3.select(configVar.container_legend);
