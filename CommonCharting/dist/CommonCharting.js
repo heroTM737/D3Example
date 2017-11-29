@@ -1479,6 +1479,7 @@ function dcs(container, data, width, height) {
     var count = 0;
     var tree = d3.layout.tree().size([height, width]);
     var eventBus = null;
+    var activeNode = null;
 
     var svg = d3.select(container).append("svg").attr("width", width + margin.right + margin.left).attr("height", height + margin.top + margin.bottom).on("click", function (d) {
         return eventBus.fireEvent("CLEAR_HIGHLIGHT_NODE", d);
@@ -1491,7 +1492,6 @@ function dcs(container, data, width, height) {
     // btnCloseGroup.on("click", d => eventBus.fireEvent("CLOSE_ALL_HOST", d));
 
     reset(data);
-    update(root);
 
     function reset(newData) {
         treeData = newData.data;
@@ -1504,15 +1504,27 @@ function dcs(container, data, width, height) {
         root.x0 = height / 2;
         root.y0 = 0;
 
-        var dataBus = { tree: tree, svg: svg, root: root, update: update };
-        eventBus = createEventBus(dataBus);
-
         nodeMap = {};
         travelTree(root, function (node) {
             nodeMap[node.dataId] = node;
+            node.waitClick = null;
         });
 
+        var dataBus = { tree: tree, svg: svg, root: root, update: update, nodeMap: nodeMap };
+        eventBus = createEventBus(dataBus);
+
         update(root);
+
+        //keep highlight state
+        if (activeNode) {
+            var newActiveNode = nodeMap[activeNode.dataId];
+            if (newActiveNode) {
+                activeNode = newActiveNode;
+                eventBus.fireEvent("CLICK_NODE", activeNode);
+            } else {
+                eventBus.fireEvent("CLEAR_HIGHLIGHT_NODE", null);
+            }
+        }
     }
 
     function update(source) {
@@ -1536,7 +1548,7 @@ function dcs(container, data, width, height) {
             var className = "node " + d.type.toLowerCase();
             if (d.children) {
                 className += " open";
-            } else if (d._children) {
+            } else if (d.temp_children) {
                 className += " close";
             }
             if (d.status) {
@@ -1544,7 +1556,11 @@ function dcs(container, data, width, height) {
             }
             return className;
         }).attr("transform", function (d) {
-            return "translate(" + source.y0 + "," + source.x0 + ")";
+            if (d.parent && d.parent.x0) {
+                return "translate(" + d.parent.y0 + "," + d.parent.x0 + ")";
+            } else {
+                return "translate(" + source.y0 + "," + source.x0 + ")";
+            }
         }).attr("id", function (d) {
             return "node" + d.id;
         }).on("mouseover", function (d) {
@@ -1552,29 +1568,41 @@ function dcs(container, data, width, height) {
         }).on("mouseout", function (d) {
             return eventBus.fireEvent("MOUSE_OUT_NODE", d);
         }).on("click", function (d) {
-            return eventBus.fireEvent("CLICK_NODE", d);
-        }).on("dblclick", function (d) {
-            return eventBus.fireEvent("DOUBLE_CLICK_NODE", d);
+            if (d.waitClick) {
+                window.clearTimeout(d.waitClick);
+                d.waitClick = null;
+                eventBus.fireEvent("DOUBLE_CLICK_NODE", d);
+            } else {
+                d.waitClick = setTimeout(function () {
+                    activeNode = d;
+                    d.waitClick = null;
+                    eventBus.fireEvent("CLICK_NODE", d);
+                }, 300);
+            }
+            d3.event.stopPropagation();
         });
 
         nodeEnter.append("circle").attr("r", 1e-6);
 
+        //center sign
         nodeEnter.append("text").attr("x", "0").attr("dy", ".35em").attr("text-anchor", "middle").text(function (d) {
             return mapTypeToCharacter(d.type);
         }).style("fill-opacity", 1e-6);
 
+        //name text 
         nodeEnter.append("text").attr("x", function (d) {
-            return d.type == "HOST" ? 0 : d.children || d._children ? -(node_r + 5) : node_r + 5;
+            return d.type == "HOST" ? 0 : d.children || d.temp_children ? -(node_r + 5) : node_r + 5;
         }).attr("y", function (d) {
             return d.type == "HOST" ? node_r : 0;
         }).attr("dy", function (d) {
             return d.type == "HOST" ? "1em" : ".35em";
         }).attr("text-anchor", function (d) {
-            return d.type == "HOST" ? "middle" : d.children || d._children ? "end" : "start";
+            return d.type == "HOST" ? "middle" : d.children || d.temp_children ? "end" : "start";
         }).text(function (d) {
             return d.name;
         }).style("fill-opacity", 1e-6);
 
+        //tooltip
         nodeEnter.append("title").text(function (d) {
             return d.name;
         });
@@ -1590,7 +1618,12 @@ function dcs(container, data, width, height) {
 
         // Transition exiting nodes to the parent's new position.
         var nodeExit = node.exit().transition().duration(duration).attr("transform", function (d) {
-            return "translate(" + source.y + "," + source.x + ")";
+            if (d.parent) {
+                parent = nodeMap[d.parent.id];
+                return "translate(" + parent.y + "," + parent.x + ")";
+            } else {
+                return "translate(" + source.y + "," + source.x + ")";
+            }
         }).remove();
 
         nodeExit.select("circle").attr("r", 1e-6);
@@ -1601,7 +1634,7 @@ function dcs(container, data, width, height) {
             var className = "node " + d.type.toLowerCase();
             if (d.children) {
                 className += " open";
-            } else if (d._children) {
+            } else if (d.temp_children) {
                 className += " close";
             }
             if (d.status) {
@@ -1622,7 +1655,12 @@ function dcs(container, data, width, height) {
         link.enter().insert("path", "g").attr("class", "link").attr("id", function (d) {
             return d.id;
         }).attr("d", function (d) {
-            var o = { x: source.x0, y: source.y0 };
+            var o = null;
+            if (d.source.x0) {
+                o = { x: d.source.x0, y: d.source.y0 };
+            } else {
+                o = { x: source.x0, y: source.y0 };
+            }
             return diagonal({ source: o, target: o });
         }).on("mouseover", function (d) {
             eventBus.fireEvent("MOUSE_OVER_NODE", d.target);
@@ -1633,9 +1671,10 @@ function dcs(container, data, width, height) {
         // Transition links to their new position.
         link.transition().duration(duration).attr("d", diagonal);
 
-        // Transition exiting nodes to the parent's new position.
+        // Transition exiting links to the source's new position.
         link.exit().transition().duration(duration).attr("d", function (d) {
-            var o = { x: source.x, y: source.y };
+            var node = nodeMap[d.source.id];
+            var o = { x: node.x, y: node.y };
             return diagonal({ source: o, target: o });
         }).remove();
 
@@ -1654,14 +1693,11 @@ function dcs(container, data, width, height) {
                 node.y = currentNode.y;
                 node.x0 = currentNode.x0;
                 node.y0 = currentNode.y0;
+                node.open = currentNode.open;
 
-                console.log(currentNode);
-                if (currentNode._children) {
-                    // console.log("closed");
-                    node._children = node.children;
+                if (currentNode.temp_children) {
+                    node.temp_children = node.children;
                     node.children = null;
-                } else {
-                    // console.log("opened");
                 }
             }
         });
@@ -2180,9 +2216,8 @@ function createEventBus(dataBus) {
         nodes.forEach(function (d) {
             if (d.type == "HOST") {
                 if (d.children == null) {
-                    d.children = d._children;
-                    d._children = null;
-                    // update(d);
+                    d.children = d.temp_children;
+                    d.temp_children = null;
                 }
             }
         });
@@ -2194,9 +2229,8 @@ function createEventBus(dataBus) {
         nodes.forEach(function (d) {
             if (d.type == "HOST") {
                 if (d.children != null) {
-                    d._children = d.children;
+                    d.temp_children = d.children;
                     d.children = null;
-                    // update(d);
                 }
             }
         });
@@ -2211,7 +2245,7 @@ function createEventBus(dataBus) {
     }
 
     function clickNode(d) {
-        d3.event.stopPropagation();
+        if (d3.event) d3.event.stopPropagation();
         activeNode = d;
         if (d.type != "HOST" && d.type != "MBUS_DATA" && d.type != "DCACHE") {
             showDetail(activeNode);
@@ -2226,12 +2260,14 @@ function createEventBus(dataBus) {
     }
 
     function doubleClickNode(d) {
+        //dont use _children instead of temp_children 
+        //because tree.nodes(root).reverse() and links = tree.links(nodes) will fuck it up
         if (d.children) {
-            d._children = d.children;
+            d.temp_children = d.children;
             d.children = null;
         } else {
-            d.children = d._children;
-            d._children = null;
+            d.children = d.temp_children;
+            d.temp_children = null;
         }
         update(d);
     }
@@ -2258,6 +2294,7 @@ function createEventBus(dataBus) {
                     break;
                 case "DOUBLE_CLICK_NODE":
                     doubleClickNode(eventData);
+                    if (activeNode) eventBus.fireEvent("CLICK_NODE", activeNode);
                     break;
                 case "CLEAR_HIGHLIGHT_NODE":
                     clearHighlightNode();

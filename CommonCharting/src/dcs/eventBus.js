@@ -9,9 +9,8 @@ function createEventBus(dataBus) {
         nodes.forEach(function (d) {
             if (d.type == "HOST") {
                 if (d.children == null) {
-                    d.children = d._children;
-                    d._children = null;
-                    // update(d);
+                    d.children = d.temp_children;
+                    d.temp_children = null;
                 }
             }
         });
@@ -23,9 +22,8 @@ function createEventBus(dataBus) {
         nodes.forEach(function (d) {
             if (d.type == "HOST") {
                 if (d.children != null) {
-                    d._children = d.children;
+                    d.temp_children = d.children;
                     d.children = null;
-                    // update(d);
                 }
             }
         });
@@ -40,7 +38,7 @@ function createEventBus(dataBus) {
     }
 
     function clickNode(d) {
-        d3.event.stopPropagation();
+        if (d3.event) d3.event.stopPropagation();
         activeNode = d;
         if (d.type != "HOST" && d.type != "MBUS_DATA" && d.type != "DCACHE") {
             showDetail(activeNode);
@@ -55,12 +53,14 @@ function createEventBus(dataBus) {
     }
 
     function doubleClickNode(d) {
+        //dont use _children instead of temp_children 
+        //because tree.nodes(root).reverse() and links = tree.links(nodes) will fuck it up
         if (d.children) {
-            d._children = d.children;
+            d.temp_children = d.children;
             d.children = null;
         } else {
-            d.children = d._children;
-            d._children = null;
+            d.children = d.temp_children;
+            d.temp_children = null;
         }
         update(d);
     }
@@ -85,6 +85,7 @@ function createEventBus(dataBus) {
                     break;
                 case "DOUBLE_CLICK_NODE":
                     doubleClickNode(eventData);
+                    if (activeNode) eventBus.fireEvent("CLICK_NODE", activeNode);
                     break;
                 case "CLEAR_HIGHLIGHT_NODE":
                     clearHighlightNode();

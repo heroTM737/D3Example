@@ -34,6 +34,7 @@ function dcs(container, data, width, height) {
     let count = 0;
     let tree = d3.layout.tree().size([height, width]);
     let eventBus = null;
+    let activeNode = null;
 
     let svg = d3.select(container).append("svg")
         .attr("width", width + margin.right + margin.left)
@@ -49,7 +50,6 @@ function dcs(container, data, width, height) {
     // btnCloseGroup.on("click", d => eventBus.fireEvent("CLOSE_ALL_HOST", d));
 
     reset(data);
-    update(root);
 
     function reset(newData) {
         treeData = newData.data;
@@ -62,15 +62,28 @@ function dcs(container, data, width, height) {
         root.x0 = height / 2;
         root.y0 = 0;
 
-        let dataBus = { tree, svg, root, update };
-        eventBus = createEventBus(dataBus);
-
         nodeMap = {};
         travelTree(root, node => {
             nodeMap[node.dataId] = node;
+            node.waitClick = null;
         });
 
+        let dataBus = { tree, svg, root, update, nodeMap };
+        eventBus = createEventBus(dataBus);
+
         update(root);
+
+        //keep highlight state
+        if (activeNode) {
+            let newActiveNode = nodeMap[activeNode.dataId];
+            if (newActiveNode) {
+                activeNode = newActiveNode;
+                eventBus.fireEvent("CLICK_NODE", activeNode);
+            } else {
+                eventBus.fireEvent("CLEAR_HIGHLIGHT_NODE", null);
+            }
+        }
+
     }
 
     function update(source) {
@@ -94,7 +107,7 @@ function dcs(container, data, width, height) {
                 let className = "node " + d.type.toLowerCase();
                 if (d.children) {
                     className += " open";
-                } else if (d._children) {
+                } else if (d.temp_children) {
                     className += " close";
                 }
                 if (d.status) {
@@ -102,16 +115,35 @@ function dcs(container, data, width, height) {
                 }
                 return className;
             })
-            .attr("transform", d => { return "translate(" + source.y0 + "," + source.x0 + ")"; })
+            .attr("transform", d => {
+                if (d.parent && d.parent.x0) {
+                    return "translate(" + d.parent.y0 + "," + d.parent.x0 + ")";
+                } else {
+                    return "translate(" + source.y0 + "," + source.x0 + ")";
+                }
+            })
             .attr("id", d => { return "node" + d.id; })
             .on("mouseover", d => eventBus.fireEvent("MOUSE_OVER_NODE", d))
             .on("mouseout", d => eventBus.fireEvent("MOUSE_OUT_NODE", d))
-            .on("click", d => eventBus.fireEvent("CLICK_NODE", d))
-            .on("dblclick", d => eventBus.fireEvent("DOUBLE_CLICK_NODE", d));
+            .on("click", d => {
+                if (d.waitClick) {
+                    window.clearTimeout(d.waitClick);
+                    d.waitClick = null;
+                    eventBus.fireEvent("DOUBLE_CLICK_NODE", d);
+                } else {
+                    d.waitClick = setTimeout(() => {
+                        activeNode = d;
+                        d.waitClick = null;
+                        eventBus.fireEvent("CLICK_NODE", d);
+                    }, 300);
+                }
+                d3.event.stopPropagation();
+            });
 
         nodeEnter.append("circle")
             .attr("r", 1e-6);
 
+        //center sign
         nodeEnter.append("text")
             .attr("x", "0")
             .attr("dy", ".35em")
@@ -119,9 +151,10 @@ function dcs(container, data, width, height) {
             .text(function (d) { return mapTypeToCharacter(d.type); })
             .style("fill-opacity", 1e-6);
 
+        //name text 
         nodeEnter.append("text")
             .attr("x", function (d) {
-                return d.type == "HOST" ? 0 : (d.children || d._children ? -(node_r + 5) : (node_r + 5));
+                return d.type == "HOST" ? 0 : (d.children || d.temp_children ? -(node_r + 5) : (node_r + 5));
             })
             .attr("y", function (d) {
                 return d.type == "HOST" ? node_r : 0;
@@ -130,11 +163,12 @@ function dcs(container, data, width, height) {
                 return d.type == "HOST" ? "1em" : ".35em";
             })
             .attr("text-anchor", function (d) {
-                return d.type == "HOST" ? "middle" : (d.children || d._children ? "end" : "start");
+                return d.type == "HOST" ? "middle" : (d.children || d.temp_children ? "end" : "start");
             })
             .text(function (d) { return d.name; })
             .style("fill-opacity", 1e-6);
 
+        //tooltip
         nodeEnter.append("title")
             .text(function (d) { return d.name; })
 
@@ -152,7 +186,14 @@ function dcs(container, data, width, height) {
         // Transition exiting nodes to the parent's new position.
         let nodeExit = node.exit().transition()
             .duration(duration)
-            .attr("transform", function (d) { return "translate(" + source.y + "," + source.x + ")"; })
+            .attr("transform", function (d) {
+                if (d.parent) {
+                    parent = nodeMap[d.parent.id];
+                    return "translate(" + parent.y + "," + parent.x + ")";
+                } else {
+                    return "translate(" + source.y + "," + source.x + ")";
+                }
+            })
             .remove();
 
         nodeExit.select("circle")
@@ -165,7 +206,7 @@ function dcs(container, data, width, height) {
             let className = "node " + d.type.toLowerCase();
             if (d.children) {
                 className += " open";
-            } else if (d._children) {
+            } else if (d.temp_children) {
                 className += " close";
             }
             if (d.status) {
@@ -188,7 +229,12 @@ function dcs(container, data, width, height) {
             .attr("class", "link")
             .attr("id", function (d) { return d.id })
             .attr("d", function (d) {
-                let o = { x: source.x0, y: source.y0 };
+                let o = null;
+                if (d.source.x0) {
+                    o = { x: d.source.x0, y: d.source.y0 };
+                } else {
+                    o = { x: source.x0, y: source.y0 };
+                }
                 return diagonal({ source: o, target: o });
             })
             .on("mouseover", function (d) { eventBus.fireEvent("MOUSE_OVER_NODE", d.target); })
@@ -199,11 +245,12 @@ function dcs(container, data, width, height) {
             .duration(duration)
             .attr("d", diagonal);
 
-        // Transition exiting nodes to the parent's new position.
+        // Transition exiting links to the source's new position.
         link.exit().transition()
             .duration(duration)
             .attr("d", function (d) {
-                let o = { x: source.x, y: source.y };
+                let node = nodeMap[d.source.id];
+                let o = { x: node.x, y: node.y };
                 return diagonal({ source: o, target: o });
             })
             .remove();
@@ -223,14 +270,11 @@ function dcs(container, data, width, height) {
                 node.y = currentNode.y;
                 node.x0 = currentNode.x0;
                 node.y0 = currentNode.y0;
+                node.open = currentNode.open;
 
-                console.log(currentNode);
-                if (currentNode._children) {
-                    // console.log("closed");
-                    node._children = node.children;
+                if (currentNode.temp_children) {
+                    node.temp_children = node.children;
                     node.children = null;
-                } else {
-                    // console.log("opened");
                 }
             }
         });

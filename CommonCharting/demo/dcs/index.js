@@ -2,8 +2,11 @@ $(document).ready(() => {
     var refreshInterval = 3000;
     var conainer = document.getElementById("tree");
     var data = genData();
+    var tree_json = JSON.stringify(data);
     var tree = dcs(conainer, data, 700, 850);
+
     var update = function () {
+        var data = JSON.parse(tree_json);
         var root = data.data[0];
         var hostIndex = -1;
 
@@ -35,14 +38,7 @@ $(document).ready(() => {
             }
         });
 
-        //clone data
-        travelTree(root, node => {
-            //remove to prevent circular
-            delete node.parent;
-            delete node.links;
-        });
-        var json = JSON.stringify(data);
-        data = JSON.parse(json);
+        tree_json = JSON.stringify(data);
 
         //update the tree
         tree.update(data);
