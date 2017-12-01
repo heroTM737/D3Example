@@ -68,7 +68,7 @@ function dcs(container, data, width, height) {
             node.waitClick = null;
         });
 
-        let dataBus = { tree, svg, root, update, nodeMap };
+        let dataBus = { tree, svg, root, update, nodeMap, cmd };
         eventBus = createEventBus(dataBus);
 
         update(root);
@@ -187,7 +187,7 @@ function dcs(container, data, width, height) {
         let nodeExit = node.exit().transition()
             .duration(duration)
             .attr("transform", function (d) {
-                if (d.parent) {
+                if (d.parent && nodeMap[d.parent.id]) {
                     parent = nodeMap[d.parent.id];
                     return "translate(" + parent.y + "," + parent.x + ")";
                 } else {
@@ -250,7 +250,12 @@ function dcs(container, data, width, height) {
             .duration(duration)
             .attr("d", function (d) {
                 let node = nodeMap[d.source.id];
-                let o = { x: node.x, y: node.y };
+                let o = null;
+                if (node) {
+                    o = { x: node.x, y: node.y };
+                } else {
+                    o = { x: d.source.x, y: d.source.y };
+                }
                 return diagonal({ source: o, target: o });
             })
             .remove();

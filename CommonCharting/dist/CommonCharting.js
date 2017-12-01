@@ -1510,7 +1510,7 @@ function dcs(container, data, width, height) {
             node.waitClick = null;
         });
 
-        var dataBus = { tree: tree, svg: svg, root: root, update: update, nodeMap: nodeMap };
+        var dataBus = { tree: tree, svg: svg, root: root, update: update, nodeMap: nodeMap, cmd: cmd };
         eventBus = createEventBus(dataBus);
 
         update(root);
@@ -1618,7 +1618,7 @@ function dcs(container, data, width, height) {
 
         // Transition exiting nodes to the parent's new position.
         var nodeExit = node.exit().transition().duration(duration).attr("transform", function (d) {
-            if (d.parent) {
+            if (d.parent && nodeMap[d.parent.id]) {
                 parent = nodeMap[d.parent.id];
                 return "translate(" + parent.y + "," + parent.x + ")";
             } else {
@@ -1674,7 +1674,12 @@ function dcs(container, data, width, height) {
         // Transition exiting links to the source's new position.
         link.exit().transition().duration(duration).attr("d", function (d) {
             var node = nodeMap[d.source.id];
-            var o = { x: node.x, y: node.y };
+            var o = null;
+            if (node) {
+                o = { x: node.x, y: node.y };
+            } else {
+                o = { x: d.source.x, y: d.source.y };
+            }
             return diagonal({ source: o, target: o });
         }).remove();
 
@@ -2207,7 +2212,8 @@ function createEventBus(dataBus) {
     var tree = dataBus.tree,
         svg = dataBus.svg,
         root = dataBus.root,
-        update = dataBus.update;
+        update = dataBus.update,
+        cmd = dataBus.cmd;
 
     var activeNode = null;
 
