@@ -1,4 +1,4 @@
-var nodeType = ["CORRELATOR", "AGGREGATOR", "MBUS_DATA", "MANANGER", "DCACHE"];
+var nodeType = ["CORRELATOR", "AGGREGATOR", "MBUS_DATA", "MANAGER", "DCACHE"];
 var statusType = ["active", "warning", "error"];
 
 var count = 0;

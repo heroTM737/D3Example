@@ -1387,7 +1387,7 @@ function simpleLineChart(container, data, width, height) {
     var endX = w;
     var endY = h;
     var path_fill = null;
-    var path = null;
+    // let path = null;
 
     var svg = d3.select(container).append("svg").attr("width", width).attr("height", height);
     var lineGroup = svg.append("g").attr("transform", "translate(3, 3)");
@@ -1404,14 +1404,19 @@ function simpleLineChart(container, data, width, height) {
             return y(d);
         }).interpolate("monotone");
 
-        if (path == null) {
+        if (path_fill == null) {
             path_fill = lineGroup.append("path").attr("d", line(data) + "   L" + endX + "," + (endY + 1) + "L" + startX + "," + (endY + 1) + "Z").attr("class", "trendLineChartFill");
 
-            path = lineGroup.append("path").attr("d", line(data)).attr("class", "trendLineChart");
+            // path = lineGroup.append("path")
+            //     .attr("d", line(data))
+            //     .attr("class", "trendLineChart");
         } else {
             path_fill.transition().duration(500).ease("linear").attr("d", line(data) + "   L" + endX + "," + (endY + 1) + "L" + startX + "," + (endY + 1) + "Z");
 
-            path.transition().duration(500).ease("linear").attr("d", line(data));
+            // path.transition()
+            //     .duration(500)
+            //     .ease("linear")
+            //     .attr("d", line(data));
         }
     };
 
@@ -1634,6 +1639,13 @@ function dcs(container, data, width, height) {
             var className = "node " + d.type.toLowerCase();
             if (d.children) {
                 className += " open";
+                var children = d.children;
+                for (var i = 0; i < children.length; i++) {
+                    if (children[i].type == "MANAGER") {
+                        className += " hasPersistor";
+                        break;
+                    }
+                }
             } else if (d.temp_children) {
                 className += " close";
             }

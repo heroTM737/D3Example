@@ -206,6 +206,13 @@ function dcs(container, data, width, height) {
             let className = "node " + d.type.toLowerCase();
             if (d.children) {
                 className += " open";
+                let children = d.children;
+                for (let i =0; i< children.length; i++) {
+                    if (children[i].type == "MANAGER") {
+                        className += " hasPersistor";
+                        break;
+                    }
+                }
             } else if (d.temp_children) {
                 className += " close";
             }

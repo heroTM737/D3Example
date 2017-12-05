@@ -10,7 +10,7 @@ function simpleLineChart(container, data, width, height) {
     let endX = w;
     let endY = h;
     let path_fill = null;
-    let path = null;
+    // let path = null;
 
     let svg = d3.select(container).append("svg").attr("width", width).attr("height", height);
     let lineGroup = svg.append("g").attr("transform", "translate(3, 3)");
@@ -30,24 +30,24 @@ function simpleLineChart(container, data, width, height) {
             })
             .interpolate("monotone");
 
-        if (path == null) {
+        if (path_fill == null) {
             path_fill = lineGroup.append("path")
                 .attr("d", line(data) + "   L" + endX + "," + (endY + 1) + "L" + startX + "," + (endY + 1) + "Z")
                 .attr("class", "trendLineChartFill");
 
-            path = lineGroup.append("path")
-                .attr("d", line(data))
-                .attr("class", "trendLineChart");
+            // path = lineGroup.append("path")
+            //     .attr("d", line(data))
+            //     .attr("class", "trendLineChart");
         } else {
             path_fill.transition()
                 .duration(500)
                 .ease("linear")
                 .attr("d", line(data) + "   L" + endX + "," + (endY + 1) + "L" + startX + "," + (endY + 1) + "Z");
 
-            path.transition()
-                .duration(500)
-                .ease("linear")
-                .attr("d", line(data));
+            // path.transition()
+            //     .duration(500)
+            //     .ease("linear")
+            //     .attr("d", line(data));
         }
     }
 
