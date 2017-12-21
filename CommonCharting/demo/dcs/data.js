@@ -1,5 +1,6 @@
 var nodeType = ["CORRELATOR", "AGGREGATOR", "MBUS_DATA", "MANAGER", "DCACHE"];
-var statusType = ["active", "warning", "error"];
+// var statusType = ["active", "warning", "error"]; //temporary hide warning status
+var statusType = ["active", "error"];
 
 var count = 0;
 function genNode(suffix) {

@@ -38,6 +38,10 @@ $applyTransition: fill $duration, stroke $duration, stroke-width $duration;
   &.host circle {
     stroke: $host;
   }
+
+  &.host.hasPersistor circle {
+    stroke: $hostPersistor;
+  }
   
   &.cluster.close circle {
     stroke: mix($cluster, $mixColor, $opacityClose);
@@ -83,6 +87,10 @@ $applyTransition: fill $duration, stroke $duration, stroke-width $duration;
   &.host circle {
     stroke: $host !important;
   }
+
+  &.host.hasPersistor circle {
+    stroke: $hostPersistor !important;
+  }
   
   &.cluster.close circle {
     stroke: mix($cluster, $mixColor, $opacityClose) !important;
@@ -90,6 +98,10 @@ $applyTransition: fill $duration, stroke $duration, stroke-width $duration;
   
   &.host.close circle {
     stroke: mix($host, $mixColor, $opacityClose) !important;
+  }
+
+  &.host.hasPersistor.close circle {
+    stroke: mix($hostPersistor, $mixColor, $opacityClose) !important;
   }
 }
 
@@ -127,6 +139,10 @@ $applyTransition: fill $duration, stroke $duration, stroke-width $duration;
   &.host circle {
     stroke: mix($host, $mixColor, $opacityHover);
   }
+
+  &.host.hasPersistor circle {
+    stroke: mix($hostPersistor, $mixColor, $opacityHover);
+  }
   
   &.cluster.close circle {
     stroke: mix($cluster, $mixColor, $opacityHover);
@@ -134,6 +150,10 @@ $applyTransition: fill $duration, stroke $duration, stroke-width $duration;
   
   &.host.close circle {
     stroke: mix($host, $mixColor, $opacityHover);
+  }
+
+  &.host.hasPersistor.close circle {
+    stroke: mix($hostPersistor, $mixColor, $opacityHover);
   }
 }
 

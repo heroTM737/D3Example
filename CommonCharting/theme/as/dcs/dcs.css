@@ -20,6 +20,8 @@
   stroke: #2587db; }
 .node.host circle {
   stroke: #937fdd; }
+.node.host.hasPersistor circle {
+  stroke: #ec5bfd; }
 .node.cluster.close circle {
   stroke: #66abe6; }
 .node.host.close circle {
@@ -51,12 +53,18 @@
 .node-highlight.host circle,
 .node-highlight-keep.host circle {
   stroke: #937fdd !important; }
+.node-highlight.host.hasPersistor circle,
+.node-highlight-keep.host.hasPersistor circle {
+  stroke: #ec5bfd !important; }
 .node-highlight.cluster.close circle,
 .node-highlight-keep.cluster.close circle {
   stroke: #66abe6 !important; }
 .node-highlight.host.close circle,
 .node-highlight-keep.host.close circle {
   stroke: #b3a5e7 !important; }
+.node-highlight.host.hasPersistor.close circle,
+.node-highlight-keep.host.hasPersistor.close circle {
+  stroke: #f28cfe !important; }
 
 /*fade out style*/
 .node-fade.link,
@@ -83,11 +91,17 @@
 .node-fade.host circle,
 .node-fade-keep.host circle {
   stroke: #e9e5f8; }
+.node-fade.host.hasPersistor circle,
+.node-fade-keep.host.hasPersistor circle {
+  stroke: #fbdeff; }
 .node-fade.cluster.close circle,
 .node-fade-keep.cluster.close circle {
   stroke: #d3e7f8; }
 .node-fade.host.close circle,
 .node-fade-keep.host.close circle {
   stroke: #e9e5f8; }
+.node-fade.host.hasPersistor.close circle,
+.node-fade-keep.host.hasPersistor.close circle {
+  stroke: #fbdeff; }
 
 /*# sourceMappingURL=dcs.css.map */
