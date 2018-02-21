@@ -2071,15 +2071,8 @@ function getContextMenuFunction(contextMenuCommand, data) {
 }
 
 function getTooltips(d) {
-    var maybeShortenString = function maybeShortenString(str) {
-        if (str.length > 40) {
-            return str.substring(0, 40) + "...";
-        }
-        return str;
-    };
-
     var tip = "";
-    tip += d.properties.typeLabel + " " + maybeShortenString(d.properties.name) + "<br/>";
+    tip += d.properties.typeLabel + " " + d.properties.name + "<br/>";
     tip += d.properties.longitudeLabel + " " + d.properties.longitude + "<br/>";
     tip += d.properties.latitudeLabel + " " + d.properties.latitude + "<br/>";
     if (d.properties.countryCodeLabel) {

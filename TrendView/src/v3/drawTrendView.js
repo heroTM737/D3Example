@@ -13,6 +13,12 @@
 			unit: unit
 		}
 	};
+	var shortenTitle = function (title) {
+		if (title.length > 35) {
+			return title.substring(0, 32) + "...";
+		}
+		return title;
+	}
 	var drawTrendView = function drawTrendView(container, chartData, width, height) {
 		//clear container
 		d3.select(container).selectAll("*").remove();
@@ -75,7 +81,9 @@
 				.attr("x", m[3])
 				.attr("y", height / 2)
 				.attr("dy", ".35em")
-				.text(title + "   " + lastValue + " " + lastValueUnit);
+				.text(shortenTitle(title) + "   " + lastValue + " " + lastValueUnit)
+				.append("title")
+          		.text(title + "   " + lastValue + " " + lastValueUnit);
 			if (!hideLineChart) {
 				//update fluctuation
 				fluctuationGroup.selectAll("*").remove();
